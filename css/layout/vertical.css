@@ -1,0 +1,12 @@
+.ut_channelbox
+{
+	padding: 40px;
+}
+
+.ut_channel
+{
+	width: 300px;
+	height: 100%;
+	margin-right: 40px;
+	float: left;
+}

@@ -1,0 +1,52 @@
+*
+{
+	margin: 0;
+	padding: 0;
+}
+
+html, body
+{
+	height: 100%;
+}
+
+.ut_cbar_button
+{
+	height: 100%;
+	float: right;
+}
+
+.ut_logo
+{
+	float: left;
+	margin-left: 4px;
+	text-shadow: 0 0 0.1em #fff;
+}
+
+.ut_cbar
+{
+	height: 40px;
+	position: relative;
+	left: 0;
+	right: 0;
+}
+
+.ut_channelbox
+{
+	height: calc(100% - 124px);
+	transition: height 0.3s;
+}
+
+.ut_footer
+{
+	height: 2px;
+	overflow: hidden;
+	transition: height 0.3s;
+}
+
+.ut_footer_inner {
+	padding: 4px;
+}
+
+.ut_footer:hover {
+	height: 60px;
+}
