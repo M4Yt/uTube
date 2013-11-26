@@ -46,6 +46,29 @@ var utube = {
 			utube.channels.store(channels);
 		}
 
+	},
+
+	getChannelData: function(channelName) {
+		var req = new XMLHttpRequest();
+		try {
+			req.open("GET","https://gdata.youtube.com/feeds/api/users/" + channelName, false);
+			req.send();
+			xml = req.responseXML;
+		} catch (err) {
+			return {error: err};
+		}
+		if (!xml) {
+			return {error: "No data received!"};
+		}
+		var thumbElem = xml.getElementsByTagName("media:thumbnail");
+		if (!thumbElem.length) {
+			thumbElem = xml.getElementsByTagName("thumbnail");
+		}
+		return {
+			name: xml.getElementsByTagName("title")[0].childNodes[0].nodeValue,
+			icon: thumbElem[0].getAttribute("url"),
+			url: "https://www.youtube.com/user/" + channelName + "/featured"
+		};
 	}
 
 };
