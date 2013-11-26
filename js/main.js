@@ -1,14 +1,33 @@
-function channelBox()
-{
-	return document.querySelector("div.ut_channelbox");
+Storage.prototype.setObject = function(key, value) {
+    this.setItem(key, JSON.stringify(value));
+}
+ 
+Storage.prototype.getObject = function(key) {
+    return JSON.parse(this.getItem(key));
 }
 
-function showFooter()
+var ut = utube || {}
+
+ut.getChannels = function()
 {
-	channelBox().style.height = "calc(100% - 182px)";
+	return localstorage.getObject("channels") || [];
 }
 
-function hideFooter()
+ut.storeChannels = function(channels)
 {
-	channelBox().style.height = "calc(100% - 124px)";
+	return localstorage.setObject("channels", channels);
+}
+
+ut.addChannel = function(channelName)
+{
+	var channels = utube.getChannels();
+	channels.push(channelName);
+	utube.storeChannels(channels);
+}
+
+ut.removeChannel = function(channelName)
+{
+	var channels = utube.getChannels();
+	delete channels["channelName"]
+	utube.storeChannels(channels);
 }

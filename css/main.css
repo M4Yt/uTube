@@ -37,7 +37,6 @@ html, body
 
 .ut_footer
 {
-	height: 2px;
 	overflow: hidden;
 	transition: height 0.3s;
 }

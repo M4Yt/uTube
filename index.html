@@ -7,6 +7,32 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="stylesheet" type="text/css" href="css/layout/vertical.css">
 	<link rel="stylesheet" type="text/css" href="css/theme/dusk.css">
+	<script type="text/javascript">
+		var FOOTER_MAX = 60;
+		var FOOTER_MIN = 8;
+
+		function channelbox()
+		{
+			return document.querySelector("div.ut_channelbox");
+		}
+
+		function footer()
+		{
+			return document.querySelector("div.ut_footer");
+		}
+
+		function showFooter()
+		{
+			channelbox().style.height = "calc(100% - " + (122 + FOOTER_MAX) + "px)";
+			footer().style.height = FOOTER_MAX + "px";
+		}
+
+		function hideFooter()
+		{
+			channelbox().style.height = "calc(100% - " + (122 + FOOTER_MIN) + "px)";
+			footer().style.height = FOOTER_MIN + "px";
+		}
+	</script>
 </head>
 <body>
 	<div class="ut_cbar">
@@ -25,5 +51,8 @@
 			<h2>I am a footer!</h2>
 		</div>
 	</div>
+	<script type="text/javascript">
+	hideFooter();
+	</script>
 </body>
 </html>
