@@ -5,6 +5,10 @@ Array.prototype.remove = function(what) {
     return this;
 };
 
+Node.prototype.remove = Element.prototype.remove || function() {
+	this.parentNode.removeChild(this);
+}
+
 Storage.prototype.setObject = function(key, value) {
     this.setItem(key, JSON.stringify(value));
 }
@@ -13,7 +17,11 @@ Storage.prototype.getObject = function(key) {
     return JSON.parse(this.getItem(key));
 }
 
-var utube = {
+var utube = function() {
+
+// Private stuff
+
+return {
 
 	channels: {
 
@@ -46,6 +54,50 @@ var utube = {
 			utube.channels.store(channels);
 		}
 
+	},
+
+	conf: {
+
+		reset: function() {
+			localStorage = utube.conf.standard;
+		},
+
+		get: function(key) {
+			return localStorage.getItem(key);
+		},
+
+		set: function(key, value) {
+			localStorage.setItem(key, value);
+		},
+
+		standard: {
+			channels: "",
+			theme: "dusk.css",
+			onvidclick: "EMBED",
+			noflash: false
+		},
+
+		themes: [
+			{
+				source: "dusk.css",
+				name: "Dusk",
+				description: "A dark gradient infested theme"
+			}
+		]
+
+	},
+
+	setTheme: function(source) {
+		var oldTheme = document.getElementsByClassName("ut_themesource")[0];
+		if (oldTheme) {
+			oldTheme.remove();
+		}
+		var link = document.createElement("link");
+		link.setAttribute("rel", "stylesheet");
+		link.setAttribute("type", "text/css");
+		link.setAttribute("href", "css/theme/" + source);
+		link.setAttribute("class", "ut_themesource");
+		document.getElementsByTagName("head")[0].appendChild(link);
 	},
 
 	queryChannel: function(channelName) {
@@ -104,4 +156,6 @@ var utube = {
 		return videos;
 	}
 
-};
+}}();
+
+utube.setTheme("dusk.css");
