@@ -32,6 +32,7 @@ html, body
 .ut_channelbox
 {
 	height: calc(100% - 124px);
+	padding: 40px;
 	transition: height 0.3s;
 }
 
@@ -47,4 +48,12 @@ html, body
 
 .ut_footer:hover {
 	height: 60px;
+}
+
+.ut_channel
+{
+	width: 300px;
+	height: 100%;
+	margin-right: 40px;
+	float: left;
 }
