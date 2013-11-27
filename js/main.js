@@ -94,7 +94,7 @@ var utube = {
 			videos.push({
 				description: rv[i].getElementsByTagName("content")[0].textContent,
 				id: id,
-				thumbnail: "https:​/​/​i.ytimg.com/​vi/" + id + "/​0.jpg",
+				thumbnail: "https://i1.ytimg.com/vi/" + id + "/mqdefault.jpg",
 				time: new Date(rv[i].getElementsByTagName("published")[0].textContent),
 				title: rv[i].getElementsByTagName("title")[0].textContent,
 				url: "http://www.youtube.com/watch?v=" + id,
