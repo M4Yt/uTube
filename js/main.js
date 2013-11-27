@@ -48,10 +48,11 @@ var utube = {
 
 	},
 
-	getChannelData: function(channelName) {
+	queryChannel: function(channelName) {
 		var req = new XMLHttpRequest();
 		try {
-			req.open("GET","https://gdata.youtube.com/feeds/api/users/" + channelName, false);
+			req.open("GET","https://gdata.youtube.com/feeds/api/users/" +
+				channelName, false);
 			req.send();
 			xml = req.responseXML;
 		} catch (err) {
@@ -65,10 +66,42 @@ var utube = {
 			thumbElem = xml.getElementsByTagName("thumbnail");
 		}
 		return {
-			name: xml.getElementsByTagName("title")[0].childNodes[0].nodeValue,
+			name: xml.getElementsByTagName("title")[0].textContent,
 			icon: thumbElem[0].getAttribute("url"),
 			url: "https://www.youtube.com/user/" + channelName + "/featured"
 		};
+	},
+
+	queryVideos: function(channelName, offset, limit) {
+		var req = new XMLHttpRequest();
+		try {
+			req.open("GET","https://gdata.youtube.com/feeds/api/users/" +
+				channelName + "/uploads?orderby=updated&start-index=" +
+				offset + 1 + (limit ? "&max-results=" + limit : ""), false);
+			req.send();
+			xml = req.responseXML;
+		} catch (err) {
+			return {error: err};
+		}
+		if (!xml) {
+			return {error: "No data received!"};
+		}
+		var videos = [];
+		var rv = xml.getElementsByTagName("entry");
+		for (i = 0; i < rv.length; i++) {
+			var id = rv[i].getElementsByTagName("id")[0].textContent;
+			id = id.substring(id.lastIndexOf("/") + 1, id.length);
+			videos.push({
+				description: rv[i].getElementsByTagName("content")[0].textContent,
+				id: id,
+				thumbnail: "https:​/​/​i.ytimg.com/​vi/" + id + "/​0.jpg",
+				time: new Date(rv[i].getElementsByTagName("published")[0].textContent),
+				title: rv[i].getElementsByTagName("title")[0].textContent,
+				url: "http://www.youtube.com/watch?v=" + id,
+				video: "https://www.youtube-nocookie.com/embed/" + id,
+			});
+		};
+		return videos;
 	}
 
 };
