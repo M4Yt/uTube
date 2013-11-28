@@ -19,11 +19,13 @@ Storage.prototype.getObject = function(key) {
 
 var utube = function() {
 
-// Private stuff
+	function _message(text, messageClass) {
+		console.log(text); // TODO
+	}
 
 return {
 
-	channels: {
+	chan: {
 
 		getAll: function() {
 			return localStorage.getObject("channels") || [];
@@ -34,24 +36,42 @@ return {
 		},
 
 		exists: function(channelName) {
-			return localStorage.getObject("channels").indexOf(channelName) !== -1;
+			var channels = utube.chan.getAll();
+			for (var i = channels.length - 1; i >= 0; i--) {
+				if (channels[i].name.toLowerCase() == channelName.toLowerCase()) {
+					return true;
+				}
+			};
+			return false;
 		},
 
 		add: function(channelName)
 		{
-			var isNew = !utube.channels.exists(channelName);
+			var isNew = !utube.chan.exists(channelName);
 			if (isNew) {
-				var channels = utube.channels.getAll();
-				channels.push(channelName);
-				utube.channels.store(channels);
+				var channels = utube.chan.getAll();
+				data = utube.queryChannel(channelName);
+				if (data.error) {
+					utube.inform("The channel could not be added! (" + data.error + ")");
+				} else {
+					channels.push(data);
+				}
+				utube.chan.store(channels);
+			} else {
+				utube.inform(channelName + " is already added")
 			}
 			return isNew;
 		},
 
 		remove: function(channelName) {
-			var channels = utube.channels.getAll();
+			var channels = utube.chan.getAll();
+			for (var i = channels.length - 1; i >= 0; i--) {
+				if (channels[i].name == channelName) {
+					channels.splice(i, 1);
+				}
+			};
 			channels.remove(channelName);
-			utube.channels.store(channels);
+			utube.chan.store(channels);
 		}
 
 	},
@@ -59,6 +79,9 @@ return {
 	conf: {
 
 		reset: function() {
+			for (key in utube.conf.standard) {
+				localStorage.setItem(key, utube.conf.standard[key])
+			}
 			localStorage = utube.conf.standard;
 		},
 
@@ -71,7 +94,7 @@ return {
 		},
 
 		standard: {
-			channels: "",
+			channels: "[]",
 			theme: "dusk.css",
 			onvidclick: "EMBED",
 			noflash: false
@@ -154,6 +177,14 @@ return {
 			});
 		};
 		return videos;
+	},
+
+	inform: function(text) {
+		_message(text, "ut_msg_info");
+	},
+
+	error: function(text) {
+		_message(text, "ut_msg_err");
 	}
 
 }}();
