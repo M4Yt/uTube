@@ -2,7 +2,7 @@ Array.prototype.remove = function(what) {
 	while ((i = this.indexOf(what)) !== -1) {
 		this.splice(i, 1);
 	}
-    return this;
+	return this;
 };
 
 Node.prototype.remove = Element.prototype.remove || function() {
@@ -10,11 +10,11 @@ Node.prototype.remove = Element.prototype.remove || function() {
 }
 
 Storage.prototype.setObject = function(key, value) {
-    this.setItem(key, JSON.stringify(value));
+	this.setItem(key, JSON.stringify(value));
 }
  
 Storage.prototype.getObject = function(key) {
-    return JSON.parse(this.getItem(key));
+	return JSON.parse(this.getItem(key));
 }
 
 var utube = function() {
@@ -38,7 +38,8 @@ return {
 		exists: function(channelName) {
 			var channels = utube.chan.getAll();
 			for (var i = channels.length - 1; i >= 0; i--) {
-				if (channels[i].name.toLowerCase() == channelName.toLowerCase()) {
+				if (channels[i].name.toLowerCase().replace(" ", "") ==
+					channelName.toLowerCase().replace(" ", "")) { // TODO
 					return true;
 				}
 			};
@@ -82,7 +83,6 @@ return {
 			for (key in utube.conf.standard) {
 				localStorage.setItem(key, utube.conf.standard[key])
 			}
-			localStorage = utube.conf.standard;
 		},
 
 		get: function(key) {
@@ -179,14 +179,50 @@ return {
 		return videos;
 	},
 
+	updateChannels: function() {
+		ch = document.getElementsByClassName("ut_channel");
+		for (i = 0; i < ch.length; i++) {
+			ch[i].remove();
+		};
+		ch = utube.chan.getAll();
+
+		var chanBox = document.getElementsByClassName("ut_channelbox")[0];
+		for (i = 0; i < ch.length; i++) {
+			var icon = ch[i].icon;
+			var name = ch[i].name;
+			var url = ch[i].url;
+			var chanElem = document.createElement("div");
+			chanElem.setAttribute("class", "ut_channel");
+			chanElem.innerHTML = '\
+				<a href="' + url + '" target="_blank" title="' + name + '">\
+					<div class="ut_channel_head">\
+					<img src="' + icon + '" />\
+						<h3>' + name + '</h3>\
+					</div>\
+				</a>\
+				<div class="ut_channel_videos"></div>\
+			';
+			chanBox.appendChild(chanElem);
+		};
+	},
+
 	inform: function(text) {
 		_message(text, "ut_msg_info");
 	},
 
 	error: function(text) {
 		_message(text, "ut_msg_err");
+	},
+
+	onload: function() {
+		utube.updateChannels();
 	}
 
 }}();
 
 utube.setTheme("dusk.css");
+
+// utube.conf.reset();
+utube.chan.add("Numberphile");
+utube.chan.add("LuminosityEvents");
+utube.chan.add("achannelthatdoesnotexist");
