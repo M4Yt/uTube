@@ -192,7 +192,7 @@ return {
 			var name = ch[i].name;
 			var url = ch[i].url;
 			var chanElem = document.createElement("div");
-			chanElem.setAttribute("class", "ut_channel");
+			chanElem.classList.add("ut_channel");
 			chanElem.innerHTML = '\
 				<a href="' + url + '" target="_blank" title="' + name + '">\
 					<div class="ut_channel_head">\
@@ -206,6 +206,41 @@ return {
 		};
 	},
 
+	showOverlay: function(contentElem) {
+		ov = document.createElement("table");
+		tr = document.createElement("tr");
+		td = document.createElement("td");
+		wr = document.createElement("div");
+		wr.classList.add("ut_overlay_wrapper");
+		contentElem.classList.add("ut_overlay_content")
+		contentElem.onclick = function(e){
+			e.stopPropagation();
+		};
+		wr.appendChild(contentElem);
+		td.appendChild(wr);
+		tr.appendChild(td);
+		ov.appendChild(tr);
+		ov.classList.add("ut_overlay");
+		ov.style.opacity = "0";
+		td.onclick = utube.removeOverlay;
+		setTimeout(function(){
+			ov.style.opacity = "1";
+		}, 20);
+		document.getElementsByTagName("body")[0].appendChild(ov);
+		wr.style.width = contentElem.clientWidth + "px";
+	},
+
+	removeOverlay: function(contentElem) {
+		ov = document.getElementsByClassName("ut_overlay");
+		if (ov.length > 0) {
+			ov = ov[0]
+			ov.style.opacity = "0";
+			setTimeout(function(){
+				ov.remove();
+			}, 300);
+		}
+	},
+
 	inform: function(text) {
 		_message(text, "ut_msg_info");
 	},
@@ -216,6 +251,12 @@ return {
 
 	onload: function() {
 		utube.updateChannels();
+
+		document.getElementsByClassName("ut_channelbox")[0].onclick = function() {
+				var d = document.createElement("div");
+				d.style.width = d.style.height = "500px";
+				utube.showOverlay(d);
+			};
 	}
 
 }}();
@@ -225,4 +266,4 @@ utube.setTheme("dusk.css");
 // utube.conf.reset();
 utube.chan.add("Numberphile");
 utube.chan.add("LuminosityEvents");
-utube.chan.add("achannelthatdoesnotexist");
+// utube.chan.add("achannelthatdoesnotexist");

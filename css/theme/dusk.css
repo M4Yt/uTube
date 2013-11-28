@@ -88,3 +88,27 @@ a
 		inset -10px 0   8px  -4px #181818,
 		inset  0    8px 16px  0   #000;
 }
+
+.ut_overlay
+{
+	background-color: rgba(0, 0, 0, 0.8);
+	transition: opacity 0.3s;
+}
+
+.ut_overlay_wrapper
+{
+	background-color: #333;
+	padding: 14px;
+	border-top: 1px solid #555;
+	border-bottom: 1px solid #111;
+	border-radius: 16px;
+	box-shadow:
+		inset 0px 8px 8px 0px #555,
+		inset 0px -8px 8px 0px #111;
+}
+
+.ut_overlay_content
+{
+	background-color: #333;
+	border-radius: 4px;
+}
