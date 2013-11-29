@@ -83,7 +83,6 @@ return {
 			for (key in utube.conf.standard) {
 				localStorage.setItem(key, utube.conf.standard[key])
 			}
-			return true;
 		},
 
 		get: function(key) {
@@ -112,53 +111,13 @@ return {
 	},
 
 	showConfigMenu: function() {
-		function themes() {
-			var ret = "";
-			for (i = 0; i < utube.conf.themes.length; i++) {
-				theme = utube.conf.themes[i];
-				cur = utube.conf.get("theme");
-				sel = cur === theme.source ? " selected" : "";
-				ret += '<option' + sel + ' value="' + theme.source + '" title="' +
-					theme.description + '">' + theme.name + '</option>';
-			}
-			return ret;
-		}
 		menu = document.createElement("div");
 		menu.style.width = "500px";
-		menu.innerHTML = '\
-			<h2>Configuration</h2>\
-			<table>\
-				<tr>\
-					<td><h4>When I click a video<h4></td>\
-					<td>\
-						<input type="radio" name="onvidclick"\
-							onchange="utube.conf.set(\'onvidclick\',\'EMBED\')">Embed</input><br />\
-						<input type="radio" name="onvidclick"\
-							onchange="utube.conf.set(\'onvidclick\', \'OPENYT\')">Open on YouTube</input>\
-					</td>\
-				<tr>\
-				<tr>\
-					<td><h4>Playback<h4></td>\
-					<td>\
-						<input type="radio" name="playback"\
-							onchange="utube.conf.set(\'playback\', \'YTFLASH\')">YouTube Flash</input><br />\
-						<input type="radio" name="playback"\
-							onchange="utube.conf.set(\'playback\', \'YTHTML5\')">YouTube HTML5</input><br />\
-						<input type="radio" name="playback"\
-							onchange="utube.conf.set(\'playback\', \'HTML5\')">HTML5</input>\
-					</td>\
-				<tr>\
-				<tr>\
-					<td><h4>Theme<h4></td>\
-					<td>\
-						<select onchange="utube.conf.set(\'theme\', this.value)">' + themes() + '</select>\
-					</td>\
-				<tr>\
-			</table>\
-			<button onclick="if(confirm(\
-				\'Delete channels and restore all settings to default?\'\
-				) && utube.conf.reset()) window.location.reload(false);">Reset</button>\
-		';
+		var req = new XMLHttpRequest();
+		req.open("GET","assets/settings.html", false);
+		req.send();
+		menu.innerHTML = req.responseText;
+		initSetttingsDialog(menu);
 		utube.showOverlay(menu);
 	},
 
@@ -303,12 +262,6 @@ return {
 
 	onload: function() {
 		utube.updateChannels();
-
-		// document.getElementsByClassName("ut_channelbox")[0].onclick = function() {
-		// 		var d = document.createElement("div");
-		// 		d.style.width = d.style.height = "500px";
-		// 		utube.showOverlay(d);
-		// };
 	}
 
 }}();

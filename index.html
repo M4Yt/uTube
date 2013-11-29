@@ -4,40 +4,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>&mu;Tube</title>
 	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/assets.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<script type="text/javascript">
-		var FOOTER_MAX = 60;
-		var FOOTER_MIN = 8;
-
-		function channelbox()
-		{
-			return document.querySelector("div.ut_channelbox");
-		}
-
-		function footer()
-		{
-			return document.querySelector("div.ut_footer");
-		}
-
-		function showFooter()
-		{
-			channelbox().style.height = "calc(100% - " + (122 + FOOTER_MAX) + "px)";
-			footer().style.height = FOOTER_MAX + "px";
-		}
-
-		function hideFooter()
-		{
-			channelbox().style.height = "calc(100% - " + (122 + FOOTER_MIN) + "px)";
-			footer().style.height = FOOTER_MIN + "px";
-		}
-	</script>
 </head>
 <body onload="utube.onload()">
 	<div class="ut_cbar">
 		<div class="ut_logo">
 			<h1>&mu;Tube</h1>
 		</div>
-		<div class="ut_cbar_button ut_cbar_settings" onclick="utube.showConfigMenu()"></div>
+		<div class="ut_cbar_button ut_cbar_settings"
+			onclick="utube.showConfigMenu()"></div>
 		<div class="ut_cbar_button ut_cbar_channels"></div>
 	</div>
 	<div class="ut_channelbox"></div>
