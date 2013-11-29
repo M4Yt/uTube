@@ -33,4 +33,20 @@ function initSetttingsDialog(elem) {
 			theme.description + "\">" + theme.name + "</option>";
 	}
 	menu.getElementsByTagName("select")[0].innerHTML = ret;
+
+	elems = elem.getElementsByTagName("input");
+	for (i = 0; i < elems.length; i++) {
+		input = elems[i];
+		input.setAttribute("onchange", "utube.conf.set('" + input.name + "', '" + input.value + "')");
+		if (utube.conf.get(input.name) == input.value) {
+			switch (input.type) {
+				case "checkbox":
+				case "radio":
+					input.checked = "checked";
+					break;
+				default:
+					break;
+			}
+		}
+	}
 }

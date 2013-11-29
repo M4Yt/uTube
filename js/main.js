@@ -91,6 +91,7 @@ return {
 
 		set: function(key, value) {
 			localStorage.setItem(key, value);
+			console.log("Config set: " + key + " = " + value);
 		},
 
 		standard: {
@@ -152,8 +153,8 @@ return {
 			thumbElem = xml.getElementsByTagName("thumbnail");
 		}
 		return {
-			name: xml.getElementsByTagName("title")[0].textContent,
 			icon: thumbElem[0].getAttribute("url"),
+			name: xml.getElementsByTagName("title")[0].textContent,
 			url: "https://www.youtube.com/user/" + channelName + "/featured"
 		};
 	},
@@ -267,8 +268,10 @@ return {
 }}();
 
 utube.setTheme("dusk.css");
+if (!localStorage.theme) {
+	utube.conf.reset();
+}
 
-// utube.conf.reset();
 utube.chan.add("Numberphile");
 utube.chan.add("LuminosityEvents");
 // utube.chan.add("achannelthatdoesnotexist");
