@@ -22,31 +22,3 @@ function hideFooter()
 	channelbox().style.height = "calc(100% - " + (122 + FOOTER_MIN) + "px)";
 	footer().style.height = FOOTER_MIN + "px";
 }
-
-function initSetttingsDialog(elem) {
-	var ret = "";
-	for (i = 0; i < utube.conf.themes.length; i++) {
-		theme = utube.conf.themes[i];
-		cur = utube.conf.get("theme");
-		sel = cur === theme.source ? " selected" : "";
-		ret += "<option" + sel + " value=\"" + theme.source + "\" title=\"" +
-			theme.description + "\">" + theme.name + "</option>";
-	}
-	menu.getElementsByTagName("select")[0].innerHTML = ret;
-
-	elems = elem.getElementsByTagName("input");
-	for (i = 0; i < elems.length; i++) {
-		input = elems[i];
-		input.setAttribute("onchange", "utube.conf.set('" + input.name + "', '" + input.value + "')");
-		if (utube.conf.get(input.name) == input.value) {
-			switch (input.type) {
-				case "checkbox":
-				case "radio":
-					input.checked = "checked";
-					break;
-				default:
-					break;
-			}
-		}
-	}
-}

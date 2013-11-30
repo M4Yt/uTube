@@ -115,10 +115,42 @@ return {
 		menu = document.createElement("div");
 		menu.style.width = "500px";
 		var req = new XMLHttpRequest();
-		req.open("GET","assets/settings.html", false);
+		req.open("GET", "assets/settings.html", false);
 		req.send();
 		menu.innerHTML = req.responseText;
-		initSetttingsDialog(menu);
+		utube.showOverlay(menu);
+		var ret = "";
+		for (i = 0; i < utube.conf.themes.length; i++) {
+			theme = utube.conf.themes[i];
+			cur = utube.conf.get("theme");
+			sel = cur === theme.source ? " selected" : "";
+			ret += "<option" + sel + " value=\"" + theme.source + "\" title=\"" +
+				theme.description + "\">" + theme.name + "</option>";
+		}
+		menu.getElementsByTagName("select")[0].innerHTML = ret;
+		elems = menu.getElementsByTagName("input");
+		for (i = 0; i < elems.length; i++) {
+			input = elems[i];
+			input.setAttribute("onchange", "utube.conf.set('" + input.name + "', '" + input.value + "')");
+			if (utube.conf.get(input.name) == input.value) {
+				switch (input.type) {
+					case "checkbox":
+					case "radio":
+						input.checked = "checked";
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	},
+
+	showChannelMenu: function() {
+		menu = document.createElement("div");
+		menu.style.width = "500px";
+		menu.innerHTML = '\
+			<h2>Channels</h2>\
+		';
 		utube.showOverlay(menu);
 	},
 
