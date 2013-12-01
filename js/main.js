@@ -305,8 +305,23 @@ return {
 		}
 	},
 
-	playVideo: function(video) {
-		console.log(video);
+	playVideo: function(id) {
+		switch (utube.conf.get("onvidclick")) {
+			case "EMBED":
+				var frame = document.createElement("iframe");
+				var height = window.innerHeight - 100;
+				frame.width = height * (16 / 9);
+				frame.height = height;
+				frame.classList.add("ut_embedvideo");
+				frame.src = utube.VID_EMDED_URL.format(id);
+				frame.allowfullscreen = "allowfullscreen";
+				frame.frameborder = "0";
+				utube.showOverlay(frame);
+				break;
+			case "OPENYT":
+				window.open(utube.VID_PAGE_URL.format(id));
+				break;
+		}
 	},
 
 	showOverlay: function(contentElem) {
