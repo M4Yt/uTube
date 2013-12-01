@@ -115,7 +115,6 @@ return {
 
 		set: function(key, value) {
 			localStorage.setItem(key, value);
-			console.log("Config set: " + key + " = " + value);
 		},
 
 		standard: {
@@ -189,9 +188,8 @@ return {
 				<div class="ut_chanconf_item">\
 					<img src="' + icon + '" />\
 					<h5>' + title + '</h5>\
-					<div class="ut_button"\
-						onclick="removeChannelByForm(\'' + name + '\');\
-						this.parentNode.remove()">Remove</div>\
+					<button onclick="removeChannelByForm(\'' + name + '\');\
+						this.parentNode.remove()">Remove</button>\
 				</div>\
 			';
 		}

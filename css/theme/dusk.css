@@ -21,6 +21,19 @@ a
 	text-decoration: none;
 }
 
+input, button, select, option
+{
+	background-color: #333;
+	border: 1px solid #111;
+	border-radius: 2px;
+	font-size: 14px;
+}
+
+option
+{
+	border: none;
+}
+
 .ut_cbar
 {
 	height: 40px;
@@ -180,6 +193,7 @@ a
 
 .ut_chanconf_item > *
 {
+	margin-top: 12px;
 	float: left;
 }
 
@@ -190,7 +204,7 @@ a
 	margin: 4px;
 }
 
-.ut_chanconf_item .ut_button
+.ut_chanconf_item button
 {
 	float: right;
 }
