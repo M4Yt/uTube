@@ -9,6 +9,12 @@ Node.prototype.remove = Element.prototype.remove || function() {
 	this.parentNode.removeChild(this);
 }
 
+Node.prototype.removeAll = function() {
+	while (this.hasChildNodes()) {
+		this.removeChild(this.lastChild);
+	}
+}
+
 Storage.prototype.setObject = function(key, value) {
 	this.setItem(key, JSON.stringify(value));
 }
@@ -42,7 +48,7 @@ return {
 					channelName.toLowerCase().replace(" ", "")) { // TODO
 					return true;
 				}
-			};
+			}
 			return false;
 		},
 
@@ -120,7 +126,7 @@ return {
 		menu.innerHTML = req.responseText;
 		utube.showOverlay(menu);
 		var ret = "";
-		for (i = 0; i < utube.conf.themes.length; i++) {
+		for (var i = 0; i < utube.conf.themes.length; i++) {
 			theme = utube.conf.themes[i];
 			cur = utube.conf.get("theme");
 			sel = cur === theme.source ? " selected" : "";
@@ -129,7 +135,7 @@ return {
 		}
 		menu.getElementsByTagName("select")[0].innerHTML = ret;
 		elems = menu.getElementsByTagName("input");
-		for (i = 0; i < elems.length; i++) {
+		for (var i = 0; i < elems.length; i++) {
 			input = elems[i];
 			input.setAttribute("onchange", "utube.conf.set('" + input.name + "', '" + input.value + "')");
 			if (utube.conf.get(input.name) == input.value) {
@@ -185,8 +191,9 @@ return {
 			thumbElem = xml.getElementsByTagName("thumbnail");
 		}
 		return {
+			name: channelName,
 			icon: thumbElem[0].getAttribute("url"),
-			name: xml.getElementsByTagName("title")[0].textContent,
+			title: xml.getElementsByTagName("title")[0].textContent,
 			url: "https://www.youtube.com/user/" + channelName + "/featured"
 		};
 	},
@@ -207,7 +214,7 @@ return {
 		}
 		var videos = [];
 		var rv = xml.getElementsByTagName("entry");
-		for (i = 0; i < rv.length; i++) {
+		for (var i = 0; i < rv.length; i++) {
 			var id = rv[i].getElementsByTagName("id")[0].textContent;
 			id = id.substring(id.lastIndexOf("/") + 1, id.length);
 			videos.push({
@@ -219,35 +226,71 @@ return {
 				url: "http://www.youtube.com/watch?v=" + id,
 				video: "https://www.youtube-nocookie.com/embed/" + id,
 			});
-		};
+		}
 		return videos;
 	},
 
 	updateChannels: function() {
 		ch = document.getElementsByClassName("ut_channel");
-		for (i = 0; i < ch.length; i++) {
+		for (var i = 0; i < ch.length; i++) {
 			ch[i].remove();
-		};
-		ch = utube.chan.getAll();
+		}
 
+		ch = utube.chan.getAll();
 		var chanBox = document.getElementsByClassName("ut_channelbox")[0];
-		for (i = 0; i < ch.length; i++) {
+		for (var i = 0; i < ch.length; i++) {
 			var icon = ch[i].icon;
 			var name = ch[i].name;
+			var title = ch[i].title;
 			var url = ch[i].url;
 			var chanElem = document.createElement("div");
+			var vidElem = document.createElement("div");
+			vidElem.classList.add("ut_channel_videos");
 			chanElem.classList.add("ut_channel");
 			chanElem.innerHTML = '\
-				<a href="' + url + '" target="_blank" title="' + name + '">\
+				<a href="' + url + '" target="_blank" title="' + title + '">\
 					<div class="ut_channel_head">\
 					<img src="' + icon + '" />\
-						<h3>' + name + '</h3>\
+						<h3>' + title + '</h3>\
 					</div>\
 				</a>\
-				<div class="ut_channel_videos"></div>\
 			';
+			chanElem.appendChild(vidElem);
+			try {
+				utube.updateVideos(name, vidElem);
+			} catch (e) {
+				console.log(e);
+			}
 			chanBox.appendChild(chanElem);
-		};
+		}
+	},
+
+	updateVideos: function(chanName, chanElem) {
+		chanElem.removeAll();
+		var videos = utube.queryVideos(chanName, 0, 0);
+		if (videos.error) {
+			var err = document.createElement("p");
+			err.innerHTML = videos.error;
+			chanElem.appendChild(err);
+		}
+		for (var i = 0; i < videos.length; i++) {
+			var video = videos[i].video;
+			var thumbnail = videos[i].thumbnail;
+			var title = videos[i].title;
+			var vidElem = document.createElement("div");
+			vidElem.classList.add("ut_list_video");
+			vidElem.setAttribute("onclick", 'utube.playVideo(\'' + video + '\')');
+			vidElem.title = title;
+			vidElem.innerHTML = '\
+				<h5>' + title + '</h5>\
+				<img src="' + thumbnail + '" />\
+			';
+			chanElem.appendChild(vidElem);
+		}
+	},
+
+	playVideo: function(video) {
+		console.log(video);
 	},
 
 	showOverlay: function(contentElem) {
@@ -304,6 +347,6 @@ if (!localStorage.theme) {
 	utube.conf.reset();
 }
 
-utube.chan.add("Numberphile");
 utube.chan.add("LuminosityEvents");
+utube.chan.add("Numberphile");
 // utube.chan.add("achannelthatdoesnotexist");
