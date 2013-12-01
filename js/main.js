@@ -78,15 +78,14 @@ return {
 				var channels = utube.chan.getAll();
 				data = utube.queryChannel(channelName);
 				if (data.error) {
-					utube.inform("The channel could not be added! (" + data.error + ")");
+					return "The channel could not be added! (" + data.error + ")";
 				} else {
 					channels.push(data);
 				}
 				utube.chan.store(channels);
 			} else {
-				utube.inform(channelName + " is already added")
+				return channelName + " is already added";
 			}
-			return isNew;
 		},
 
 		remove: function(channelName) {
@@ -123,7 +122,7 @@ return {
 			channels: "[]",
 			theme: "dusk.css",
 			onvidclick: "EMBED",
-			playback: "YTFLASH"
+			playback: "YT"
 		},
 
 		themes: [
@@ -175,7 +174,27 @@ return {
 		menu.style.width = "500px";
 		menu.innerHTML = '\
 			<h2>Channels</h2>\
+			<form onsubmit="addChannelByForm(); return false">\
+				<input class="ut_addchannel_txt" type="text"\
+					pattern="[a-zA-Z0-9]{1,20}" required />\
+				<input type="submit" value="Add" />\
+			</form>\
 		';
+		var ch = utube.chan.getAll();
+		for (var i = 0; i < ch.length; i++) {
+			var icon = ch[i].icon;
+			var name = ch[i].name;
+			var title = ch[i].title;
+			menu.innerHTML += '\
+				<div class="ut_chanconf_item">\
+					<img src="' + icon + '" />\
+					<h5>' + title + '</h5>\
+					<div class="ut_button"\
+						onclick="removeChannelByForm(\'' + name + '\');\
+						this.parentNode.remove()">Remove</div>\
+				</div>\
+			';
+		}
 		utube.showOverlay(menu);
 	},
 
@@ -399,6 +418,3 @@ if (!localStorage.theme) {
 	utube.conf.reset();
 }
 utube.reloadTheme();
-
-utube.chan.add("LuminosityEvents");
-utube.chan.add("Numberphile");

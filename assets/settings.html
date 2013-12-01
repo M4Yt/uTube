@@ -4,9 +4,11 @@
 		<td><h4>When I click a video<h4></td>
 		<td>
 			<input type="radio" name="onvidclick" value="EMBED">
-				Embed</input><br />
+				Embed</input>
+			<br />
 			<input type="radio" name="onvidclick" value="EMBEDINTAB">
-				Embed in new tab</input><br />
+				Embed in new tab</input>
+			<br />
 			<input type="radio" name="onvidclick" value="OPENYT">
 				Open on YouTube</input>
 		</td>
@@ -14,9 +16,9 @@
 	<tr>
 		<td><h4>Playback<h4></td>
 		<td>
-			<input type="radio" name="playback" value="YT">YouTube</input>
+			<input type="radio" name="playback" value="YT"> YouTube</input>
 			<br />
-			<input type="radio" name="playback" value="NATIVE">Native</input>
+			<input type="radio" name="playback" value="NATIVE"> Native</input>
 		</td>
 	</tr>
 	<tr>
@@ -26,5 +28,5 @@
 		</td>
 	</tr>
 </table>
-<button onclick="if(confirm('Delete channels and restore all settings to default?')){
-	utube.conf.reset();window.location.reload(false);}">Reset</button>
+<button onclick="if(confirm('Delete channels and restore all settings to default?')) {
+	utube.conf.reset();window.location.reload(false);}" class="ut_button">Reset</button>

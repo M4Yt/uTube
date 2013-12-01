@@ -171,3 +171,26 @@ a
 {
 	border: none;
 }
+
+.ut_chanconf_item
+{
+	width: 100%;
+	height: 40px;
+}
+
+.ut_chanconf_item > *
+{
+	float: left;
+}
+
+.ut_chanconf_item img
+{
+	width: 32px;
+	height: 32px;
+	margin: 4px;
+}
+
+.ut_chanconf_item .ut_button
+{
+	float: right;
+}
