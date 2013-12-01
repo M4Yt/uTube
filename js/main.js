@@ -1,3 +1,10 @@
+String.prototype.format = String.prototype.format || function() {
+	var args = arguments;
+	return this.replace(/{(\d+)}/g, function(match, number) { 
+		return typeof args[number] != "undefined" ? args[number] : match;
+	});
+};
+
 Array.prototype.remove = function(what) {
 	while ((i = this.indexOf(what)) !== -1) {
 		this.splice(i, 1);
@@ -30,6 +37,18 @@ var utube = function() {
 	}
 
 return {
+
+	CHANNEL_DATA: "https://gdata.youtube.com/feeds/api/users/{0}",
+
+	CHANNEL_URL: "https://www.youtube.com/user/{0}/featured",
+
+	FEED_DATA: "https://gdata.youtube.com/feeds/api/users/{0}/uploads?orderby=updated{1}{2}",
+
+	VID_EMDED_URL: "https://www.youtube-nocookie.com/embed/{0}",
+
+	VID_THUMBNAIL_URL: "https://i1.ytimg.com/vi/{0}/mqdefault.jpg",
+
+	VID_PAGE_URL: "http://www.youtube.com/watch?v={0}",
 
 	chan: {
 
@@ -176,8 +195,7 @@ return {
 	queryChannel: function(channelName) {
 		var req = new XMLHttpRequest();
 		try {
-			req.open("GET","https://gdata.youtube.com/feeds/api/users/" +
-				channelName, false);
+			req.open("GET", utube.CHANNEL_DATA.format(channelName), false);
 			req.send();
 			xml = req.responseXML;
 		} catch (err) {
@@ -194,16 +212,15 @@ return {
 			name: channelName,
 			icon: thumbElem[0].getAttribute("url"),
 			title: xml.getElementsByTagName("title")[0].textContent,
-			url: "https://www.youtube.com/user/" + channelName + "/featured"
+			url: utube.CHANNEL_URL.format(channelName)
 		};
 	},
 
 	queryVideos: function(channelName, offset, limit) {
 		var req = new XMLHttpRequest();
 		try {
-			req.open("GET","https://gdata.youtube.com/feeds/api/users/" +
-				channelName + "/uploads?orderby=updated&start-index=" +
-				offset + 1 + (limit ? "&max-results=" + limit : ""), false);
+			req.open("GET", utube.FEED_DATA.format(channelName, "&start-index=" + offset + 1,
+				(limit ? "&max-results=" + limit : "")), false);
 			req.send();
 			xml = req.responseXML;
 		} catch (err) {
@@ -220,11 +237,8 @@ return {
 			videos.push({
 				description: rv[i].getElementsByTagName("content")[0].textContent,
 				id: id,
-				thumbnail: "https://i1.ytimg.com/vi/" + id + "/mqdefault.jpg",
 				time: new Date(rv[i].getElementsByTagName("published")[0].textContent),
 				title: rv[i].getElementsByTagName("title")[0].textContent,
-				url: "http://www.youtube.com/watch?v=" + id,
-				video: "https://www.youtube-nocookie.com/embed/" + id,
 			});
 		}
 		return videos;
@@ -276,12 +290,12 @@ return {
 			chanElem.appendChild(err);
 		}
 		for (var i = 0; i < videos.length; i++) {
-			var video = videos[i].video;
-			var thumbnail = videos[i].thumbnail;
+			var id = videos[i].id;
+			var thumbnail = utube.VID_THUMBNAIL_URL.format(id);
 			var title = videos[i].title;
 			var vidElem = document.createElement("div");
 			vidElem.classList.add("ut_list_video");
-			vidElem.setAttribute("onclick", 'utube.playVideo(\'' + video + '\')');
+			vidElem.setAttribute("onclick", 'utube.playVideo(\'' + id + '\')');
 			vidElem.title = title;
 			vidElem.innerHTML = '\
 				<h5>' + title + '</h5>\
@@ -345,7 +359,6 @@ return {
 		var cbox = document.getElementsByClassName("ut_channelbox")[0];
 		var left = 0;
 		var max = -cbox.clientWidth + window.innerWidth;
-		console.log(max)
 		function scrollChannels(e) {
 			left += e.wheelDelta || -e.detail * 40;
 			if (left > 0) {
@@ -370,8 +383,3 @@ utube.reloadTheme();
 
 utube.chan.add("LuminosityEvents");
 utube.chan.add("Numberphile");
-utube.chan.add("PauseUnpause");
-utube.chan.add("VintageBeef");
-utube.chan.add("Vsauce");
-utube.chan.add("JonTronShow");
-utube.chan.add("Generikb");
