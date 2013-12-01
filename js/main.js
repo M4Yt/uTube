@@ -314,9 +314,11 @@ return {
 				frame.height = height;
 				frame.classList.add("ut_embedvideo");
 				frame.src = utube.VID_EMDED_URL.format(id);
-				frame.allowfullscreen = "allowfullscreen";
-				frame.frameborder = "0";
+				frame.setAttribute("allowfullscreen", "allowfullscreen");
 				utube.showOverlay(frame);
+				break;
+			case "EMBEDINTAB":
+				window.open(utube.VID_EMDED_URL.format(id));
 				break;
 			case "OPENYT":
 				window.open(utube.VID_PAGE_URL.format(id));
@@ -383,6 +385,8 @@ return {
 			}
 			if (cbox.clientWidth > window.innerWidth) {
 				cbox.style.left = left + "px";
+			} else {
+				cbox.style.left = "0px";
 			}
 		}
 		cbar.addEventListener("mousewheel", scrollChannels, false);
