@@ -7,22 +7,11 @@
 html, body
 {
 	height: 100%;
-}
-
-.ut_cbar_button
-{
-	float: right;
-}
-
-.ut_logo
-{
-	float: left;
-	margin-left: 4px;
+	overflow: hidden;
 }
 
 .ut_cbar
 {
-	height: 40px;
 	position: relative;
 	left: 0;
 	right: 0;
@@ -30,21 +19,19 @@ html, body
 
 .ut_channelbox
 {
-	height: calc(100% - 124px);
-	padding: 40px;
+	position: relative;
 	transition: height 0.3s;
 }
 
 .ut_channel
 {
-	width: 256px;
 	height: 100%;
-	margin-right: 40px;
 	float: left;
 }
 
 .ut_footer
 {
+	width: 100%;
 	overflow: hidden;
 	transition: height 0.3s;
 }

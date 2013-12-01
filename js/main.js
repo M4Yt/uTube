@@ -160,7 +160,7 @@ return {
 		utube.showOverlay(menu);
 	},
 
-	setTheme: function(source) {
+	reloadTheme: function() {
 		var oldTheme = document.getElementsByClassName("ut_themesource")[0];
 		if (oldTheme) {
 			oldTheme.remove();
@@ -168,7 +168,7 @@ return {
 		var link = document.createElement("link");
 		link.setAttribute("rel", "stylesheet");
 		link.setAttribute("type", "text/css");
-		link.setAttribute("href", "css/theme/" + source);
+		link.setAttribute("href", "css/theme/" + utube.conf.get("theme"));
 		link.setAttribute("class", "ut_themesource");
 		document.getElementsByTagName("head")[0].appendChild(link);
 	},
@@ -235,9 +235,10 @@ return {
 		for (var i = 0; i < ch.length; i++) {
 			ch[i].remove();
 		}
-
 		ch = utube.chan.getAll();
 		var chanBox = document.getElementsByClassName("ut_channelbox")[0];
+		var width = 0;
+		var margin;
 		for (var i = 0; i < ch.length; i++) {
 			var icon = ch[i].icon;
 			var name = ch[i].name;
@@ -256,13 +257,14 @@ return {
 				</a>\
 			';
 			chanElem.appendChild(vidElem);
-			try {
-				utube.updateVideos(name, vidElem);
-			} catch (e) {
-				console.log(e);
-			}
+			utube.updateVideos(name, vidElem);
 			chanBox.appendChild(chanElem);
+			if (i == 0) {
+				margin = chanElem.offsetLeft;
+			}
+			width += chanElem.clientWidth + margin;
 		}
+		chanBox.style.width = width + margin + "px";
 	},
 
 	updateVideos: function(chanName, chanElem) {
@@ -338,15 +340,38 @@ return {
 
 	onload: function() {
 		utube.updateChannels();
+
+		var cbar = document.getElementsByClassName("ut_cbar")[0];
+		var cbox = document.getElementsByClassName("ut_channelbox")[0];
+		var left = 0;
+		var max = -cbox.clientWidth + window.innerWidth;
+		console.log(max)
+		function scrollChannels(e) {
+			left += e.wheelDelta || -e.detail * 40;
+			if (left > 0) {
+				left = 0;
+			} else if (left < max) {
+				left = max;
+			}
+			if (cbox.clientWidth > window.innerWidth) {
+				cbox.style.left = left + "px";
+			}
+		}
+		cbar.addEventListener("mousewheel", scrollChannels, false);
+		cbar.addEventListener("DOMMouseScroll", scrollChannels, false);
 	}
 
 }}();
 
-utube.setTheme("dusk.css");
 if (!localStorage.theme) {
 	utube.conf.reset();
 }
+utube.reloadTheme();
 
 utube.chan.add("LuminosityEvents");
 utube.chan.add("Numberphile");
-// utube.chan.add("achannelthatdoesnotexist");
+utube.chan.add("PauseUnpause");
+utube.chan.add("VintageBeef");
+utube.chan.add("Vsauce");
+utube.chan.add("JonTronShow");
+utube.chan.add("Generikb");
