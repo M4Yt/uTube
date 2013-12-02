@@ -351,8 +351,15 @@ return {
 			case "EMBED":
 				var frame = document.createElement("iframe");
 				var height = window.innerHeight - 100;
-				frame.width = height * (16 / 9);
-				frame.height = height;
+				var width = window.innerWidth - 100;
+				var w = height * (16 / 9);
+				var h = height;
+				if (w > width) {
+					w = width;
+					h = w / (16 / 9);
+				}
+				frame.width = w;
+				frame.height = h;
 				frame.classList.add("ut_embedvideo");
 				frame.src = utube.VID_EMDED_URL.format(id);
 				frame.setAttribute("allowfullscreen", "allowfullscreen");
