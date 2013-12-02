@@ -68,7 +68,7 @@ return {
 			var channels = utube.chan.getAll();
 			for (var i = channels.length - 1; i >= 0; i--) {
 				if (channels[i].name.toLowerCase().replace(" ", "") ==
-					channelName.toLowerCase().replace(" ", "")) { // TODO
+					channelName.toLowerCase().replace(" ", "")) {
 					return true;
 				}
 			}
@@ -83,9 +83,11 @@ return {
 				data = utube.queryChannel(channelName);
 				if (data.error) {
 					return "The channel could not be added! (" + data.error + ")";
-				} else {
-					channels.push(data);
 				}
+				channels.push(data);
+				channels.sort(function(a, b) {
+					return a.name > b.name ? 1 : -1;
+				});
 				utube.chan.store(channels);
 			} else {
 				return channelName + " is already added";
@@ -196,22 +198,29 @@ return {
 					pattern="[a-zA-Z0-9]{1,20}" required autofocus />\
 				<input type="submit" value="Add" />\
 			</form>\
+			<div class="ut_channelmenulist">\
 		';
+		utube.showOverlay(menu);
+		utube.updateChannelMenu();
+	},
+
+	updateChannelMenu: function() {
+		var list = document.getElementsByClassName("ut_channelmenulist")[0];
+		list.removeAll();
 		var ch = utube.chan.getAll();
 		for (var i = 0; i < ch.length; i++) {
 			var icon = ch[i].icon;
 			var name = ch[i].name;
 			var title = ch[i].title;
-			menu.innerHTML += '\
+			list.innerHTML += '\
 				<div class="ut_chanconf_item">\
 					<img src="' + icon + '" />\
 					<h5>' + title + '</h5>\
-					<button onclick="removeChannelByForm(\'' + name + '\');\
-						this.parentNode.remove()">Remove</button>\
+					<button onclick="this.parentNode.remove();\
+						removeChannelByForm(\'' + name + '\');">Remove</button>\
 				</div>\
 			';
 		}
-		utube.showOverlay(menu);
 	},
 
 	reloadTheme: function() {
@@ -280,11 +289,8 @@ return {
 	},
 
 	updateChannels: function() {
-		ch = document.getElementsByClassName("ut_channel");
-		for (var i = 0; i < ch.length; i++) {
-			ch[i].remove();
-		}
-		ch = utube.chan.getAll();
+		document.getElementsByClassName("ut_channelbox")[0].removeAll();
+		var ch = utube.chan.getAll();
 		var chanBox = document.getElementsByClassName("ut_channelbox")[0];
 		var width = 0;
 		var margin;

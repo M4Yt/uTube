@@ -34,22 +34,23 @@ function updatetransitionConf(enable) {
 
 function addChannelByForm() {
 	var inputElem = document.getElementsByClassName("ut_addchannel_txt")[0];
-	var err = utube.chan.add(inputElem.value);
 	var oldErrs = document.getElementsByClassName("ut_chanconf_err");
 	for (var i = 0; i < oldErrs.length; i++) {
 		oldErrs[i].remove();
 	}
+	var err = utube.chan.add(inputElem.value);
 	if (err) {
 		var errElem = document.createElement("h6");
 		errElem.classList.add("ut_chanconf_err");
 		errElem.innerHTML = err;
 		inputElem.parentNode.appendChild(errElem);
 	} else {
+		utube.updateChannelMenu();
 		utube.updateChannels();
 	}
 }
 
 function removeChannelByForm(name) {
-	utube.chan.remove(name);
 	utube.updateChannels();
+	utube.chan.remove(name);
 }
