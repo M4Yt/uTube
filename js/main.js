@@ -64,6 +64,12 @@ return {
 			return localStorage.setObject("channels", channels);
 		},
 
+		sortAlphabetical: function(channels) {
+			channels.sort(function(a, b){
+				return a.name > b.name ? 1 : -1;
+			});
+		},
+
 		exists: function(channelName) {
 			var channels = utube.chan.getAll();
 			for (var i = channels.length - 1; i >= 0; i--) {
@@ -85,9 +91,7 @@ return {
 					return "The channel could not be added! (" + data.error + ")";
 				}
 				channels.push(data);
-				channels.sort(function(a, b) {
-					return a.name > b.name ? 1 : -1;
-				});
+				utube.chan.sortAlphabetical(channels);
 				utube.chan.store(channels);
 			} else {
 				return channelName + " is already added";
@@ -122,6 +126,12 @@ return {
 		set: function(key, value) {
 			localStorage.setItem(key, value);
 			switch (key) {
+			case "chanorder":
+				if (value == "CHANNAME") {
+					utube.chan.sortAlphabetical(utube.chan.getAll());
+				}
+				utube.updateChannels();
+				break;
 			case "theme":
 				utube.reloadTheme();
 				break;
@@ -133,9 +143,10 @@ return {
 
 		standard: {
 			channels: "[]",
-			theme: "dusk.css",
+			chanorder: "VIDDATE",
 			onvidclick: "EMBED",
 			playback: "YT",
+			theme: "dusk.css",
 			transitions: true
 		},
 
@@ -275,13 +286,17 @@ return {
 		}
 		var videos = [];
 		var rv = xml.getElementsByTagName("entry");
+		function parseDate(str) {
+			var t = str.split(/-|T|\:|\./i);
+			return new Date(t[0], parseInt(t[1]) - 1, t[2], t[3], t[4], t[5]);
+		}
 		for (var i = 0; i < rv.length; i++) {
 			var id = rv[i].getElementsByTagName("id")[0].textContent;
 			id = id.substring(id.lastIndexOf("/") + 1, id.length);
 			videos.push({
 				description: rv[i].getElementsByTagName("content")[0].textContent,
 				id: id,
-				time: new Date(rv[i].getElementsByTagName("published")[0].textContent),
+				time: parseDate(rv[i].getElementsByTagName("published")[0].textContent),
 				title: rv[i].getElementsByTagName("title")[0].textContent,
 			});
 		}
@@ -294,6 +309,7 @@ return {
 		var chanBox = document.getElementsByClassName("ut_channelbox")[0];
 		var width = 0;
 		var margin;
+		var channels = [];
 		for (var i = 0; i < ch.length; i++) {
 			var icon = ch[i].icon;
 			var name = ch[i].name;
@@ -312,7 +328,18 @@ return {
 				</a>\
 			';
 			chanElem.appendChild(vidElem);
-			utube.updateVideos(name, vidElem);
+			channels.push({
+				v: utube.updateVideos(name, vidElem),
+				e: chanElem
+			});
+		}
+		if (utube.conf.get("chanorder") == "VIDDATE") {
+			channels.sort(function(a, b){
+				return a.v.time.getTime() < b.v.time.getTime() ? 1 : -1;
+			});
+		}
+		for (var i = 0; i < channels.length; i++) {
+			var chanElem = channels[i].e;
 			chanBox.appendChild(chanElem);
 			if (i == 0) {
 				margin = chanElem.offsetLeft;
@@ -344,6 +371,7 @@ return {
 			';
 			chanElem.appendChild(vidElem);
 		}
+		return videos[0];
 	},
 
 	playVideo: function(id) {

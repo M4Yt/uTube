@@ -51,6 +51,6 @@ function addChannelByForm() {
 }
 
 function removeChannelByForm(name) {
-	utube.updateChannels();
 	utube.chan.remove(name);
+	utube.updateChannels();
 }
