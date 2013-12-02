@@ -1,7 +1,9 @@
 <h2>Configuration</h2>
 <table>
 	<tr>
-		<td><h4>When I click a video<h4></td>
+		<td>
+			<h4>When I click a video<h4>
+		</td>
 		<td>
 			<input type="radio" name="onvidclick" value="EMBED">
 				Embed</input>
@@ -22,11 +24,23 @@
 		</td>
 	</tr>
 	<tr>
-	<td><h4>Theme<h4></td>
 		<td>
-			<select id="conf_theme" onchange="utube.conf.set('theme', this.value)"></select>
+			<h4>Theme<h4>
+		</td>
+		<td>
+			<select id="conf_theme" onchange="utube.conf.set('theme', this.value);
+				utube.reloadTheme()"></select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<h4>Transitions<h4>
+		</td>
+		<td>
+			<input type="checkbox" name="transitions" />
 		</td>
 	</tr>
 </table>
 <button onclick="if(confirm('Delete channels and restore all settings to default?')) {
-	utube.conf.reset();window.location.reload(false);}" class="ut_button">Reset</button>
+	utube.conf.reset(); window.location.reload(false); }"
+	class="ut_button">Reset</button>

@@ -36,6 +36,10 @@ var utube = function() {
 		console.log(text); // TODO
 	}
 
+	function _transition() {
+		return utube.conf.get("transitions") == "true";
+	}
+
 return {
 
 	CHANNEL_DATA: "https://gdata.youtube.com/feeds/api/users/{0}",
@@ -105,7 +109,7 @@ return {
 
 		reset: function() {
 			for (key in utube.conf.standard) {
-				localStorage.setItem(key, utube.conf.standard[key])
+				utube.conf.set(key, utube.conf.standard[key]);
 			}
 		},
 
@@ -115,13 +119,22 @@ return {
 
 		set: function(key, value) {
 			localStorage.setItem(key, value);
+			switch (key) {
+			case "theme":
+				utube.reloadTheme();
+				break;
+			case "transitions":
+				updatetransitionConf(value == "true");
+				break;
+			}
 		},
 
 		standard: {
 			channels: "[]",
 			theme: "dusk.css",
 			onvidclick: "EMBED",
-			playback: "YT"
+			playback: "YT",
+			transitions: true
 		},
 
 		themes: [
@@ -154,16 +167,21 @@ return {
 		elems = menu.getElementsByTagName("input");
 		for (var i = 0; i < elems.length; i++) {
 			input = elems[i];
-			input.setAttribute("onchange", "utube.conf.set('" + input.name + "', '" + input.value + "')");
-			if (utube.conf.get(input.name) == input.value) {
-				switch (input.type) {
-					case "checkbox":
-					case "radio":
+			switch (input.type) {
+				case "checkbox":
+					if (utube.conf.get(input.name) == "true") {
 						input.checked = "checked";
-						break;
-					default:
-						break;
-				}
+					}
+					input.setAttribute("onclick", "utube.conf.set(this.name, this.checked)");
+					break;
+				case "radio":
+					if (utube.conf.get(input.name) == input.value) {
+						input.checked = "checked";
+					}
+					input.setAttribute("onchange", "utube.conf.set(this.name, this.value)");
+					break;
+				default:
+					break;
 			}
 		}
 	},
@@ -175,7 +193,7 @@ return {
 			<h2>Channels</h2>\
 			<form onsubmit="addChannelByForm(); return false">\
 				<input class="ut_addchannel_txt" type="text"\
-					pattern="[a-zA-Z0-9]{1,20}" required />\
+					pattern="[a-zA-Z0-9]{1,20}" required autofocus />\
 				<input type="submit" value="Add" />\
 			</form>\
 		';
@@ -362,7 +380,7 @@ return {
 		td.onclick = utube.removeOverlay;
 		setTimeout(function(){
 			ov.style.opacity = "1";
-		}, 20);
+		}, _transition() ? 20 : 0);
 		document.getElementsByTagName("body")[0].appendChild(ov);
 		wr.style.width = contentElem.clientWidth + "px";
 	},
@@ -370,11 +388,11 @@ return {
 	removeOverlay: function(contentElem) {
 		ov = document.getElementsByClassName("ut_overlay");
 		if (ov.length > 0) {
-			ov = ov[0]
+			ov = ov[0];
 			ov.style.opacity = "0";
 			setTimeout(function(){
 				ov.remove();
-			}, 300);
+			}, _transition() ? 300 : 0);
 		}
 	},
 
@@ -388,6 +406,7 @@ return {
 
 	onload: function() {
 		utube.updateChannels();
+		updatetransitionConf(utube.conf.get("transitions") == "true");
 
 		var cbar = document.getElementsByClassName("ut_cbar")[0];
 		var cbox = document.getElementsByClassName("ut_channelbox")[0];
@@ -414,5 +433,6 @@ return {
 
 if (!localStorage.theme) {
 	utube.conf.reset();
+} else {	
+	utube.reloadTheme();
 }
-utube.reloadTheme();
