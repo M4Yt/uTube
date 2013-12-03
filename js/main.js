@@ -40,7 +40,19 @@ var utube = function() {
 		return utube.conf.get("transitions") == "true";
 	}
 
+	function _channelbox() {
+		return document.querySelector("div.ut_channelbox");
+	}
+
+	function _footer() {
+		return document.querySelector("div.ut_footer");
+	}
+
 return {
+
+	FOOTER_MAX: 60,
+
+	FOOTER_MIN: 8,
 
 	CHANNEL_DATA: "https://gdata.youtube.com/feeds/api/users/{0}",
 
@@ -137,7 +149,7 @@ return {
 				utube.reloadTheme();
 				break;
 			case "transitions":
-				updatetransitionConf(value == "true");
+				utube.updatetransitionConf(value == "true");
 				break;
 			}
 		},
@@ -164,10 +176,7 @@ return {
 	showConfigMenu: function() {
 		menu = document.createElement("div");
 		menu.style.width = "500px";
-		var req = new XMLHttpRequest();
-		req.open("GET", "assets/settings.html", false);
-		req.send();
-		menu.innerHTML = req.responseText;
+		menu.innerHTML = document.getElementById("ut_configmenu_content").innerHTML;
 		utube.showOverlay(menu);
 		var ret = "";
 		for (var i = 0; i < utube.conf.themes.length; i++) {
@@ -203,21 +212,13 @@ return {
 	showChannelMenu: function() {
 		menu = document.createElement("div");
 		menu.style.width = "500px";
-		menu.innerHTML = '\
-			<h2>Channels</h2>\
-			<form onsubmit="addChannelByForm(); return false">\
-				<input class="ut_addchannel_txt" type="text"\
-					pattern="[a-zA-Z0-9]{1,20}" required autofocus />\
-				<input type="submit" value="Add" />\
-			</form>\
-			<div class="ut_channelmenulist">\
-		';
+		menu.innerHTML = document.getElementById("ut_channelmenu_content").innerHTML;
 		utube.showOverlay(menu);
 		utube.updateChannelMenu();
 	},
 
 	updateChannelMenu: function() {
-		var list = document.getElementsByClassName("ut_channelmenulist")[0];
+		var list = document.getElementsByClassName("ut_channelmenulist")[1];
 		list.removeAll();
 		var ch = utube.chan.getAll();
 		for (var i = 0; i < ch.length; i++) {
@@ -229,10 +230,46 @@ return {
 					<img src="' + icon + '" />\
 					<h5>' + title + '</h5>\
 					<button onclick="this.parentNode.remove();\
-						removeChannelByForm(\'' + name + '\');">Remove</button>\
+						utube.removeChannelByForm(\'' + name + '\');">Remove</button>\
 				</div>\
 			';
 		}
+	},
+
+	updatetransitionConf: function(enable) {
+		var style = document.getElementById("disabletransitions");
+		if (!enable && !style) {
+			style = document.createElement("style");
+			style.id = "disabletransitions";
+			style.setAttribute("type", "text/css");
+			style.innerHTML = "*{transition:none !important;}";
+			document.getElementsByTagName("head")[0].appendChild(style);
+		} else if (style) {
+			style.remove();
+		}
+	},
+
+	addChannelByForm: function() {
+		var inputElem = document.getElementsByClassName("ut_addchannel_txt")[1];
+		var oldErrs = document.getElementsByClassName("ut_chanconf_err");
+		for (var i = 0; i < oldErrs.length; i++) {
+			oldErrs[i].remove();
+		}
+		var err = utube.chan.add(inputElem.value);
+		if (err) {
+			var errElem = document.createElement("h6");
+			errElem.classList.add("ut_chanconf_err");
+			errElem.innerHTML = err;
+			inputElem.parentNode.appendChild(errElem);
+		} else {
+			utube.updateChannelMenu();
+			utube.updateChannels();
+		}
+	},
+
+	removeChannelByForm: function(name) {
+		utube.chan.remove(name);
+		utube.updateChannels();
 	},
 
 	reloadTheme: function() {
@@ -304,52 +341,6 @@ return {
 		return videos;
 	},
 
-	updateChannels: function() {
-		document.getElementsByClassName("ut_channelbox")[0].removeAll();
-		var ch = utube.chan.getAll();
-		var chanBox = document.getElementsByClassName("ut_channelbox")[0];
-		var width = 0;
-		var margin;
-		var channels = [];
-		for (var i = 0; i < ch.length; i++) {
-			var icon = ch[i].icon;
-			var name = ch[i].name;
-			var title = ch[i].title;
-			var url = ch[i].url;
-			var chanElem = document.createElement("div");
-			var vidElem = document.createElement("div");
-			vidElem.classList.add("ut_channel_videos");
-			chanElem.classList.add("ut_channel");
-			chanElem.innerHTML = '\
-				<a href="' + url + '" target="_blank" title="' + title + '">\
-					<div class="ut_channel_head">\
-					<img src="' + icon + '" />\
-						<h3>' + title + '</h3>\
-					</div>\
-				</a>\
-			';
-			chanElem.appendChild(vidElem);
-			channels.push({
-				v: utube.updateVideos(name, vidElem),
-				e: chanElem
-			});
-		}
-		if (utube.conf.get("chanorder") == "VIDDATE") {
-			channels.sort(function(a, b){
-				return a.v.time.getTime() < b.v.time.getTime() ? 1 : -1;
-			});
-		}
-		for (var i = 0; i < channels.length; i++) {
-			var chanElem = channels[i].e;
-			chanBox.appendChild(chanElem);
-			if (i == 0) {
-				margin = chanElem.offsetLeft;
-			}
-			width += chanElem.clientWidth + margin;
-		}
-		chanBox.style.width = width + margin + "px";
-	},
-
 	updateVideos: function(chanName, chanElem) {
 		chanElem.removeAll();
 		var videos = utube.queryVideos(chanName, 0, 0);
@@ -373,6 +364,52 @@ return {
 			chanElem.appendChild(vidElem);
 		}
 		return videos[0];
+	},
+
+	updateChannels: function() {
+		document.getElementsByClassName("ut_channelbox")[0].removeAll();
+		var channels = utube.chan.getAll();
+		var chanBox = document.getElementsByClassName("ut_channelbox")[0];
+		var width = 0;
+		var margin = 0;
+		var channelsOut = [];
+		for (var i = 0; i < channels.length; i++) {
+			var icon = channels[i].icon;
+			var name = channels[i].name;
+			var title = channels[i].title;
+			var url = channels[i].url;
+			var chanElem = document.createElement("div");
+			var vidElem = document.createElement("div");
+			vidElem.classList.add("ut_channel_videos");
+			chanElem.classList.add("ut_channel");
+			chanElem.innerHTML = '\
+				<a href="' + url + '" target="_blank" title="' + title + '">\
+					<div class="ut_channel_head">\
+						<img src="' + icon + '" />\
+						<h3>' + title + '</h3>\
+					</div>\
+				</a>\
+			';
+			chanElem.appendChild(vidElem);
+			channelsOut.push({
+				v: utube.updateVideos(name, vidElem),
+				e: chanElem
+			});
+		}
+		if (utube.conf.get("chanorder") == "VIDDATE") {
+			channelsOut.sort(function(a, b){
+				return a.v.time.getTime() < b.v.time.getTime() ? 1 : -1;
+			});
+		}
+		for (var i = 0; i < channelsOut.length; i++) {
+			var chanElem = channelsOut[i].e;
+			chanBox.appendChild(chanElem);
+			if (i == 0) {
+				margin = chanElem.offsetLeft;
+			}
+			width += chanElem.clientWidth + margin;
+		}
+		chanBox.style.width = width + margin + "px";
 	},
 
 	playVideo: function(id) {
@@ -438,6 +475,16 @@ return {
 		}
 	},
 
+	showFooter: function() {
+		_channelbox().style.height = "calc(100% - " + (122 + utube.FOOTER_MAX) + "px)";
+		_footer().style.height = utube.FOOTER_MAX + "px";
+	},
+
+	hideFooter: function() {
+		_channelbox().style.height = "calc(100% - " + (122 + utube.FOOTER_MIN) + "px)";
+		_footer().style.height = utube.FOOTER_MIN + "px";
+	},
+
 	inform: function(text) {
 		_message(text, "ut_msg_info");
 	},
@@ -449,11 +496,11 @@ return {
 	onload: function() {
 		if (!localStorage.theme) {
 			utube.conf.reset();
-		} else {
-			utube.reloadTheme();
 		}
+		utube.hideFooter();
+		utube.reloadTheme();
 		utube.updateChannels();
-		updatetransitionConf(utube.conf.get("transitions") == "true");
+		utube.updatetransitionConf(utube.conf.get("transitions") == "true");
 
 		var cbar = document.getElementsByClassName("ut_cbar")[0];
 		var cbox = document.getElementsByClassName("ut_channelbox")[0];

@@ -2,10 +2,9 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>&mu;Tube</title>
 	<script type="text/javascript" src="js/main.js"></script>
-	<script type="text/javascript" src="js/assets.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<title>&mu;Tube</title>
 </head>
 <body onload="utube.onload()">
 	<div class="ut_cbar">
@@ -18,7 +17,8 @@
 			onclick="utube.showChannelMenu()"></div>
 	</div>
 	<div class="ut_channelbox"></div>
-	<div class="ut_footer" onmouseover="showFooter()" onmouseout="hideFooter()">
+	<div class="ut_footer" onmouseover="utube.showFooter()"
+		onmouseout="utube.hideFooter()">
 		<div class="ut_footer_inner">
 			<h2 style="float:left">
 				<a href="https://github.com/PolyFloyd/uTube">More info on GitHub</a>
@@ -27,8 +27,83 @@
 			~ PolyFloyd</h5>
 		</div>
 	</div>
-	<script type="text/javascript">
-		hideFooter();
-	</script>
+	<div hidden>
+		<div id="ut_configmenu_content">
+
+			<h2>Configuration</h2>
+			<table>
+				<tr>
+					<td>
+						<h4>When I click a video<h4>
+					</td>
+					<td>
+						<input type="radio" name="onvidclick" value="EMBED">
+							Embed</input>
+						<br />
+						<input type="radio" name="onvidclick" value="EMBEDINTAB">
+							Embed in new tab</input>
+						<br />
+						<input type="radio" name="onvidclick" value="OPENYT">
+							Open on YouTube</input>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h4>Playback<h4>
+					</td>
+					<td>
+						<input type="radio" name="playback" value="YT">
+							YouTube</input>
+						<br />
+						<input type="radio" name="playback" value="NATIVE">
+							Native</input>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h4>Order channels by<h4>
+					</td>
+					<td>
+						<input type="radio" name="chanorder" value="CHANNAME">
+							Channelname</input>
+						<br />
+						<input type="radio" name="chanorder" value="VIDDATE">
+							Date Uploaded</input>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h4>Theme<h4>
+					</td>
+					<td>
+						<select id="conf_theme" onchange="utube.conf.set('theme', this.value);
+							utube.reloadTheme()"></select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h4>Transitions<h4>
+					</td>
+					<td>
+						<input type="checkbox" name="transitions" />
+					</td>
+				</tr>
+			</table>
+			<button onclick="if(confirm('Delete channels and restore all settings to default?')) {
+				utube.conf.reset();}" class="ut_button">Reset</button>
+
+		</div>
+		<div id="ut_channelmenu_content">
+
+			<h2>Channels</h2>
+			<form onsubmit="utube.addChannelByForm(); return false">
+				<input class="ut_addchannel_txt" type="text"
+					pattern="[a-zA-Z0-9]{1,20}" required autofocus />
+				<input type="submit" value="Add" />
+			</form>
+			<div class="ut_channelmenulist"></div>
+
+		</div>
+	</div>
 </body>
 </html>
