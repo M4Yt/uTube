@@ -168,6 +168,12 @@ return {
 				source: "dusk.css",
 				name: "Dusk",
 				description: "A dark gradient infested theme"
+			},
+
+			{
+				source: "mickeysoft.css",
+				name: "MickeySoft",
+				description: "Dunno"
 			}
 		]
 

@@ -1,0 +1,184 @@
+*
+{
+	font-family: Liberation Sans;
+	color: #000;
+}
+
+body
+{
+	background-color: #00787F;
+}
+
+a
+{
+	text-decoration: none;
+}
+
+input, button, select, option
+{
+	font-size: 14px;
+}
+
+option
+{
+	border: none;
+}
+
+button, input, select, .ut_cbar, .ut_channel, .ut_overlay_wrapper, .ut_footer
+{
+	border: 2px solid #fff;
+	background-color: #bfb8bf;
+	border-bottom-color: #171717;
+	border-right-color: #171717;
+}
+
+input[type="text"]
+{
+	border: 2px solid #fff;
+	border-top-color: #171717;
+	border-left-color: #171717;
+}
+
+.ut_cbar
+{
+	height: 40px;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAAgCAMAAACijUGCAAAAP1BMVEX/+P8AAH8AeAD/+AD/AAAAAP9/eAAA+AB/AAAA+P8AAL//AP9/AH8AuL+/uAC/AAB/eH8AeH8AAAC/uL/f2N9DA7q9AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfdDAMPHBEyqt0sAAAAgklEQVQ4y7XT0QrAIAgF0CCl9/7/Y0eizqZsFu0+FLQzdotWSpQuKW/5VN3nsJoprwPQ1Jq4BTWG+wsAqtglVVB5WwG49mxM//NqDKB1gtPPKQpIeBWRplrXFKJrj6iK3Xk1BtSH24qCErtDs8ukCm+0O/sFNd9o8+If6lkn/N1z6gJY2i6BBpb/VgAAAABJRU5ErkJggg==') no-repeat 4px 4px, #bfb8bf;
+}
+
+.ut_logo
+{
+	float: left;
+	margin-left: 44px;
+}
+
+.ut_cbar_button
+{
+	width: 128px;
+	height: 38px;
+	margin: 0 2px;
+	float: right;
+}
+
+.ut_cbar_button h3
+{
+	margin: 8px 36px;
+	color: inherit;
+}
+
+
+.ut_cbar_button:hover
+{
+	background-color: #00007f;
+	color: #fff;
+}
+
+.ut_cbar_settings
+{
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAM1BMVEUAeH/f2N9/AH//AP9/eH//+P8AAAC/uL8AeAAAAP8AAH//AAAA+AB/AAAA+P9/eAD/+AAAwzSvAAAAAXRSTlMAQObYZgAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90MAw8yGEBxbKQAAADRSURBVDjLpZLBAoMgDEM52HJM//9rl1QQcbrploOofaYpUpYzuZdNS33XD8AwtyvAU7VeA0bVf4H6sQWLbj3uqYPThFOk008AgG0/BHDZAWYIo4c2agVcz/uthkUYOgDyEc8Ah1lYBwgH4HNIxt9loN0AICnU5sD7DK1xbwGh/uw7tVAOjboooCTIm1T0fD0AXqw7acVTQKHo6srDmmf/DujvcYzIT6yvwDpFi4UWCu3LtM+d+go0JeAtWF/LAdCLXvAjUNox2wrTsbsFDG6uvABhMhiTeqbC9AAAAABJRU5ErkJggg==') no-repeat 4px 4px;
+}
+
+.ut_cbar_channels
+{
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAM1BMVEUAeH/f2N9/AH//AP9/eH//+P8AAAC/uL8AeAAAAP8AAH//AAAA+AB/AAAA+P9/eAD/+AAAwzSvAAAAAXRSTlMAQObYZgAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90MAw8zEFex1dcAAABLSURBVDjL7c47CgAgDERBi7h7/xuLoEiCn4hFGl89ZJOSJ7Hdg6wT4ABEsAf1yCvQf1iAlgLsdUVieSEKUPcnAiceAacNgEV+sKsA+XQOiso6+98AAAAASUVORK5CYII=') no-repeat 0 4px;
+}
+
+.ut_channelbox
+{
+	height: calc(100% - 104px);
+	padding: 40px;
+}
+
+.ut_channel
+{
+	width: 256px;
+	margin-right: 40px;
+	overflow: hidden;
+}
+
+.ut_channel_head
+{
+	height: 20px;
+	padding: 2px;
+	background-color: #00007f;
+	box-shadow: inset 0 0 0 2px #bfb8bf;
+}
+
+.ut_channel_head img
+{
+	margin: 2px;
+	width: 16px;
+	height: 16px;
+	float: left;
+}
+
+.ut_channel_head h3
+{
+	margin: 3px 24px;
+	color: #fff;
+	font-size: 13px;
+}
+
+.ut_channel_videos
+{
+	width: calc(100% + 30px);
+	height: calc(100% - 26px);
+	overflow: auto;
+}
+
+.ut_list_video
+{
+	width: calc(100% - 22px);
+	margin: 2px;
+	cursor: pointer;
+}
+
+.ut_list_video h5
+{
+	display: none;
+}
+
+.ut_list_video img
+{
+	width: 100%;
+}
+
+.ut_overlay_wrapper
+{
+	padding: 2px;
+}
+
+.ut_overlay_content > h2 {
+	padding-left: 2px;
+	background-color: #00007f;
+	color: #fff;
+	font-size: 13px;
+}
+
+.ut_embedvideo
+{
+	border: none;
+}
+
+.ut_chanconf_item
+{
+	width: 100%;
+	height: 40px;
+}
+
+.ut_chanconf_item > *
+{
+	margin-top: 12px;
+	float: left;
+}
+
+.ut_chanconf_item img
+{
+	width: 32px;
+	height: 32px;
+	margin: 4px;
+}
+
+.ut_chanconf_item button
+{
+	float: right;
+}

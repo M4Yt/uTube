@@ -59,6 +59,11 @@ option
 	transition: box-shadow 0.3s;
 }
 
+.ut_cbar_button h3
+{
+	display: none;
+}
+
 .ut_cbar_button:hover
 {
 	box-shadow: inset 0 0 8px 0 #222;
