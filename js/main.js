@@ -33,7 +33,7 @@ Storage.prototype.getObject = function(key) {
 var utube = function() {
 
 	function _message(text, messageClass) {
-		console.log(text); // TODO
+		alert(text); // TODO
 	}
 
 	function _transition() {
@@ -125,9 +125,12 @@ return {
 
 	conf: {
 
-		reset: function() {
-			for (key in utube.conf.standard) {
-				utube.conf.set(key, utube.conf.standard[key]);
+		reset: function(source) {
+			if (!source) {
+				source = utube.conf.standard;
+			}
+			for (key in source) {
+				utube.conf.set(key, source[key], true);
 			}
 			window.location.reload(false);
 		},
@@ -136,22 +139,39 @@ return {
 			return localStorage.getItem(key);
 		},
 
-		set: function(key, value) {
+		set: function(key, value, noapply) {
 			localStorage.setItem(key, value);
-			switch (key) {
-			case "chanorder":
-				if (value == "CHANNAME") {
-					utube.chan.sortAlphabetical(utube.chan.getAll());
+			if (!noapply) {
+				switch (key) {
+				case "channels":
+					break;
+				case "chanorder":
+					if (value == "CHANNAME") {
+						utube.chan.sortAlphabetical(utube.chan.getAll());
+					}
+					utube.updateChannels();
+					break;
+				case "theme":
+					utube.reloadTheme();
+					break;
+				case "transitions":
+					utube.updatetransitionConf(value == "true");
+					break;
 				}
-				utube.updateChannels();
-				break;
-			case "theme":
-				utube.reloadTheme();
-				break;
-			case "transitions":
-				utube.updatetransitionConf(value == "true");
-				break;
 			}
+		},
+
+		exportAll: function() {
+			return JSON.stringify(localStorage);
+		},
+
+		importAll: function(base64) {
+			var data = prompt("Copy exported settings below");
+			if (data) {
+				return true;
+			}
+			utube.conf.reset(JSON.parse(data));
+			return true;
 		},
 
 		standard: {
