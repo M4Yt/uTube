@@ -117,6 +117,7 @@ return {
 			for (key in utube.conf.standard) {
 				utube.conf.set(key, utube.conf.standard[key]);
 			}
+			window.location.reload(false);
 		},
 
 		get: function(key) {
@@ -446,6 +447,11 @@ return {
 	},
 
 	onload: function() {
+		if (!localStorage.theme) {
+			utube.conf.reset();
+		} else {
+			utube.reloadTheme();
+		}
 		utube.updateChannels();
 		updatetransitionConf(utube.conf.get("transitions") == "true");
 
@@ -471,9 +477,3 @@ return {
 	}
 
 }}();
-
-if (!localStorage.theme) {
-	utube.conf.reset();
-} else {	
-	utube.reloadTheme();
-}
