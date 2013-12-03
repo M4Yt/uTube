@@ -389,7 +389,7 @@ return {
 			';
 			chanElem.appendChild(vidElem);
 		}
-		return videos[0];
+		return videos.length > 0 ? videos[0] : {};
 	},
 
 	updateChannels: function() {
@@ -424,7 +424,7 @@ return {
 		}
 		if (utube.conf.get("chanorder") == "VIDDATE") {
 			channelsOut.sort(function(a, b){
-				return a.v.time.getTime() < b.v.time.getTime() ? 1 : -1;
+				return a.v.time && b.v.time && a.v.time.getTime() < b.v.time.getTime() ? 1 : -1;
 			});
 		}
 		for (var i = 0; i < channelsOut.length; i++) {
