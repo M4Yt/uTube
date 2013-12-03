@@ -533,7 +533,7 @@ return {
 		var left = 0;
 		var max = -cbox.clientWidth + window.innerWidth;
 		function scrollChannels(e) {
-			left += e.wheelDelta || -e.detail * 40;
+			left += e.wheelDelta / 2 || -e.detail * 20;
 			if (left > 0) {
 				left = 0;
 			} else if (left < max) {
