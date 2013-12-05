@@ -315,6 +315,7 @@ return {
 		link.setAttribute("type", "text/css");
 		link.setAttribute("href", "css/theme/" + utube.conf.get("theme"));
 		link.setAttribute("class", "ut_themesource");
+		link.setAttribute("onload", "utube.setFooterHeight(utube.FOOTER_MIN)");
 		document.getElementsByTagName("head")[0].appendChild(link);
 	},
 
@@ -530,9 +531,6 @@ return {
 		utube.reloadTheme();
 		utube.updateChannels();
 		utube.updateTransitionRule(_shouldTransition());
-		setTimeout(function(){
-			utube.setFooterHeight(utube.FOOTER_MIN);
-		}, 0);
 
 		var cbar = _cbar();
 		var cbox = _channelbox();
