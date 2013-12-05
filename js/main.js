@@ -370,7 +370,10 @@ return {
 				id: id,
 				time: parseDate(rv[i].getElementsByTagName("published")[0].textContent),
 				title: rv[i].getElementsByTagName("title")[0].textContent,
+				duration: (rv[i].getElementsByTagName("yt:duration")[0] ||
+					rv[i].getElementsByTagName("duration")[0]).getAttribute("seconds"),
 			});
+			console.log(utube.timeString(videos[i].duration));
 		}
 		return videos;
 	},
@@ -385,6 +388,7 @@ return {
 			return {};
 		}
 		for (var i = 0; i < videos.length; i++) {
+			var duration = utube.timeString(videos[i].duration);
 			var id = videos[i].id;
 			var thumbnail = utube.VID_THUMBNAIL_URL.format(id);
 			var title = videos[i].title;
@@ -394,6 +398,7 @@ return {
 			vidElem.title = title;
 			vidElem.innerHTML = '\
 				<h5>' + title + '</h5>\
+				<p>' + duration + '</p>\
 				<img src="' + thumbnail + '" />\
 			';
 			chanElem.appendChild(vidElem);
@@ -551,6 +556,26 @@ return {
 		}
 		cbar.addEventListener("mousewheel", scrollChannels, false);
 		cbar.addEventListener("DOMMouseScroll", scrollChannels, false);
+	},
+
+	timeString: function(seconds) {
+		seconds = parseInt(seconds);
+		var s = "";
+		var hasHours = false;
+		if (hasHours = seconds > 3600) {
+			s += Math.round(seconds / 3600) + ":";
+			seconds %= 3600;
+		}
+		var min = Math.round(seconds / 60 - 0.5);
+		if (min < 10 && hasHours) {
+			s += "0";
+		}
+		s += min + ":";
+		var sec = seconds % 60;
+		if  (sec < 10) {
+			s += "0";
+		}
+		return s + sec;
 	}
 
 }}();

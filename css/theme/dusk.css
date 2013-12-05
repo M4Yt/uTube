@@ -137,12 +137,23 @@ option
 {
 	width: calc(100% - 40px);
 	margin: 10px;
+	position: relative;
 	cursor: pointer;
 }
 
 .ut_list_video h5
 {
 	display: none;
+}
+
+.ut_list_video p
+{
+	padding: 0 2px;
+	bottom: 3px;
+	right: 0;
+	position: absolute;
+	border-radius: 4px 0;
+	background-color: rgba(0, 0, 0, 0.7);
 }
 
 .ut_list_video img

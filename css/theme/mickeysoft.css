@@ -129,12 +129,22 @@ button:active, select:active, input[type="text"], input[type="submit"]:active
 {
 	width: calc(100% - 22px);
 	margin: 2px;
+	position: relative;
 	cursor: pointer;
 }
 
 .ut_list_video h5
 {
 	display: none;
+}
+
+.ut_list_video p
+{
+	padding: 0 2px;
+	bottom: 3px;
+	right: 0;
+	position: absolute;
+	background-color: #bfb8bf;
 }
 
 .ut_list_video img
