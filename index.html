@@ -95,8 +95,8 @@
 			</table>
 			<button onclick="if(confirm('Delete channels and restore all settings to default?')) {
 				utube.conf.reset();}" class="ut_button">Reset</button>
-			<button onclick="if(!utube.conf.importAll()){utube.error('Input not accepted :(');}"
-				class="ut_button">Import</button>
+			<button onclick="if(!utube.conf.importAll(prompt('Copy exported settings below'))){
+				utube.error('Input not accepted :(');}" class="ut_button">Import</button>
 			<button onclick="prompt('Exported channels and settings',
 				utube.conf.exportAll())" class="ut_button">Export</button>
 

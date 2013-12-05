@@ -169,13 +169,16 @@ return {
 			return JSON.stringify(localStorage);
 		},
 
-		importAll: function(base64) {
-			var data = prompt("Copy exported settings below");
-			if (data) {
+		importAll: function(data) {
+			if (!data) {
 				return true;
 			}
-			utube.conf.reset(JSON.parse(data));
-			return true;
+			try {
+				utube.conf.reset(JSON.parse(data));
+				return true;
+			} catch (err) {
+				return false;
+			}
 		},
 
 		standard: {
