@@ -36,8 +36,12 @@ var utube = function() {
 		alert(text); // TODO
 	}
 
-	function _transition() {
+	function _shouldTransition() {
 		return utube.conf.get("transitions") == "true";
+	}
+
+	function _cbar() {
+		return document.querySelector("div.ut_cbar");
 	}
 
 	function _channelbox() {
@@ -100,7 +104,7 @@ return {
 				var channels = utube.chan.getAll();
 				data = utube.queryChannel(channelName);
 				if (data.error) {
-					return "The channel could not be added! (" + data.error + ")";
+					return "The channel could not be added: " + data.error;
 				}
 				channels.push(data);
 				utube.chan.sortAlphabetical(channels);
@@ -155,7 +159,7 @@ return {
 					utube.reloadTheme();
 					break;
 				case "transitions":
-					utube.updatetransitionConf(value == "true");
+					utube.updateTransitionRule(value == "true");
 					break;
 				}
 			}
@@ -262,7 +266,7 @@ return {
 		}
 	},
 
-	updatetransitionConf: function(enable) {
+	updateTransitionRule: function(enable) {
 		var style = document.getElementById("disabletransitions");
 		if (!enable && !style) {
 			style = document.createElement("style");
@@ -328,7 +332,7 @@ return {
 			thumbElem = xml.getElementsByTagName("thumbnail");
 		}
 		return {
-			name: channelName,
+			name: channelName.toLowerCase(),
 			icon: thumbElem[0].getAttribute("url"),
 			title: xml.getElementsByTagName("title")[0].textContent,
 			url: utube.CHANNEL_URL.format(channelName)
@@ -374,6 +378,7 @@ return {
 			var err = document.createElement("p");
 			err.innerHTML = videos.error;
 			chanElem.appendChild(err);
+			return {};
 		}
 		for (var i = 0; i < videos.length; i++) {
 			var id = videos[i].id;
@@ -393,12 +398,12 @@ return {
 	},
 
 	updateChannels: function() {
-		document.getElementsByClassName("ut_channelbox")[0].removeAll();
 		var channels = utube.chan.getAll();
-		var chanBox = document.getElementsByClassName("ut_channelbox")[0];
+		var chanBox = _channelbox();
 		var width = 0;
 		var margin = 0;
 		var channelsOut = [];
+		chanBox.removeAll();
 		for (var i = 0; i < channels.length; i++) {
 			var icon = channels[i].icon;
 			var name = channels[i].name;
@@ -485,7 +490,7 @@ return {
 		td.onclick = utube.removeOverlay;
 		setTimeout(function(){
 			ov.style.opacity = "1";
-		}, _transition() ? 20 : 0);
+		}, _shouldTransition() ? 20 : 0);
 		document.getElementsByTagName("body")[0].appendChild(ov);
 		wr.style.width = contentElem.clientWidth + "px";
 	},
@@ -497,18 +502,14 @@ return {
 			ov.style.opacity = "0";
 			setTimeout(function(){
 				ov.remove();
-			}, _transition() ? 300 : 0);
+			}, _shouldTransition() ? 300 : 0);
 		}
 	},
 
-	showFooter: function() {
-		_channelbox().style.height = "calc(100% - " + (122 + utube.FOOTER_MAX) + "px)";
-		_footer().style.height = utube.FOOTER_MAX + "px";
-	},
-
-	hideFooter: function() {
-		_channelbox().style.height = "calc(100% - " + (122 + utube.FOOTER_MIN) + "px)";
-		_footer().style.height = utube.FOOTER_MIN + "px";
+	setFooterHeight: function(height) {
+		_channelbox().style.height = "calc(100% - " +
+			(82 + height + _cbar().clientHeight) + "px)";
+		_footer().style.height = height + "px";
 	},
 
 	inform: function(text) {
@@ -523,13 +524,15 @@ return {
 		if (!localStorage.theme) {
 			utube.conf.reset();
 		}
-		utube.hideFooter();
 		utube.reloadTheme();
 		utube.updateChannels();
-		utube.updatetransitionConf(utube.conf.get("transitions") == "true");
+		utube.updateTransitionRule(_shouldTransition());
+		setTimeout(function(){
+			utube.setFooterHeight(utube.FOOTER_MIN);
+		}, 0);
 
-		var cbar = document.getElementsByClassName("ut_cbar")[0];
-		var cbox = document.getElementsByClassName("ut_channelbox")[0];
+		var cbar = _cbar();
+		var cbox = _channelbox();
 		var left = 0;
 		var max = -cbox.clientWidth + window.innerWidth;
 		function scrollChannels(e) {

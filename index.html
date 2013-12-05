@@ -2,15 +2,13 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<script type="text/javascript" src="js/main.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<script type="text/javascript" src="js/main.js"></script>
 	<title>&mu;Tube</title>
 </head>
 <body onload="utube.onload()">
 	<div class="ut_cbar">
-		<div class="ut_logo">
-			<h1>&mu;Tube</h1>
-		</div>
+		<h1>&mu;Tube</h1>
 		<div class="ut_cbar_button ut_cbar_settings"
 			onclick="utube.showConfigMenu()">
 			<h3>Config</h3>
@@ -21,14 +19,16 @@
 		</div>
 	</div>
 	<div class="ut_channelbox"></div>
-	<div class="ut_footer" onmouseover="utube.showFooter()"
-		onmouseout="utube.hideFooter()">
+	<div class="ut_footer" onmouseover="utube.setFooterHeight(utube.FOOTER_MAX)"
+		onmouseout="utube.setFooterHeight(utube.FOOTER_MIN)">
 		<div class="ut_footer_inner">
 			<h2 style="float:left">
-				<a href="https://github.com/PolyFloyd/uTube">More info on GitHub</a>
+				<a href="https://github.com/PolyFloyd/uTube">GitHub</a>
 			</h2>
-			<h5 style="float:right">&quot;I don't know what else to put here&quot;<br />
-			~ PolyFloyd</h5>
+			<h5 style="float:right">
+				&quot;I don't know what else to put here&quot;<br />
+				~ PolyFloyd
+			</h5>
 		</div>
 	</div>
 	<div hidden>
