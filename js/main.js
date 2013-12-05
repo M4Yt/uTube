@@ -373,7 +373,6 @@ return {
 				duration: (rv[i].getElementsByTagName("yt:duration")[0] ||
 					rv[i].getElementsByTagName("duration")[0]).getAttribute("seconds"),
 			});
-			console.log(utube.timeString(videos[i].duration));
 		}
 		return videos;
 	},
@@ -561,8 +560,8 @@ return {
 	timeString: function(seconds) {
 		seconds = parseInt(seconds);
 		var s = "";
-		var hasHours = false;
-		if (hasHours = seconds > 3600) {
+		var hasHours = seconds > 3600;
+		if (hasHours) {
 			s += Math.round(seconds / 3600) + ":";
 			seconds %= 3600;
 		}
