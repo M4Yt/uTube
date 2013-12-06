@@ -135,7 +135,7 @@ option
 
 .ut_list_video
 {
-	width: calc(100% - 40px);
+	width: calc(100% - 38px);
 	margin: 10px;
 	position: relative;
 	cursor: pointer;

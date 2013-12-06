@@ -21,7 +21,7 @@ html, body
 	position: relative;
 	transition: height 0.3s;
 	white-space: nowrap;
-	overflow-x: scroll;
+	overflow-x: auto;
 	overflow-y: hidden;
 }
 
