@@ -7,7 +7,6 @@
 html, body
 {
 	height: 100%;
-	overflow: hidden;
 }
 
 .ut_cbar
@@ -21,12 +20,20 @@ html, body
 {
 	position: relative;
 	transition: height 0.3s;
+	white-space: nowrap;
+	overflow-x: scroll;
+	overflow-y: hidden;
 }
 
 .ut_channel
 {
 	height: 100%;
-	float: left;
+	display: inline-block;
+}
+
+.ut_channel_videos
+{
+	overflow: hidden;
 }
 
 .ut_overlay
