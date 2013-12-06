@@ -48,15 +48,7 @@ var utube = function() {
 		return document.querySelector("div.ut_channelbox");
 	}
 
-	function _footer() {
-		return document.querySelector("div.ut_footer");
-	}
-
 return {
-
-	FOOTER_MAX: 60,
-
-	FOOTER_MIN: 8,
 
 	CHANNEL_DATA: "https://gdata.youtube.com/feeds/api/users/{0}",
 
@@ -315,7 +307,6 @@ return {
 		link.setAttribute("type", "text/css");
 		link.setAttribute("href", "css/theme/" + utube.conf.get("theme"));
 		link.setAttribute("class", "ut_themesource");
-		link.setAttribute("onload", "utube.setFooterHeight(utube.FOOTER_MIN)");
 		document.getElementsByTagName("head")[0].appendChild(link);
 	},
 
@@ -512,12 +503,6 @@ return {
 				ov.remove();
 			}, _shouldTransition() ? 300 : 0);
 		}
-	},
-
-	setFooterHeight: function(height) {
-		_channelbox().style.height = "calc(100% - " +
-			(82 + height + _cbar().clientHeight) + "px)";
-		_footer().style.height = height + "px";
 	},
 
 	inform: function(text) {

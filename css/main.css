@@ -29,19 +29,6 @@ html, body
 	float: left;
 }
 
-.ut_footer
-{
-	height: 0px;
-	width: 100%;
-	overflow: hidden;
-	transition: height 0.3s;
-}
-
-.ut_footer_inner
-{
-	padding: 8px;
-}
-
 .ut_overlay
 {
 	width: 100%;
