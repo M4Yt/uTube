@@ -130,6 +130,7 @@ return {
 	conf: {
 
 		reset: function(source) {
+			localStorage.clear();
 			if (!source) {
 				source = utube.conf.standard;
 			}
@@ -315,7 +316,6 @@ return {
 		link.setAttribute("type", "text/css");
 		link.setAttribute("href", "css/theme/" + utube.conf.get("theme"));
 		link.setAttribute("class", "ut_themesource");
-		link.setAttribute("onload", "utube.setFooterHeight(utube.FOOTER_MIN)");
 		document.getElementsByTagName("head")[0].appendChild(link);
 	},
 
@@ -392,7 +392,11 @@ return {
 			var thumbnail = utube.VID_THUMBNAIL_URL.format(id);
 			var title = videos[i].title;
 			var vidElem = document.createElement("div");
+			vidElem.id = "vid_" + id;
 			vidElem.classList.add("ut_list_video");
+			if (utube.hasWatched(id)) {
+				vidElem.classList.add("ut_video_watched");
+			}
 			vidElem.setAttribute("onclick", 'utube.playVideo(\'' + id + '\')');
 			vidElem.title = title;
 			vidElem.innerHTML = '\
@@ -477,6 +481,16 @@ return {
 				window.open(utube.VID_PAGE_URL.format(id));
 				break;
 		}
+		utube.markAsWatched(id);
+	},
+
+	markAsWatched: function(id) {
+		utube.conf.set("watched_" + id, true);
+		document.getElementById("vid_" + id).classList.add("ut_video_watched");
+	},
+
+	hasWatched: function(id) {
+		return utube.conf.get("watched_" + id) == "true";
 	},
 
 	showOverlay: function(contentElem) {
@@ -512,12 +526,6 @@ return {
 				ov.remove();
 			}, _shouldTransition() ? 300 : 0);
 		}
-	},
-
-	setFooterHeight: function(height) {
-		_channelbox().style.height = "calc(100% - " +
-			(82 + height + _cbar().clientHeight) + "px)";
-		_footer().style.height = height + "px";
 	},
 
 	inform: function(text) {

@@ -162,6 +162,11 @@ option
 	border-radius: 4px;
 }
 
+.ut_video_watched
+{
+	opacity: 0.6;
+}
+
 .ut_footer
 {
 	background-color: #181818;
