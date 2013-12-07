@@ -24,7 +24,7 @@ option
 	border: none;
 }
 
-button, input, select, .ut_cbar, .ut_channel, .ut_overlay_wrapper, .ut_footer
+button, input, select, .ut_cbar, .ut_channel, .ut_overlay_wrapper
 {
 	border: 2px solid #fff;
 	background-color: #bfb8bf;

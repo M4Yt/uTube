@@ -48,15 +48,12 @@ var utube = function() {
 		return document.querySelector("div.ut_channelbox");
 	}
 
-	function _footer() {
-		return document.querySelector("div.ut_footer");
+	function _addMousewheel(elem, callback) {
+		elem.addEventListener("mousewheel", callback, false);
+		elem.addEventListener("DOMMouseScroll", callback, false);
 	}
 
 return {
-
-	FOOTER_MAX: 60,
-
-	FOOTER_MIN: 8,
 
 	CHANNEL_DATA: "https://gdata.youtube.com/feeds/api/users/{0}",
 
@@ -377,13 +374,13 @@ return {
 		return videos;
 	},
 
-	updateVideos: function(chanName, chanElem) {
-		chanElem.removeAll();
+	updateVideos: function(chanName, vidListElem) {
+		vidListElem.removeAll();
 		var videos = utube.queryVideos(chanName, 0, 0);
 		if (videos.error) {
 			var err = document.createElement("p");
 			err.innerHTML = videos.error;
-			chanElem.appendChild(err);
+			vidListElem.appendChild(err);
 			return {};
 		}
 		for (var i = 0; i < videos.length; i++) {
@@ -404,7 +401,7 @@ return {
 				<p>' + duration + '</p>\
 				<img src="' + thumbnail + '" />\
 			';
-			chanElem.appendChild(vidElem);
+			vidListElem.appendChild(vidElem);
 		}
 		return videos.length > 0 ? videos[0] : {};
 	},
@@ -412,8 +409,6 @@ return {
 	updateChannels: function() {
 		var channels = utube.chan.getAll();
 		var chanBox = _channelbox();
-		var width = 0;
-		var margin = 0;
 		var channelsOut = [];
 		chanBox.removeAll();
 		for (var i = 0; i < channels.length; i++) {
@@ -424,6 +419,7 @@ return {
 			var chanElem = document.createElement("div");
 			var vidElem = document.createElement("div");
 			vidElem.classList.add("ut_channel_videos");
+			_addMousewheel(vidElem, utube.scrollVideos);
 			chanElem.classList.add("ut_channel");
 			chanElem.innerHTML = '\
 				<a href="' + url + '" target="_blank" title="' + title + '">\
@@ -447,12 +443,7 @@ return {
 		for (var i = 0; i < channelsOut.length; i++) {
 			var chanElem = channelsOut[i].e;
 			chanBox.appendChild(chanElem);
-			if (i == 0) {
-				margin = chanElem.offsetLeft;
-			}
-			width += chanElem.clientWidth + margin;
 		}
-		chanBox.style.width = width + margin + "px";
 	},
 
 	playVideo: function(id) {
@@ -543,26 +534,21 @@ return {
 		utube.reloadTheme();
 		utube.updateChannels();
 		utube.updateTransitionRule(_shouldTransition());
-
-		var cbar = _cbar();
 		var cbox = _channelbox();
-		var left = 0;
-		var max = -cbox.clientWidth + window.innerWidth;
 		function scrollChannels(e) {
-			left += e.wheelDelta / 2 || -e.detail * 20;
-			if (left > 0) {
-				left = 0;
-			} else if (left < max) {
-				left = max;
-			}
-			if (cbox.clientWidth > window.innerWidth) {
-				cbox.style.left = left + "px";
-			} else {
-				cbox.style.left = "0px";
-			}
+			cbox.scrollLeft -= e.wheelDelta / 2 || -e.detail * 20;
 		}
-		cbar.addEventListener("mousewheel", scrollChannels, false);
-		cbar.addEventListener("DOMMouseScroll", scrollChannels, false);
+		_addMousewheel(_cbar(), scrollChannels);
+		_addMousewheel(cbox, scrollChannels);
+	},
+
+	scrollVideos: function(e) {
+		var n = e.target;
+		for (; n && !n.classList.contains("ut_channel_videos"); n = n.parentNode);
+		if (n) {
+			e.target.parentNode.scrollTop -= e.wheelDelta / 2 || -e.detail * 20;
+		}
+		e.stopPropagation();
 	},
 
 	timeString: function(seconds) {
