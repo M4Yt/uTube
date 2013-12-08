@@ -5,6 +5,11 @@ String.prototype.format = String.prototype.format || function() {
 	});
 };
 
+
+String.prototype.startsWith =String.prototype.startsWith || function(str) {
+	return this.indexOf(str) == 0;
+};
+
 Array.prototype.remove = function(what) {
 	while ((i = this.indexOf(what)) !== -1) {
 		this.splice(i, 1);
@@ -472,7 +477,9 @@ return {
 				window.open(utube.VID_PAGE_URL.format(id));
 				break;
 		}
-		utube.markAsWatched(id);
+		if (utube.conf.get("markwatched") == "true") {
+			utube.markAsWatched(id);
+		}
 	},
 
 	markAsWatched: function(id) {
@@ -482,6 +489,18 @@ return {
 
 	hasWatched: function(id) {
 		return utube.conf.get("watched_" + id) == "true";
+	},
+
+	unwatchAll: function() {
+		for (var o in localStorage) {
+			if (o.startsWith("watched_")) {
+				localStorage.removeItem(o);
+			}
+		}
+		var v = document.getElementsByClassName("ut_video_watched");
+		for (var i = v.length - 1; i >= 0; i--) {
+			v[i].classList.remove("ut_video_watched");
+		};
 	},
 
 	showOverlay: function(contentElem) {
