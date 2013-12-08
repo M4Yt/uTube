@@ -190,7 +190,8 @@ return {
 			onvidclick: "EMBED",
 			playback: "YT",
 			theme: "dusk.css",
-			transitions: true
+			transitions: true,
+			markwatched: true
 		},
 
 		themes: [
