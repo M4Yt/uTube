@@ -48,3 +48,8 @@ html, body
 {
 	margin: 0 auto;
 }
+
+.ut_channelmenu_list
+{
+	overflow: auto;
+}

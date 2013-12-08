@@ -249,13 +249,16 @@ return {
 	showChannelMenu: function() {
 		menu = document.createElement("div");
 		menu.style.width = "500px";
+		menu.classList.add("ut_channelmenu");
 		menu.innerHTML = document.getElementById("ut_channelmenu_content").innerHTML;
+		menu.getElementsByClassName("ut_channelmenu_list")[0].style.height =
+			(document.documentElement.clientHeight - 200) + "px";
 		utube.showOverlay(menu);
 		utube.updateChannelMenu();
 	},
 
 	updateChannelMenu: function() {
-		var list = document.getElementsByClassName("ut_channelmenulist")[1];
+		var list = document.getElementsByClassName("ut_channelmenu_list")[1];
 		list.removeAll();
 		var ch = utube.chan.getAll();
 		for (var i = 0; i < ch.length; i++) {
