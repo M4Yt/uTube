@@ -17,3 +17,11 @@ If something doesn't work, try some of the following:
 
  *  Use another browser. I only tested this in Firefox and Chromium.
  *  Disable NoScript, Request Policy and whatnot.
+
+### License
+µTube is available under the MIT license.
+However, this does not apply to the following file:
+
+ *  [js/viewtube.js](js/viewtube.js)
+
+    Which is copyrighted by Sebastian Luncan under GPLv3.
