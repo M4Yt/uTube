@@ -11,7 +11,7 @@ String.prototype.format = String.prototype.format || function() {
 };
 
 
-String.prototype.startsWith =String.prototype.startsWith || function(str) {
+String.prototype.startsWith = String.prototype.startsWith || function(str) {
 	return this.indexOf(str) == 0;
 };
 
@@ -193,8 +193,10 @@ return {
 			channels: "[]",
 			chanorder: "VIDDATE",
 			onvidclick: "EMBED",
-			playback: "YT",
 			theme: "dusk.css",
+			nativequeryurl: "http://localhost/uTube/videoinfo.php?id=%ID",
+			nativeformat: "MP4",
+			nativevideo: false,
 			transitions: true,
 			markwatched: true
 		},
@@ -228,11 +230,15 @@ return {
 			ret += "<option" + sel + " value=\"" + theme.source + "\" title=\"" +
 				theme.description + "\">" + theme.name + "</option>";
 		}
-		menu.getElementsByTagName("select")[0].innerHTML = ret;
+		menu.getElementsByTagName("select")[1].innerHTML = ret;
 		elems = menu.getElementsByTagName("input");
 		for (var i = 0; i < elems.length; i++) {
 			input = elems[i];
 			switch (input.type) {
+				case "text":
+					input.value = utube.conf.get(input.name);
+					input.setAttribute("onchange", "utube.conf.set(this.name, this.value)");
+					break;
 				case "checkbox":
 					if (utube.conf.get(input.name) == "true") {
 						input.checked = "checked";
@@ -463,7 +469,24 @@ return {
 	playVideo: function(id) {
 		switch (utube.conf.get("onvidclick")) {
 			case "EMBED":
-				var frame = document.createElement("iframe");
+				var embedElem;
+				if (utube.conf.get("nativevideo") == "true") {
+					embedElem = document.createElement("video");
+					embedElem.controls = "controls";
+					embedElem.autoplay = "autoplay";
+					vidList = vt.ytVideoList(utube.conf.get("nativequeryurl").replace("%ID", id));
+					for (var v in vidList) {
+						if (v.indexOf('MP4') != -1) {
+							embedElem.src = vidList[v];
+							break;
+						}
+					}
+				} else {
+					embedElem = document.createElement("iframe");
+					embedElem.classList.add("ut_embedvideo");
+					embedElem.src = utube.VID_EMDED_URL.format(id);
+					embedElem.setAttribute("allowfullscreen", "allowfullscreen");
+				}
 				var height = window.innerHeight - 100;
 				var width = window.innerWidth - 100;
 				var w = height * (16 / 9);
@@ -472,12 +495,9 @@ return {
 					w = width;
 					h = w / (16 / 9);
 				}
-				frame.width = w;
-				frame.height = h;
-				frame.classList.add("ut_embedvideo");
-				frame.src = utube.VID_EMDED_URL.format(id);
-				frame.setAttribute("allowfullscreen", "allowfullscreen");
-				utube.showOverlay(frame);
+				embedElem.width = w;
+				embedElem.height = h;
+				utube.showOverlay(embedElem);
 				break;
 			case "EMBEDINTAB":
 				window.open(utube.VID_EMDED_URL.format(id));

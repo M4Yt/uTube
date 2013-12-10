@@ -9,6 +9,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/viewtube.js"></script>
 	<title>&mu;Tube</title>
 </head>
 <body onload="utube.onload()">
@@ -49,14 +50,19 @@
 				</tr>
 				<tr>
 					<td>
-						<h4>Playback<h4>
+						<h4>Native Playback<h4>
 					</td>
 					<td>
-						<input type="radio" name="playback" value="YT">
-							YouTube</input>
+						<input type="checkbox" name="nativevideo" />
 						<br />
-						<input type="radio" name="playback" value="NATIVE">
-							Native</input>
+						<input type="text" name="nativequeryurl" />
+						<br />
+						<select name="nativeformat">
+							<option value="3GP">3GP</option>
+							<option value="FLV">FLV</option>
+							<option value="MP4">MP4</option>
+							<option value="WEBM">WebM</option>
+						</select>
 					</td>
 				</tr>
 				<tr>
