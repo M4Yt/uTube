@@ -529,6 +529,7 @@ return {
 					<!DOCTYPE html>\
 					<html>\
 						<head>\
+							<title>&mu;Tube Video</title>\
 							<style type=\"text/css\">\
 								* { margin: 0; padding: 0; }\
 								html, body, video { height: 100%; }\
