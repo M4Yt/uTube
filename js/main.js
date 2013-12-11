@@ -222,18 +222,18 @@ return {
 		menu.style.width = "500px";
 		menu.innerHTML = document.getElementById("ut_configmenu_content").innerHTML;
 		utube.showOverlay(menu);
-		var ret = "";
+		var themeSelect = menu.getElementsByTagName("select")[1];
 		for (var i = 0; i < utube.conf.themes.length; i++) {
+			var op = document.createElement("option");
 			theme = utube.conf.themes[i];
-			cur = utube.conf.get("theme");
-			sel = cur === theme.source ? " selected" : "";
-			ret += "<option" + sel + " value=\"" + theme.source + "\" title=\"" +
-				theme.description + "\">" + theme.name + "</option>";
+			op.value = theme.source;
+			op.title = theme.description;
+			op.innerHTML = theme.name;
+			themeSelect.appendChild(op);
 		}
-		menu.getElementsByTagName("select")[1].innerHTML = ret;
-		elems = menu.getElementsByTagName("input");
-		for (var i = 0; i < elems.length; i++) {
-			input = elems[i];
+		inputElems = menu.getElementsByTagName("input");
+		for (var i = 0; i < inputElems.length; i++) {
+			input = inputElems[i];
 			switch (input.type) {
 				case "text":
 					input.value = utube.conf.get(input.name);
@@ -253,6 +253,19 @@ return {
 					break;
 				default:
 					break;
+			}
+		}
+		var selectElems = menu.getElementsByTagName("select");
+		for (var i = 0; i < selectElems.length; i++) {
+			select = selectElems[i];
+			select.setAttribute("onchange", "utube.conf.set(this.name, this.value)");
+			var value =  utube.conf.get(select.name);
+			for (var j = select.childNodes.length - 1; j >= 0; j--) {
+				var op = select.childNodes[j];
+				if (op.value == value) {
+					op.setAttribute("selected", "selected");
+					break;
+				}
 			}
 		}
 	},
@@ -475,11 +488,17 @@ return {
 					embedElem.controls = "controls";
 					embedElem.autoplay = "autoplay";
 					vidList = vt.ytVideoList(utube.conf.get("nativequeryurl").replace("%ID", id));
+					var format = utube.conf.get("nativeformat");
 					for (var v in vidList) {
-						if (v.indexOf('MP4') != -1) {
+						if (v.indexOf(format) != -1) {
 							embedElem.src = vidList[v];
 							break;
 						}
+					}
+					if (!embedElem.src) {
+						embedElem = document.createElement("h3");
+						embedElem.innerHTML = "This video is not available in " + format;
+						embedElem.style.width = "500px";
 					}
 				} else {
 					embedElem = document.createElement("iframe");
