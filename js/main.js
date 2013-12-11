@@ -480,26 +480,30 @@ return {
 	},
 
 	playVideo: function(id) {
+		function html5Video() {
+			var embedElem = document.createElement("video");
+			embedElem.controls = "controls";
+			embedElem.autoplay = "autoplay";
+			vidList = vt.ytVideoList(utube.conf.get("nativequeryurl").replace("%ID", id));
+			var format = utube.conf.get("nativeformat");
+			for (var v in vidList) {
+				if (v.indexOf(format) != -1) {
+					embedElem.src = vidList[v];
+					break;
+				}
+			}
+			if (!embedElem.src) {
+				embedElem = document.createElement("h3");
+				embedElem.innerHTML = "This video is not available in " + format;
+				embedElem.style.width = "500px";
+			}
+			return embedElem;
+		}
 		switch (utube.conf.get("onvidclick")) {
 			case "EMBED":
 				var embedElem;
 				if (utube.conf.get("nativevideo") == "true") {
-					embedElem = document.createElement("video");
-					embedElem.controls = "controls";
-					embedElem.autoplay = "autoplay";
-					vidList = vt.ytVideoList(utube.conf.get("nativequeryurl").replace("%ID", id));
-					var format = utube.conf.get("nativeformat");
-					for (var v in vidList) {
-						if (v.indexOf(format) != -1) {
-							embedElem.src = vidList[v];
-							break;
-						}
-					}
-					if (!embedElem.src) {
-						embedElem = document.createElement("h3");
-						embedElem.innerHTML = "This video is not available in " + format;
-						embedElem.style.width = "500px";
-					}
+					embedElem = html5Video();
 				} else {
 					embedElem = document.createElement("iframe");
 					embedElem.classList.add("ut_embedvideo");
@@ -519,7 +523,26 @@ return {
 				utube.showOverlay(embedElem);
 				break;
 			case "EMBEDINTAB":
-				window.open(utube.VID_EMDED_URL.format(id));
+				if (utube.conf.get("nativevideo") == "true") {
+					var video = html5Video();
+					var page = "\
+					<!DOCTYPE html>\
+					<html>\
+						<head>\
+							<style type=\"text/css\">\
+								* { margin: 0; padding: 0; }\
+								html, body, video { height: 100%; }\
+								body { background-color: #000;  overflow: hidden; }\
+								video { display: block; margin: auto; }\
+							</style>\
+						</head>\
+						<body>" + video.outerHTML + "</body>\
+					</html>";
+					video.src = ""; // TODO
+					window.open("data:text/html;base64," + btoa(page));
+				} else {
+					window.open(utube.VID_EMDED_URL.format(id));
+				}
 				break;
 			case "OPENYT":
 				window.open(utube.VID_PAGE_URL.format(id));
