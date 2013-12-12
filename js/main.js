@@ -219,6 +219,7 @@ return {
 
 	showConfigMenu: function() {
 		menu = document.createElement("div");
+		menu.classList.add("ut_configmenu");
 		menu.style.width = "500px";
 		menu.innerHTML = document.getElementById("ut_configmenu_content").innerHTML;
 		utube.showOverlay(menu);

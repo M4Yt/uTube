@@ -201,6 +201,21 @@ option
 	border: none;
 }
 
+.ut_configmenu td
+{
+	padding-left: 20px;
+}
+
+.ut_configmenu td > h2
+{
+	margin-left: -20px;
+}
+
+.ut_configmenu td > h4
+{
+	margin: 5px 0 0 -10px;
+}
+
 .ut_chanconf_item
 {
 	width: 100%;

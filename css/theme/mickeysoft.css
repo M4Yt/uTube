@@ -168,7 +168,8 @@ button:active, select:active, input[type="text"], input[type="submit"]:active
 	padding: 2px;
 }
 
-.ut_overlay_content > h2 {
+.ut_overlay_content > h1
+{
 	padding-left: 2px;
 	background-color: #00007f;
 	color: #fff;
@@ -178,6 +179,21 @@ button:active, select:active, input[type="text"], input[type="submit"]:active
 .ut_embedvideo
 {
 	border: none;
+}
+
+.ut_configmenu td
+{
+	padding-left: 20px;
+}
+
+.ut_configmenu td > h2
+{
+	margin-left: -20px;
+}
+
+.ut_configmenu td > h4
+{
+	margin: 5px 0 0 -10px;
 }
 
 .ut_chanconf_item
