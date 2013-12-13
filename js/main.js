@@ -63,13 +63,27 @@ var utube = function() {
 		elem.addEventListener("DOMMouseScroll", callback, false);
 	}
 
+	function _queryJSON(url) {
+		var req = new XMLHttpRequest();
+		try {
+			req.open("GET", url, false);
+			req.send();
+			if (req.responseText.indexOf("{") != 0) {
+				return {error: "No data received!"};
+			}
+			return JSON.parse(req.responseText);
+		} catch (err) {
+			return {error: err.message};
+		}
+	}
+
 return {
 
-	CHANNEL_DATA: "https://gdata.youtube.com/feeds/api/users/{0}",
+	CHANNEL_DATA: "https://gdata.youtube.com/feeds/api/users/{0}?alt=json",
 
 	CHANNEL_URL: "https://www.youtube.com/user/{0}/featured",
 
-	FEED_DATA: "https://gdata.youtube.com/feeds/api/users/{0}/uploads?orderby=updated{1}{2}",
+	VID_FEED: "https://gdata.youtube.com/feeds/api/users/{0}/uploads?alt=json&orderby=updated{1}{2}",
 
 	VID_EMDED_URL: "https://www.youtube-nocookie.com/embed/{0}",
 
@@ -351,58 +365,36 @@ return {
 	},
 
 	queryChannel: function(channelName) {
-		var req = new XMLHttpRequest();
-		try {
-			req.open("GET", utube.CHANNEL_DATA.format(channelName), false);
-			req.send();
-			xml = req.responseXML;
-		} catch (err) {
-			return {error: err};
-		}
-		if (!xml) {
-			return {error: "No data received!"};
-		}
-		var thumbElem = xml.getElementsByTagName("media:thumbnail");
-		if (!thumbElem.length) {
-			thumbElem = xml.getElementsByTagName("thumbnail");
-		}
+		var json = _queryJSON(utube.CHANNEL_DATA.format(channelName));
+		if (json.error) return json;
+		json = json.entry;
 		return {
-			name: channelName.toLowerCase(),
-			icon: thumbElem[0].getAttribute("url"),
-			title: xml.getElementsByTagName("title")[0].textContent,
+			name: json['yt$username']['$t'],
+			icon: json['media$thumbnail']['url'],
+			title: json['title']['$t'],
 			url: utube.CHANNEL_URL.format(channelName)
 		};
 	},
 
 	queryVideos: function(channelName, offset, limit) {
-		var req = new XMLHttpRequest();
-		try {
-			req.open("GET", utube.FEED_DATA.format(channelName, "&start-index=" + offset + 1,
-				(limit ? "&max-results=" + limit : "")), false);
-			req.send();
-			xml = req.responseXML;
-		} catch (err) {
-			return {error: err};
-		}
-		if (!xml) {
-			return {error: "No data received!"};
-		}
-		var videos = [];
-		var rv = xml.getElementsByTagName("entry");
+		var json = _queryJSON(utube.VID_FEED.format(channelName, "&start-index=" + offset + 1,
+			(limit ? "&max-results=" + limit : "")));
+		if (json.error) return json;
 		function parseDate(str) {
 			var t = str.split(/-|T|\:|\./i);
 			return new Date(t[0], parseInt(t[1]) - 1, t[2], t[3], t[4], t[5]);
 		}
-		for (var i = 0; i < rv.length; i++) {
-			var id = rv[i].getElementsByTagName("id")[0].textContent;
-			id = id.substring(id.lastIndexOf("/") + 1, id.length);
+		var entries = json.feed.entry;
+		var videos = [];
+		for (var i = 0; i < entries.length; i++) {
+			var e = entries[i];
+			var id = e['id']['$t'];
 			videos.push({
-				description: rv[i].getElementsByTagName("content")[0].textContent,
-				id: id,
-				time: parseDate(rv[i].getElementsByTagName("published")[0].textContent),
-				title: rv[i].getElementsByTagName("title")[0].textContent,
-				duration: (rv[i].getElementsByTagName("yt:duration")[0] ||
-					rv[i].getElementsByTagName("duration")[0]).getAttribute("seconds"),
+				description: e['media$group']['media$description']['$t'],
+				id: id.substring(id.lastIndexOf("/") + 1, id.length),
+				time: parseDate(e['published']['$t']),
+				title: e['title']['$t'],
+				duration: e['media$group']['yt$duration']['seconds'],
 			});
 		}
 		return videos;
