@@ -380,10 +380,6 @@ return {
 		var json = _queryJSON(utube.VID_FEED.format(channelName, "&start-index=" + offset + 1,
 			(limit ? "&max-results=" + limit : "")));
 		if (json.error) return json;
-		function parseDate(str) {
-			var t = str.split(/-|T|\:|\./i);
-			return new Date(t[0], parseInt(t[1]) - 1, t[2], t[3], t[4], t[5]);
-		}
 		var entries = json.feed.entry;
 		var videos = [];
 		for (var i = 0; i < entries.length; i++) {
@@ -392,7 +388,7 @@ return {
 			videos.push({
 				description: e['media$group']['media$description']['$t'],
 				id: id.substring(id.lastIndexOf("/") + 1, id.length),
-				time: parseDate(e['published']['$t']),
+				time: utube.parseDate(e['published']['$t']),
 				title: e['title']['$t'],
 				duration: e['media$group']['yt$duration']['seconds'],
 			});
@@ -400,9 +396,8 @@ return {
 		return videos;
 	},
 
-	updateVideos: function(chanName, vidListElem) {
-		vidListElem.removeAll();
-		var videos = utube.queryVideos(chanName, 0, 0);
+	insertVideos: function(channelName, offset, limit, vidListElem) {
+		var videos = utube.queryVideos(channelName, 0, 0);
 		if (videos.error) {
 			var err = document.createElement("p");
 			err.innerHTML = videos.error;
@@ -429,7 +424,9 @@ return {
 			';
 			vidListElem.appendChild(vidElem);
 		}
-		return videos.length > 0 ? videos[0] : {};
+		if (offset == 0) {
+			vidListElem.parentNode.setAttribute("data-mostrecent", videos[0].time.getTime())
+		}
 	},
 
 	updateChannels: function() {
@@ -443,9 +440,9 @@ return {
 			var title = channels[i].title;
 			var url = channels[i].url;
 			var chanElem = document.createElement("div");
-			var vidElem = document.createElement("div");
-			vidElem.classList.add("ut_channel_videos");
-			_addMousewheel(vidElem, utube.scrollVideos);
+			var vidListElem = document.createElement("div");
+			vidListElem.classList.add("ut_channel_videos");
+			_addMousewheel(vidListElem, utube.scrollVideos);
 			chanElem.classList.add("ut_channel");
 			chanElem.innerHTML = '\
 				<a href="' + url + '" target="_blank" title="' + title + '">\
@@ -455,20 +452,27 @@ return {
 					</div>\
 				</a>\
 			';
-			chanElem.appendChild(vidElem);
-			channelsOut.push({
-				v: utube.updateVideos(name, vidElem),
-				e: chanElem
-			});
-		}
-		if (utube.conf.get("chanorder") == "VIDDATE") {
-			channelsOut.sort(function(a, b){
-				return a.v.time && b.v.time && a.v.time.getTime() < b.v.time.getTime() ? 1 : -1;
-			});
-		}
-		for (var i = 0; i < channelsOut.length; i++) {
-			var chanElem = channelsOut[i].e;
+			chanElem.appendChild(vidListElem);
 			chanBox.appendChild(chanElem);
+			setTimeout(function(n, s, l, v) {
+				return function() {
+					utube.insertVideos(n, s, l, v);
+					utube.sortChannels();
+				}
+			}(name, 0, 0, vidListElem), 0);
+		}
+	},
+
+	sortChannels: function() {
+		var channels = Array.prototype.slice.call(document.getElementsByClassName("ut_channel"));
+
+		channels.sort(function(a, b) {
+			var ta = parseInt(a.getAttribute("data-mostrecent"));
+			var tb = parseInt(b.getAttribute("data-mostrecent"));
+			return ta < tb ? 1 : -1;
+		});
+		for (var i = 0; i < channels.length; i++) {
+			channels[i].parentNode.appendChild(channels[i]);
 		}
 	},
 
@@ -653,6 +657,11 @@ return {
 			s += "0";
 		}
 		return s + sec;
+	},
+
+	parseDate: function(str) {
+		var t = str.split(/-|T|\:|\./i);
+		return new Date(t[0], parseInt(t[1]) - 1, t[2], t[3], t[4], t[5]);
 	}
 
 }}();
