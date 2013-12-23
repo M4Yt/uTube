@@ -633,7 +633,7 @@ return {
 		var n = e.target;
 		for (; n && !n.classList.contains("ut_channel_videos"); n = n.parentNode);
 		if (n) {
-			e.target.parentNode.scrollTop -= e.wheelDelta / 2 || -e.detail * 20;
+			n.scrollTop -= e.wheelDelta / 2 || -e.detail * 20;
 		}
 		e.stopPropagation();
 	},
