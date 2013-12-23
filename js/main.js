@@ -82,7 +82,7 @@ return {
 
 	CHANNEL_URL: "https://www.youtube.com/user/{0}/featured",
 
-	VID_FEED: "https://gdata.youtube.com/feeds/api/users/{0}/uploads?alt=json&orderby=updated{1}{2}",
+	VID_FEED: "https://gdata.youtube.com/feeds/api/users/{0}/uploads?alt=json&orderby=published{1}{2}",
 
 	VID_EMDED_URL: "https://www.youtube-nocookie.com/embed/{0}",
 
@@ -404,22 +404,21 @@ return {
 			return {};
 		}
 		for (var i = 0; i < videos.length; i++) {
-			var duration = utube.timeString(videos[i].duration);
-			var id = videos[i].id;
-			var thumbnail = utube.VID_THUMBNAIL_URL.format(id);
-			var title = videos[i].title;
+			var v = videos[i];
 			var vidElem = document.createElement("div");
-			vidElem.id = "vid_" + id;
+			vidElem.id = "vid_" + v.id;
 			vidElem.classList.add("ut_list_video");
-			if (utube.hasWatched(id)) {
+			if (utube.hasWatched(v.id)) {
 				vidElem.classList.add("ut_video_watched");
 			}
-			vidElem.setAttribute("onclick", 'utube.playVideo(\'' + id + '\')');
-			vidElem.title = title;
+			vidElem.setAttribute("onclick", 'utube.playVideo(\'' + v.id + '\')');
+			vidElem.title = v.title;
+			var time = v.time.getDate() + "-" + (v.time.getMonth() + 1) + "-" + v.time.getFullYear();
 			vidElem.innerHTML = '\
-				<h5>' + title + '</h5>\
-				<p>' + duration + '</p>\
-				<img src="' + thumbnail + '" />\
+				<p class="ut_video_title">' + v.title + '</p>\
+				<p class="ut_video_time">' + time + '</p>\
+				<p class="ut_video_duration">' + utube.timeString(v.duration) + '</p>\
+				<img src="' + utube.VID_THUMBNAIL_URL.format(v.id) + '" />\
 			';
 			vidListElem.appendChild(vidElem);
 		}
@@ -470,9 +469,6 @@ return {
 							}
 							break;
 						default: break;
-					}
-					if (utube.conf.get("chanorder") == "VIDDATE") {
-						utube.sortChannelsByDate();
 					}
 				}
 			}(name, 0, 0, vidListElem), 0);

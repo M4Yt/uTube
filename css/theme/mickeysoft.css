@@ -133,23 +133,37 @@ button:active, select:active, input[type="text"], input[type="submit"]:active
 .ut_list_video
 {
 	width: calc(100% - 22px);
-	margin: 2px;
+	margin: 0 2px;
 	position: relative;
 	cursor: pointer;
-}
-
-.ut_list_video h5
-{
-	display: none;
 }
 
 .ut_list_video p
 {
 	padding: 0 2px;
-	bottom: 3px;
-	right: 0;
 	position: absolute;
 	background-color: #bfb8bf;
+	font-size: 12px;
+}
+
+.ut_list_video .ut_video_title
+{
+	width: calc(100% - 4px);
+	top: 0;
+	left: 0;
+	overflow: hidden;
+}
+
+.ut_list_video .ut_video_time
+{
+	bottom: 3px;
+	left: 0;
+}
+
+.ut_list_video .ut_video_duration
+{
+	bottom: 3px;
+	right: 0;
 }
 
 .ut_list_video img
