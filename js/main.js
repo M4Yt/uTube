@@ -10,7 +10,6 @@ String.prototype.format = String.prototype.format || function() {
 	});
 };
 
-
 String.prototype.startsWith = String.prototype.startsWith || function(str) {
 	return this.indexOf(str) == 0;
 };
@@ -457,22 +456,26 @@ return {
 			setTimeout(function(n, s, l, v) {
 				return function() {
 					utube.insertVideos(n, s, l, v);
-					utube.sortChannels();
+					switch (utube.conf.get("chanorder")) {
+						case "VIDDATE":
+							var channels = Array.prototype.slice.call(
+								document.getElementsByClassName("ut_channel"));
+							channels.sort(function(a, b) {
+								var ta = parseInt(a.getAttribute("data-mostrecent"));
+								var tb = parseInt(b.getAttribute("data-mostrecent"));
+								return ta < tb ? 1 : -1;
+							});
+							for (var i = 0; i < channels.length; i++) {
+								channels[i].parentNode.appendChild(channels[i]);
+							}
+							break;
+						default: break;
+					}
+					if (utube.conf.get("chanorder") == "VIDDATE") {
+						utube.sortChannelsByDate();
+					}
 				}
 			}(name, 0, 0, vidListElem), 0);
-		}
-	},
-
-	sortChannels: function() {
-		var channels = Array.prototype.slice.call(document.getElementsByClassName("ut_channel"));
-
-		channels.sort(function(a, b) {
-			var ta = parseInt(a.getAttribute("data-mostrecent"));
-			var tb = parseInt(b.getAttribute("data-mostrecent"));
-			return ta < tb ? 1 : -1;
-		});
-		for (var i = 0; i < channels.length; i++) {
-			channels[i].parentNode.appendChild(channels[i]);
 		}
 	},
 
