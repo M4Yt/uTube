@@ -218,7 +218,7 @@ return {
 			{
 				source: "dusk.css",
 				name: "Dusk",
-				description: "A dark gradient infested theme"
+				description: "Dark gradients composed in an ordinary way"
 			},
 
 			{
