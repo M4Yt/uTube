@@ -222,15 +222,21 @@ return {
 			},
 
 			{
+				source: "mickeysoft.css",
+				name: "MickeySoft",
+				description: "Dunno"
+			},
+
+			{
 				source: "newhorizons.css",
 				name: "New Horizons",
 				description: "A Simple Obligatory Theme"
 			},
 
 			{
-				source: "mickeysoft.css",
-				name: "MickeySoft",
-				description: "Dunno"
+				source: "ohesicks.css",
+				name: "Oh Es Icks",
+				description: "Inb4 lawsuit"
 			}
 		]
 

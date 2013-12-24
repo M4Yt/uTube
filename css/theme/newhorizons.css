@@ -18,11 +18,6 @@ input, button, select, option
 	font-size: 14px;
 }
 
-input, button, select
-{
-	/*color: #000;*/
-}
-
 input
 {
 	padding: 2px 4px;
