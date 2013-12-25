@@ -62,20 +62,6 @@ var utube = function() {
 		elem.addEventListener("DOMMouseScroll", callback, false);
 	}
 
-	function _queryJSON(url) {
-		var req = new XMLHttpRequest();
-		try {
-			req.open("GET", url, false);
-			req.send();
-			if (req.responseText.indexOf("{") != 0) {
-				return {error: "No data received!"};
-			}
-			return JSON.parse(req.responseText);
-		} catch (err) {
-			return {error: err.message};
-		}
-	}
-
 return {
 
 	CHANNEL_DATA: "https://gdata.youtube.com/feeds/api/users/{0}?alt=json",
@@ -375,8 +361,22 @@ return {
 		document.getElementsByTagName("head")[0].appendChild(link);
 	},
 
+	queryJSON: function(url) {
+		var req = new XMLHttpRequest();
+		try {
+			req.open("GET", url, false);
+			req.send();
+			if (req.responseText.indexOf("{") != 0) {
+				return {error: "No data received!"};
+			}
+			return JSON.parse(req.responseText);
+		} catch (err) {
+			return {error: err.message};
+		}
+	},
+
 	queryChannel: function(channelName) {
-		var json = _queryJSON(utube.CHANNEL_DATA.format(channelName));
+		var json = utube.queryJSON(utube.CHANNEL_DATA.format(channelName));
 		if (json.error) return json;
 		json = json.entry;
 		return {
@@ -388,7 +388,7 @@ return {
 	},
 
 	queryVideos: function(channelName, offset, limit) {
-		var json = _queryJSON(utube.VID_FEED.format(channelName, "&start-index=" + offset + 1,
+		var json = utube.queryJSON(utube.VID_FEED.format(channelName, "&start-index=" + offset + 1,
 			(limit ? "&max-results=" + limit : "")));
 		if (json.error) return json;
 		var entries = json.feed.entry;
@@ -639,6 +639,11 @@ return {
 		}
 		_addMousewheel(_cbar(), scrollChannels);
 		_addMousewheel(cbox, scrollChannels);
+		document.keybindings = {};
+		document.addEventListener("keypress", function(e) {
+			var func = document.keybindings[String.fromCharCode(e.charCode)]
+			if (func) func(e);
+		}, false);
 	},
 
 	scrollVideos: function(e) {
@@ -673,6 +678,10 @@ return {
 	parseDate: function(str) {
 		var t = str.split(/-|T|\:|\./i);
 		return new Date(t[0], parseInt(t[1]) - 1, t[2], t[3], t[4], t[5]);
+	},
+
+	addKey: function(key, callback) {
+		document.keybindings[key] = callback;
 	}
 
 }}();
