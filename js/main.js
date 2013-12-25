@@ -302,7 +302,7 @@ return {
 			var name = ch[i].name;
 			var title = ch[i].title;
 			list.innerHTML += '\
-				<div class="ut_chanconf_item">\
+				<div class="ut_channelmenu_item">\
 					<img src="' + icon + '" />\
 					<h5>' + title + '</h5>\
 					<button onclick="this.parentNode.remove();\

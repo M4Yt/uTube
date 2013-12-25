@@ -134,7 +134,7 @@ option
 .ut_channel_videos
 {
 	width: calc(100% + 30px);
-	height: calc(100% - 62px);
+	height: calc(100% - 60px);
 	overflow: auto;
 }
 
@@ -251,21 +251,21 @@ option
 	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QwXFQQ5S84L4QAAAA5JREFUCNdjYEAAXtwMAALlACiS2BwtAAAAAElFTkSuQmCC') #e9e9e9;
 }
 
-.ut_chanconf_item
+.ut_channelmenu_item
 {
-	width: calc(100% - 12px);
+	width: calc(100% - 8px);
 	height: 40px;
 	margin: 4px;
 	background-color: #fff;
 }
 
-.ut_chanconf_item h5
+.ut_channelmenu_item h5
 {
 	margin-top: 12px;
 	float: left;
 }
 
-.ut_chanconf_item img
+.ut_channelmenu_item img
 {
 	width: 32px;
 	height: 32px;
@@ -273,7 +273,7 @@ option
 	float: left;
 }
 
-.ut_chanconf_item button
+.ut_channelmenu_item button
 {
 	margin: 8px;
 	float: right;

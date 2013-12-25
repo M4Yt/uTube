@@ -278,7 +278,7 @@ option
 	display: none;
 }
 
-.ut_chanconf_item
+.ut_channelmenu_item
 {
 	width: calc(100% - 12px);
 	height: 40px;
@@ -286,13 +286,13 @@ option
 	background-color: #fff;
 }
 
-.ut_chanconf_item h5
+.ut_channelmenu_item h5
 {
 	margin-top: 12px;
 	float: left;
 }
 
-.ut_chanconf_item img
+.ut_channelmenu_item img
 {
 	width: 32px;
 	height: 32px;
@@ -300,7 +300,7 @@ option
 	float: left;
 }
 
-.ut_chanconf_item button
+.ut_channelmenu_item button
 {
 	margin-top: 4px;
 	float: right;
