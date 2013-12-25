@@ -13,13 +13,9 @@ To add a channel, click in the list-icon thinghy in the top-right of the screen 
 You need a channelname, e.g "LuminosityEvents". Stuff like "UCi4JeT_3WuhXKOqfcOp9-Sw" will not work (yet). You can find the channelname in the URL of the channel e.g. "https://www.youtube.com/user/LuminosityEvents".
 
 ### Keybindings
-
  *  R - Reload all channels
-
  *  Q - Close a video or dialog
-
  *  C - Open the µTube configuration dialog
-
  *  I - Open the channel menu
 
 ### HTML5 Video
@@ -30,14 +26,10 @@ This is set to `http://localhost/uTube/videoinfo.php?id=%ID` by default.
 You can secure it with a password if you want. Just add `&passwd=PASSWORD` to the URL and update [videoinfo.php](videoinfo.php) accordingly.
 
 ### Request Policy
-µTube needs to get information from the following domains
-
+µTube needs to get information from the following domains:
  *  youtube.com (The YouTube data API)
-
  *  ytimg.com (Video preview images)
-
  *  youtube-nocookie.com (Embedded videos)
-
  *  googlevideo.com (HTML5 videos)
 
 ### Troubleshooting
