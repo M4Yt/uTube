@@ -74,6 +74,8 @@ return {
 
 	VID_THUMBNAIL_URL: "https://i1.ytimg.com/vi/{0}/mqdefault.jpg",
 
+	VID_POSTER_URL: "https://i1.ytimg.com/vi/{0}/maxresdefault.jpg",
+
 	VID_PAGE_URL: "http://www.youtube.com/watch?v={0}",
 
 	chan: {
@@ -491,7 +493,7 @@ return {
 		function html5Video() {
 			var embedElem = document.createElement("video");
 			embedElem.controls = "controls";
-			embedElem.autoplay = "autoplay";
+			embedElem.poster = utube.VID_POSTER_URL.format(id);
 			vidList = vt.ytVideoList(utube.conf.get("nativequeryurl").replace("%ID", id));
 			var format = utube.conf.get("nativeformat");
 			for (var v in vidList) {
