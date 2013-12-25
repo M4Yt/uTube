@@ -207,7 +207,7 @@ return {
 			chanorder: "VIDDATE",
 			onvidclick: "EMBED",
 			theme: "dusk.css",
-			nativequeryurl: "http://localhost/uTube/videoinfo.php?id=%ID&passwd=mysecretpassworddonotsteal",
+			nativequeryurl: "http://localhost/uTube/videoinfo.php?id=%ID",
 			nativeformat: "MP4",
 			nativevideo: false,
 			transitions: true,

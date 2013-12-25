@@ -6,9 +6,10 @@
 
 /*
  * Use a password to limit access to the video proxy.
- * Remove it to disable.
+ * Uncomment to enable.
  */
-$PASSWD = "mysecretpassworddonotsteal";
+
+// $PASSWD = "mysecretpassworddonotsteal";
 
 header("Content-Type: text/plain");
 header("Access-Control-Allow-Origin: *");

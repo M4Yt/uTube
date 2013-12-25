@@ -17,7 +17,7 @@ To view videos in HTML5, µTube needs to access the youtube page of this video.
 Since AJAX calls are denied, µTube proxies this information through [videoinfo.php](videoinfo.php).
 Make this file accessible with a PHP server, and link to it in the µTube config.
 This is set to `http://localhost/uTube/videoinfo.php?id=%ID` by default.
-You can secure it with a password if you want.
+You can secure it with a password if you want. Just add `&passwd=PASSWORD` to the URL and update [videoinfo.php](videoinfo.php) accordingly.
 
 ### Request Policy
 µTube needs to get information from the following domains
