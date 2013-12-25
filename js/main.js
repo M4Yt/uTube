@@ -70,6 +70,8 @@ return {
 
 	VID_FEED: "https://gdata.youtube.com/feeds/api/users/{0}/uploads?alt=json&orderby=published{1}{2}",
 
+	VID_FEED_INCREMENTS: 6,
+
 	VID_EMDED_URL: "https://www.youtube-nocookie.com/embed/{0}",
 
 	VID_THUMBNAIL_URL: "https://i1.ytimg.com/vi/{0}/mqdefault.jpg",
@@ -390,7 +392,7 @@ return {
 	},
 
 	queryVideos: function(channelName, offset, limit) {
-		var json = utube.queryJSON(utube.VID_FEED.format(channelName, "&start-index=" + offset + 1,
+		var json = utube.queryJSON(utube.VID_FEED.format(channelName, "&start-index=" + (offset + 1),
 			(limit ? "&max-results=" + limit : "")));
 		if (json.error) return json;
 		var entries = json.feed.entry;
@@ -410,7 +412,7 @@ return {
 	},
 
 	insertVideos: function(channelName, offset, limit, vidListElem) {
-		var videos = utube.queryVideos(channelName, 0, 0);
+		var videos = utube.queryVideos(channelName, offset, limit);
 		if (videos.error) {
 			var err = document.createElement("p");
 			err.innerHTML = videos.error;
@@ -439,6 +441,8 @@ return {
 		if (offset == 0) {
 			vidListElem.parentNode.setAttribute("data-mostrecent", videos[0].time.getTime())
 		}
+		vidListElem.setAttribute("data-vidcount",
+			parseInt(vidListElem.getAttribute("data-vidcount")) + limit);
 	},
 
 	updateChannels: function() {
@@ -447,20 +451,19 @@ return {
 		var channelsOut = [];
 		chanBox.removeAll();
 		for (var i = 0; i < channels.length; i++) {
-			var icon = channels[i].icon;
-			var name = channels[i].name;
-			var title = channels[i].title;
-			var url = channels[i].url;
+			var c = channels[i];
 			var chanElem = document.createElement("div");
 			var vidListElem = document.createElement("div");
 			vidListElem.classList.add("ut_channel_videos");
+			vidListElem.setAttribute("data-channelname", c.name)
+			vidListElem.setAttribute("data-vidcount", 0);
 			_addMousewheel(vidListElem, utube.scrollVideos);
 			chanElem.classList.add("ut_channel");
 			chanElem.innerHTML = '\
-				<a href="' + url + '" target="_blank" title="' + title + '">\
+				<a href="' + c.url + '" target="_blank" title="' + c.title + '">\
 					<div class="ut_channel_head">\
-						<img src="' + icon + '" />\
-						<h3>' + title + '</h3>\
+						<img src="' + c.icon + '" />\
+						<h3>' + c.title + '</h3>\
 					</div>\
 				</a>\
 			';
@@ -485,7 +488,7 @@ return {
 						default: break;
 					}
 				}
-			}(name, 0, 0, vidListElem), 0);
+			}(c.name, 0, utube.VID_FEED_INCREMENTS, vidListElem), 0);
 		}
 	},
 
@@ -653,6 +656,12 @@ return {
 		for (; n && !n.classList.contains("ut_channel_videos"); n = n.parentNode);
 		if (n) {
 			n.scrollTop -= e.wheelDelta / 2 || -e.detail * 20;
+			if (n.scrollTop == n.scrollHeight - n.clientHeight && !n.classList.contains("ut_loading")) {
+				n.classList.add("ut_loading");
+				utube.insertVideos(n.getAttribute("data-channelname"),
+					parseInt(n.getAttribute("data-vidcount")), utube.VID_FEED_INCREMENTS, n);
+				n.classList.remove("ut_loading");
+			}
 		}
 		e.stopPropagation();
 	},
