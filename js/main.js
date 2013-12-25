@@ -589,6 +589,7 @@ return {
 	},
 
 	showOverlay: function(contentElem) {
+		if (document.getElementsByClassName("ut_overlay").length > 0) return false;
 		ov = document.createElement("table");
 		tr = document.createElement("tr");
 		td = document.createElement("td");
@@ -644,11 +645,16 @@ return {
 		}
 		_addMousewheel(_cbar(), scrollChannels);
 		_addMousewheel(cbox, scrollChannels);
+
 		document.keybindings = {};
 		document.addEventListener("keypress", function(e) {
 			var func = document.keybindings[String.fromCharCode(e.charCode)]
 			if (func) func(e);
 		}, false);
+		utube.addKey("r", utube.updateChannels);
+		utube.addKey("c", utube.showConfigMenu);
+		utube.addKey("i", utube.showChannelMenu);
+		utube.addKey("q", utube.removeOverlay);
 	},
 
 	scrollVideos: function(e) {
