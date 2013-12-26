@@ -5,7 +5,7 @@
 
 *
 {
-	font-family: Liberation Sans;
+	font-family: Liberation Sans, Helvetica, Arial;
 	color: #ddd;
 }
 
@@ -19,11 +19,6 @@ h1, h2, h3, h4, h5, h6
 	text-shadow:
 		1px 1px 0 #000,
 		0 0 0.2em #fff;
-}
-
-a
-{
-	text-decoration: none;
 }
 
 input, button, select, option
@@ -135,7 +130,6 @@ option
 	height: calc(100% - 62px);
 	background-color: #181818;
 	box-shadow: inset 0 0 16px 2px #000;
-	overflow: auto;
 }
 
 .ut_list_video
@@ -210,11 +204,6 @@ option
 {
 	background-color: #333;
 	border-radius: 4px;
-}
-
-.ut_embedvideo
-{
-	border: none;
 }
 
 .ut_configmenu td

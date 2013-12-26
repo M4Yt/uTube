@@ -6,7 +6,7 @@
 *
 {
 	color: #616161;
-	font-family: Helvetica;
+	font-family: Helvetica, Liberation Sans, Arial;
 	font-weight: normal;
 	text-decoration: none;
 }
@@ -107,7 +107,6 @@ option
 {
 	width: 256px;
 	margin-right: 40px;
-	overflow: hidden;
 	background-color: #fff;
 }
 
@@ -135,7 +134,6 @@ option
 {
 	width: calc(100% + 30px);
 	height: calc(100% - 60px);
-	overflow: auto;
 }
 
 .ut_list_video
@@ -204,7 +202,6 @@ option
 .ut_embedvideo
 {
 	background-color: #333;
-	border: none;
 }
 
 .ut_configmenu

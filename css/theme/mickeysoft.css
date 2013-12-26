@@ -5,18 +5,13 @@
 
 *
 {
-	font-family: Liberation Sans;
+	font-family: Liberation Sans, Helvetica, Arial;
 	color: #000;
 }
 
 body
 {
 	background-color: #00787F;
-}
-
-a
-{
-	text-decoration: none;
 }
 
 input, button, select, option
@@ -97,7 +92,6 @@ button:active, select:active, input[type="text"], input[type="submit"]:active
 {
 	width: 256px;
 	margin-right: 40px;
-	overflow: hidden;
 }
 
 .ut_channel_head
@@ -127,7 +121,6 @@ button:active, select:active, input[type="text"], input[type="submit"]:active
 {
 	width: calc(100% + 30px);
 	height: calc(100% - 24px);
-	overflow: auto;
 }
 
 .ut_list_video
@@ -188,11 +181,6 @@ button:active, select:active, input[type="text"], input[type="submit"]:active
 	background-color: #00007f;
 	color: #fff;
 	font-size: 13px;
-}
-
-.ut_embedvideo
-{
-	border: none;
 }
 
 .ut_configmenu td

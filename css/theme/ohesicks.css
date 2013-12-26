@@ -6,9 +6,8 @@
 *
 {
 	color: #616161;
-	font-family: Helvetica;
+	font-family: Helvetica, Liberation Sans, Arial;
 	font-weight: normal;
-	text-decoration: none;
 }
 
 body
@@ -193,6 +192,11 @@ option
 	opacity: 0.6;
 }
 
+.ut_overlay
+{
+	transition: opacity 0.3s;
+}
+
 .ut_overlay_content
 {
 	background-color: #fff;
@@ -215,7 +219,6 @@ option
 .ut_embedvideo
 {
 	background-color: transparent;
-	border: none;
 }
 
 .ut_configmenu table

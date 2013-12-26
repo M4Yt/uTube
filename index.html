@@ -7,13 +7,14 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<link rel="stylesheet" type="text/css" class="ut_theme" />
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/viewtube.js"></script>
 	<title>&mu;Tube</title>
-	<link rel="shortcut icon" type="image/png" href="img/favicon.png">
+	<link rel="shortcut icon" type="image/png" href="img/favicon.png" />
 </head>
-<body onload="utube.onload()">
+<body onload="utube.init()">
 	<div class="ut_cbar">
 		<h1>&mu;Tube</h1>
 		<div class="ut_cbar_button ut_cbar_settings"
@@ -26,17 +27,14 @@
 		</div>
 	</div>
 	<div class="ut_channelbox"></div>
-	</div>
 	<div hidden>
-		<div id="ut_configmenu_content">
 
+		<div id="ut_configmenu_content">
 			<h1>Configuration</h1>
 			<table>
-
 				<tr>
 					<td><h2>Behaviour</h2></td>
 				</tr>
-
 				<tr>
 					<td><h4>When I Click A Video</h4></td>
 				</tr>
@@ -52,7 +50,6 @@
 					<td>Open YouTube</td>
 					<td><input type="radio" name="onvidclick" value="OPENYT" /></td>
 				</tr>
-
 				<tr>
 					<td><h4>HTML5 Playback</h4></td>
 				</tr>
@@ -75,11 +72,9 @@
 						</select>
 					</td>
 				</tr>
-
 				<tr>
 					<td><h2>Appearance</h2></td>
 				</tr>
-
 				<tr>
 					<td><h4>Channel Order</h4></td>
 				</tr>
@@ -91,7 +86,6 @@
 					<td>Alphabetical</td>
 					<td><input type="radio" name="chanorder" value="CHANNAME" /></td>
 				</tr>
-
 				<tr>
 					<td><h4>History</h4></td>
 				</tr>
@@ -103,7 +97,6 @@
 					<td>Erase History</td>
 					<td><button onclick="utube.unwatchAll()">Unsee</button></td>
 				</tr>
-
 				<tr>
 					<td><h4>Styling</h4></td>
 				</tr>
@@ -115,7 +108,6 @@
 					<td>CSS Transitions</td>
 					<td><input type="checkbox" name="transitions" /></td>
 				</tr>
-
 			</table>
 			<button onclick="if(confirm('Delete channels and restore all settings to default?')) {
 				utube.conf.reset();}" class="ut_button">Reset</button>
@@ -123,10 +115,9 @@
 				utube.error('Input not accepted :(');}" class="ut_button">Import</button>
 			<button onclick="prompt('Exported channels and settings',
 				utube.conf.exportAll())" class="ut_button">Export</button>
-
 		</div>
-		<div id="ut_channelmenu_content">
 
+		<div id="ut_channelmenu_content">
 			<h1>Channels</h1>
 			<form onsubmit="utube.addChannelByForm(); return false">
 				<input class="ut_addchannel_txt" type="text"
@@ -134,8 +125,8 @@
 				<input type="submit" value="Add" />
 			</form>
 			<div class="ut_channelmenu_list"></div>
-
 		</div>
+
 	</div>
 </body>
 </html>

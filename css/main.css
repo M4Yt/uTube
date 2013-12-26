@@ -7,6 +7,7 @@
 {
 	margin: 0;
 	padding: 0;
+	text-decoration: none;
 }
 
 html, body
@@ -24,7 +25,6 @@ html, body
 .ut_channelbox
 {
 	position: relative;
-	transition: height 0.3s;
 	white-space: nowrap;
 	overflow-x: auto;
 	overflow-y: hidden;
@@ -33,12 +33,13 @@ html, body
 .ut_channel
 {
 	height: 100%;
+	overflow: hidden;
 	display: inline-block;
 }
 
-.ut_channel_videos
+.ut_channelmenu_list, .ut_channel_videos
 {
-	overflow: hidden;
+	overflow: auto;
 }
 
 .ut_overlay
@@ -47,6 +48,7 @@ html, body
 	height: 100%;
 	position: fixed;
 	bottom: 0;
+	z-index: 1;
 }
 
 .ut_overlay_wrapper
@@ -54,7 +56,7 @@ html, body
 	margin: 0 auto;
 }
 
-.ut_channelmenu_list
+.ut_embedvideo
 {
-	overflow: auto;
+	border: none;
 }
