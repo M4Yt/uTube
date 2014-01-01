@@ -54,7 +54,7 @@ var utube = {
 
 	VID_FEED_INCREMENTS: 6,
 
-	VID_EMDED_URL: "https://www.youtube-nocookie.com/embed/{0}",
+	VID_EMDED_URL: "https://www.youtube-nocookie.com/embed/{0}{1}",
 
 	VID_THUMBNAIL_URL: "https://i1.ytimg.com/vi/{0}/mqdefault.jpg",
 
@@ -162,15 +162,26 @@ var utube = {
 		},
 
 		standard: {
+
+			autoplay: false,
+
 			channels: "[]",
+
 			chanorder: "VIDDATE",
-			onvidclick: "EMBED",
-			theme: "dusk.css",
+
+			markwatched: true,
+
 			nativequeryurl: "http://localhost/uTube/videoinfo.php?id=%ID",
+
 			nativeformat: "MP4",
+
 			nativevideo: false,
-			transitions: true,
-			markwatched: true
+
+			onvidclick: "EMBED",
+
+			theme: "dusk.css",
+
+			transitions: true
 		},
 
 		themes: [
@@ -455,6 +466,9 @@ var utube = {
 		function html5Video() {
 			var embedElem = document.createElement("video");
 			embedElem.controls = "controls";
+			if (utube.conf.get("autoplay") == "true") {
+				embedElem.autoplay = "autoplay";
+			}
 			embedElem.poster = utube.VID_POSTER_URL.format(id);
 			vidList = vt.ytVideoList(utube.conf.get("nativequeryurl").replace("%ID", id));
 			var format = utube.conf.get("nativeformat");
@@ -471,6 +485,10 @@ var utube = {
 			}
 			return embedElem;
 		}
+		function embedVideo() {
+			return utube.VID_EMDED_URL.format(id,
+				utube.conf.get("autoplay") == "true" ? "?autoplay=1" : "");
+		}
 		switch (utube.conf.get("onvidclick")) {
 			case "EMBED":
 				var embedElem;
@@ -479,7 +497,7 @@ var utube = {
 				} else {
 					embedElem = document.createElement("iframe");
 					embedElem.classList.add("ut_embedvideo");
-					embedElem.src = utube.VID_EMDED_URL.format(id);
+					embedElem.src = embedVideo();
 					embedElem.setAttribute("allowfullscreen", "allowfullscreen");
 				}
 				var height = window.innerHeight - 100;
@@ -514,7 +532,7 @@ var utube = {
 					video.remove();
 					window.open("data:text/html;base64," + btoa(page));
 				} else {
-					window.open(utube.VID_EMDED_URL.format(id));
+					window.open(embedVideo());
 				}
 				break;
 			case "OPENYT":
@@ -734,5 +752,5 @@ var utube = {
 		utube.addKey(37, utube.selectorMoveLeft);  // Left
 		utube.addKey(39, utube.selectorMoveRight); // Right
 		utube.addKey(13, utube.playSelectedVideo); // Return
-	},
+	}
 };
