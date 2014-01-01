@@ -134,10 +134,18 @@ option
 
 .ut_list_video
 {
-	width: calc(100% - 38px);
+	width: 240px;
+	height: 135px;
 	margin: 10px;
 	position: relative;
+	border-radius: 4px;
 	cursor: pointer;
+	overflow: hidden;
+	transition: box-shadow 0.2s;
+}
+
+.ut_list_video.ut_selected {
+	box-shadow: 0 0 4px 1px #fff;
 }
 
 .ut_list_video p
@@ -154,19 +162,18 @@ option
 	top: 0;
 	left: 0;
 	overflow: hidden;
-	border-radius: 4px 4px 0 0;
 }
 
 .ut_list_video .ut_video_time
 {
-	bottom: 3px;
+	bottom: 0;
 	left: 0;
 	border-radius: 0 4px;
 }
 
 .ut_list_video .ut_video_duration
 {
-	bottom: 3px;
+	bottom: 0;
 	right: 0;
 	border-radius: 4px 0;
 }
@@ -174,7 +181,6 @@ option
 .ut_list_video img
 {
 	width: 100%;
-	border-radius: 4px;
 }
 
 .ut_video_watched

@@ -145,15 +145,19 @@ option
 	cursor: pointer;
 }
 
+.ut_list_video.ut_selected {
+	box-shadow: inset 0 0 0 2px #0066ff;
+}
+
 .ut_list_video p
 {
-	padding: 0 2px;
+	padding: 0 3px;
 	position: absolute;
 }
 
 .ut_list_video .ut_video_title
 {
-	width: calc(100% - 4px);
+	width: calc(100% - 10px);
 	top: 0;
 	left: 0;
 	font-size: 12px;
@@ -179,8 +183,8 @@ option
 
 .ut_list_video img
 {
-	margin-top: 4px;
-	width: 100%;
+	width: calc(100% - 4px);
+	margin: 4px 2px 0 2px;
 }
 
 .ut_video_watched

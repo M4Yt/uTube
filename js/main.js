@@ -403,6 +403,9 @@ var utube = {
 
 	updateChannels: function() {
 		var channels = utube.chan.getAll();
+		utube.selectorX = utube.selectorY = 0;
+		utube.selectorYSave = [];
+		utube.chan.count = channels.length;
 		var chanBox = document.querySelector(".ut_channelbox");
 		var channelsOut = [];
 		chanBox.removeAll();
@@ -411,7 +414,7 @@ var utube = {
 			var chanElem = document.createElement("div");
 			var vidListElem = document.createElement("div");
 			vidListElem.classList.add("ut_channel_videos");
-			vidListElem.setAttribute("data-channelname", c.name)
+			vidListElem.setAttribute("data-channelname", c.name);
 			vidListElem.setAttribute("data-vidcount", 0);
 			vidListElem.addMousewheel(utube.scrollVideos);
 			chanElem.classList.add("ut_channel");
@@ -562,6 +565,13 @@ var utube = {
 		ov.classList.add("ut_overlay");
 		ov.style.opacity = "0";
 		td.onclick = utube.removeOverlay;
+		var inputs = contentElem.getElementsByTagName("input");
+		for (var i = 0; i < inputs.length; i++) {
+			if (inputs[i].type == "text") {
+				inputs[i].setAttribute("onfocus", "utube.keysEnabled=false");
+				inputs[i].setAttribute("onblur", "utube.keysEnabled=true");
+			}
+		}
 		setTimeout(function() {
 			ov.style.opacity = "1";
 		}, utube.conf.get("transitions") == "true" ? 20 : 0);
@@ -580,16 +590,22 @@ var utube = {
 		}
 	},
 
+	loadVideos: function(n) {
+		if (!n.classList.contains("ut_loading")) {
+			n.classList.add("ut_loading");
+			utube.insertVideos(n.getAttribute("data-channelname"),
+				parseInt(n.getAttribute("data-vidcount")), utube.VID_FEED_INCREMENTS, n);
+			n.classList.remove("ut_loading");
+		}
+	},
+
 	scrollVideos: function(e) {
 		var n = e.target;
 		for (; n && !n.classList.contains("ut_channel_videos"); n = n.parentNode);
 		if (n) {
 			n.scrollTop -= e.wheelDelta / 2 || -e.detail * 20;
-			if (n.scrollTop == n.scrollHeight - n.clientHeight && !n.classList.contains("ut_loading")) {
-				n.classList.add("ut_loading");
-				utube.insertVideos(n.getAttribute("data-channelname"),
-					parseInt(n.getAttribute("data-vidcount")), utube.VID_FEED_INCREMENTS, n);
-				n.classList.remove("ut_loading");
+			if (n.scrollTop == n.scrollHeight - n.clientHeight) {
+				utube.loadVideos(n);
 			}
 		}
 		e.stopPropagation();
@@ -615,8 +631,73 @@ var utube = {
 		return s + sec;
 	},
 
+	updateSelector: function() {
+		var old = document.querySelector(".ut_list_video.ut_selected");
+		if (old) {
+			old.classList.remove("ut_selected");
+		}
+		var vid = utube.getSelectedVideo();
+		vid.classList.add("ut_selected");
+		vid.scrollIntoView(false);
+		if (vid == old) {
+			utube.loadVideos(vid.parentNode);
+		}
+	},
+
+	playSelectedVideo: function() {
+		utube.getSelectedVideo().onclick();
+	},
+
+	getSelectedChannel: function() {
+		var cbox = document.querySelector(".ut_channelbox");
+		return cbox.childNodes[utube.selectorX];
+	},
+
+	getSelectedVideo: function() {
+		var chan = utube.getSelectedChannel();
+		if (chan) {
+			var list = chan.querySelector(".ut_channel_videos");
+			return list.childNodes[utube.selectorY];
+		}
+		return null;
+	},
+
+	selectorMoveUp: function() {
+		if (utube.selectorY > 0) {
+			utube.selectorY--;
+			utube.updateSelector();
+		}
+	},
+
+	selectorMoveDown: function() {
+		var vidcount = parseInt(utube.getSelectedChannel()
+			.querySelector(".ut_channel_videos").getAttribute("data-vidcount"));
+		if (utube.selectorY < vidcount - 1) {
+			utube.selectorY++;
+		}
+		utube.updateSelector();
+	},
+
+	selectorMoveLeft: function() {
+		if (utube.selectorX > 0) {
+			utube.selectorYSave[utube.selectorX] = utube.selectorY;
+			utube.selectorX--;
+			utube.selectorY = utube.selectorYSave[utube.selectorX] || 0;
+			utube.updateSelector();
+		}
+	},
+
+	selectorMoveRight: function() {
+		if (utube.selectorX < utube.chan.count - 1) {
+			utube.selectorYSave[utube.selectorX] = utube.selectorY;
+			utube.selectorX++;
+			utube.selectorY = utube.selectorYSave[utube.selectorX] || 0;
+			utube.updateSelector();
+		}
+	},
+
 	addKey: function(key, callback) {
-		document.keybindings[key] = callback;
+		utube.keybindings[key] = callback;
 	},
 
 	init: function() {
@@ -632,15 +713,26 @@ var utube = {
 		}
 		cbox.addMousewheel(scrollChannels);
 		document.querySelector(".ut_cbar").addMousewheel(scrollChannels);
-		document.keybindings = {};
-		document.addEventListener("keypress", function(e) {
-			var func = document.keybindings[String.fromCharCode(e.charCode)]
-			if (func) func(e);
+		document.addEventListener("keydown", function(e) {
+			var func = utube.keybindings[e.keyCode];
+			if (func && utube.keysEnabled) func(e);
 		}, false);
-		utube.addKey("r", utube.updateChannels);
-		utube.addKey("c", utube.showConfigMenu);
-		utube.addKey("i", utube.showChannelMenu);
-		utube.addKey("q", utube.removeOverlay);
-	}
-
+		utube.keybindings = {},
+		utube.keysEnabled = true,
+		utube.addKey(82, utube.updateChannels);    // R
+		utube.addKey(67, utube.showConfigMenu);    // C
+		utube.addKey(73, utube.showChannelMenu);   // I
+		utube.addKey(81, utube.removeOverlay);     // Q
+		utube.addKey(79, utube.playSelectedVideo); // O
+		utube.addKey(75, utube.selectorMoveUp);    // K
+		utube.addKey(74, utube.selectorMoveDown);  // J
+		utube.addKey(72, utube.selectorMoveLeft);  // H
+		utube.addKey(76, utube.selectorMoveRight); // L
+		utube.addKey(27, utube.removeOverlay);     // Escape
+		utube.addKey(38, utube.selectorMoveUp);    // Up
+		utube.addKey(40, utube.selectorMoveDown);  // Down
+		utube.addKey(37, utube.selectorMoveLeft);  // Left
+		utube.addKey(39, utube.selectorMoveRight); // Right
+		utube.addKey(13, utube.playSelectedVideo); // Return
+	},
 };

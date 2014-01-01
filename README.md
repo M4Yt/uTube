@@ -13,10 +13,15 @@ To add a channel, click in the list-icon thinghy in the top-right of the screen 
 You need a channelname, e.g "LuminosityEvents". Stuff like "UCi4JeT_3WuhXKOqfcOp9-Sw" will not work (yet). You can find the channelname in the URL of the channel e.g. "https://www.youtube.com/user/LuminosityEvents".
 
 ### Keybindings
- *  R - Reload all channels
- *  Q - Close a video or dialog
- *  C - Open the µTube configuration dialog
- *  I - Open the channel menu
+ *  R = Reload all channels
+ *  C = Open the µTube configuration dialog
+ *  I = Open the channel menu
+ *  Q | Escape = Close a video or dialog
+ *  O | Return = Open selected video
+ *  H | Left = Move selector left
+ *  J | Down = Move selector down
+ *  K | Up = Move selector up
+ *  L | Right = Move selector right
 
 ### HTML5 Video
 To view videos in HTML5, µTube needs to access the youtube page of this video.

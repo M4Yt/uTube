@@ -125,16 +125,26 @@ button:active, select:active, input[type="text"], input[type="submit"]:active
 
 .ut_list_video
 {
-	width: calc(100% - 22px);
-	margin: 0 2px;
+	width: 252px;
+	height: 156px;
+	margin: 2px;
 	position: relative;
 	cursor: pointer;
+}
+
+.ut_list_video.ut_selected
+{
+	box-shadow: 0 0 0 2px #00007F;
+}
+
+.ut_list_video.ut_selected p {
+	background-color: #00007F;
+	color: #fff;
 }
 
 .ut_list_video p
 {
 	padding: 0 2px;
-	position: absolute;
 	background-color: #bfb8bf;
 	font-size: 12px;
 }
@@ -142,20 +152,22 @@ button:active, select:active, input[type="text"], input[type="submit"]:active
 .ut_list_video .ut_video_title
 {
 	width: calc(100% - 4px);
-	top: 0;
-	left: 0;
 	overflow: hidden;
+}
+
+.ut_list_video .ut_video_time, .ut_list_video .ut_video_duration
+{
+	position: absolute;
+	bottom: 0;
 }
 
 .ut_list_video .ut_video_time
 {
-	bottom: 3px;
 	left: 0;
 }
 
 .ut_list_video .ut_video_duration
 {
-	bottom: 3px;
 	right: 0;
 }
 
