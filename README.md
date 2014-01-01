@@ -52,7 +52,6 @@ If something doesn't work, try some of the following:
     Which is copyrighted by Sebastian Luncan under GPLv3.
 
 ### TODO
- *  More keybindings
  *  Playlists?
  *  Support for other streaming sites?
  *  Videobrowsing?
