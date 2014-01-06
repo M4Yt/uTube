@@ -598,8 +598,12 @@ var utube = {
         }
     },
 
+    isOverlayOpen: function() {
+        return document.querySelector(".ut_overlay") != null;
+    },
+
     showOverlay: function(contentElem) {
-        if (document.querySelector(".ut_overlay")) return false;
+        if (utube.isOverlayOpen()) return false;
         ov = document.createElement("table");
         tr = document.createElement("tr");
         td = document.createElement("td");
@@ -696,7 +700,9 @@ var utube = {
     },
 
     playSelectedVideo: function() {
-        utube.getSelectedVideo().onclick();
+        if (!utube.isOverlayOpen()) {
+            utube.getSelectedVideo().onclick();
+        }
     },
 
     getSelectedChannel: function() {
@@ -714,23 +720,25 @@ var utube = {
     },
 
     selectorMoveUp: function() {
-        if (utube.selectorY > 0) {
+        if (utube.selectorY > 0 && !utube.isOverlayOpen()) {
             utube.selectorY--;
             utube.updateSelector();
         }
     },
 
     selectorMoveDown: function() {
-        var vidcount = parseInt(utube.getSelectedChannel()
-            .querySelector(".ut_channel_videos").getAttribute("data-vidcount"));
-        if (utube.selectorY < vidcount - 1) {
-            utube.selectorY++;
+        if (!utube.isOverlayOpen()) {
+            var vidcount = parseInt(utube.getSelectedChannel()
+                .querySelector(".ut_channel_videos").getAttribute("data-vidcount"));
+            if (utube.selectorY < vidcount - 1) {
+                utube.selectorY++;
+            }
+            utube.updateSelector();
         }
-        utube.updateSelector();
     },
 
     selectorMoveLeft: function() {
-        if (utube.selectorX > 0) {
+        if (utube.selectorX > 0 && !utube.isOverlayOpen()) {
             utube.selectorYSave[utube.selectorX] = utube.selectorY;
             utube.selectorX--;
             utube.selectorY = utube.selectorYSave[utube.selectorX] || 0;
@@ -739,7 +747,7 @@ var utube = {
     },
 
     selectorMoveRight: function() {
-        if (utube.selectorX < utube.chan.count - 1) {
+        if (utube.selectorX < utube.chan.count - 1 && !utube.isOverlayOpen()) {
             utube.selectorYSave[utube.selectorX] = utube.selectorY;
             utube.selectorX++;
             utube.selectorY = utube.selectorYSave[utube.selectorX] || 0;
