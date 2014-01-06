@@ -175,7 +175,7 @@ var utube = {
 
         standard: {
 
-            autoplay: false,
+            autoplay: true,
 
             channels: "[]",
 
