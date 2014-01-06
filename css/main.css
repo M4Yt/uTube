@@ -60,3 +60,18 @@ html, body
 {
     border: none;
 }
+
+.ut_about {
+    padding: 0 4px;
+    float: right;
+}
+
+.gh_ribbon {
+    width: 134px;
+    height: 134px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    background-image: url('../img/forkme_right_blue_0039cb.png');
+}
