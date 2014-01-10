@@ -17,7 +17,9 @@ Date.prototype.format = function(fmt) {
 String.prototype.filter = function(data) {
     var str = this;
     for (arg in data) {
-        str = str.replace("$"+arg, data[arg], "g");
+        while (str.indexOf("$"+arg) != -1) {
+            str = str.replace("$"+arg, data[arg]);
+        }
     }
     return str;
 }

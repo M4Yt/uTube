@@ -1,3 +1,6 @@
+v 1.0.1
+  - Fixed channel titles being displayed incorrectly in Chromium
+
 v 1.0
   - Inital release
   - Subscribe to YouTube channels without the need for a Google+ account
