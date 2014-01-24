@@ -1,6 +1,7 @@
 v 1.0.2
   - Dropped the Mickeysoft theme
   - Removed the text-shadow from the Dusk theme
+  - Fixed some crappy CSS
 
 v 1.0.1
   - Fixed channel titles being displayed incorrectly in Chromium

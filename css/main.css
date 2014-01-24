@@ -3,47 +3,40 @@
  *  Copyright (c) 2013 PolyFloyd
  */
 
-*
-{
+* {
     margin: 0;
     padding: 0;
     text-decoration: none;
 }
 
-html, body
-{
+html, body {
     height: 100%;
 }
 
-.ut_cbar
-{
+.ut_cbar {
     position: relative;
     left: 0;
     right: 0;
 }
 
-.ut_channelbox
-{
+.ut_channelbox {
     position: relative;
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
 }
 
-.ut_channel
-{
+.ut_channel {
     height: 100%;
     overflow: hidden;
     display: inline-block;
 }
 
-.ut_channelmenu_list, .ut_channel_videos
-{
+.ut_channelmenu_list, .ut_channel_videos {
     overflow: auto;
 }
 
-.ut_overlay
-{
+.ut_overlay {
     width: 100%;
     height: 100%;
     position: fixed;
@@ -51,13 +44,15 @@ html, body
     z-index: 1;
 }
 
-.ut_overlay_wrapper
-{
+.ut_overlay_wrapper {
     margin: 0 auto;
 }
 
-.ut_embedvideo
-{
+.ut_configmenu input[type="text"] {
+    width: 300px;
+}
+
+.ut_embedvideo {
     border: none;
 }
 

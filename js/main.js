@@ -195,7 +195,9 @@ var utube = {
 
             theme: "dusk.css",
 
-            transitions: true
+            transitions: true,
+
+            unfoldchannelcount: 12
         },
 
         themes: [
