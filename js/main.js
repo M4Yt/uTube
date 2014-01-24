@@ -206,12 +206,6 @@ var utube = {
             },
 
             {
-                source: "mickeysoft.css",
-                name: "MickeySoft",
-                description: "Dunno"
-            },
-
-            {
                 source: "newhorizons.css",
                 name: "New Horizons",
                 description: "A Simple Obligatory Theme"
