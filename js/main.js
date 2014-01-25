@@ -560,6 +560,9 @@ var utube = {
                         </head>\
                         <body>"+video.outerHTML+"</body>\
                     </html>";
+                    if (video.getAttribute("src")) {
+                        video.removeAttribute("src");
+                    }
                     video.remove();
                     window.open("data:text/html;base64,"+btoa(page));
                 } else {
