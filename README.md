@@ -41,10 +41,15 @@ You can secure it with a password if you want. Just add `&passwd=PASSWORD` to th
 
 ### FAQ
  *  What about playlists?
+
     I have never used YouTube playlists myself, so I have no idea how to implement them in a sensible way. Contact me if you want to be the ideas guy.
+
  *  How do I pronounce the name?
+
     "mewtube"
+
  *  Will you be adding more stuff in the future?
+
     Probably, either if I or other people want something.
 
 ### Troubleshooting
