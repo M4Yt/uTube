@@ -185,7 +185,7 @@ var utube = {
 
             markwatched: true,
 
-            nativequeryurl: "http://kornephoros.polyfloyd.net/videoinfo/index.php?id=%ID",
+            nativequeryurl: "http://localhost/uTube/videoinfo.php?id=%ID",
 
             nativeformat: "MP4",
 
