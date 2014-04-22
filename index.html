@@ -1,132 +1,127 @@
-
 <!--
-    Copyright (c) 2013 PolyFloyd
+  Copyright (c) 2013 PolyFloyd
  -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="css/main.css" />
-    <link rel="stylesheet" type="text/css" class="ut_theme" />
-    <script type="text/javascript" src="js/main.js"></script>
-    <script type="text/javascript" src="js/viewtube.js"></script>
-    <title>&mu;Tube</title>
-    <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="css/main.css" />
+  <link rel="stylesheet" type="text/css" class="ut_theme" />
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/viewtube.js"></script>
+  <title>&mu;Tube</title>
+  <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
 </head>
 <body onload="utube.init()">
-    <div class="ut_cbar">
-        <h1>&mu;Tube</h1>
-        <div class="ut_cbar_button ut_cbar_settings"
-            onclick="utube.showConfigMenu()">
-            <h3>Config</h3>
-        </div>
-        <div class="ut_cbar_button ut_cbar_channels"
-            onclick="utube.showChannelMenu()">
-            <h3>Channels</h3>
-        </div>
+  <div class="ut_cbar">
+    <h1>&mu;Tube</h1>
+    <div class="ut_cbar_button ut_cbar_settings"
+      onclick="utube.showConfigMenu()">
+      <h3>Config</h3>
     </div>
-    <div class="ut_channelbox"></div>
-    <div hidden>
-
-        <div id="ut_configmenu_content">
-            <h1>Configuration</h1>
-            <table>
-                <tr>
-                    <td><h4>When I Click A Video</h4></td>
-                </tr>
-                <tr>
-                    <td>Embed on &mu;Tube</td>
-                    <td><input type="radio" name="onvidclick" value="EMBED" /></td>
-                </tr>
-                <tr>
-                    <td>Embed in new tab</td>
-                    <td><input type="radio" name="onvidclick" value="EMBEDINTAB" /></td>
-                </tr>
-                <tr>
-                    <td>Open YouTube</td>
-                    <td><input type="radio" name="onvidclick" value="OPENYT" /></td>
-                </tr>
-                <tr>
-                    <td>Autoplay</td>
-                    <td><input type="checkbox" name="autoplay" /></td>
-                </tr>
-                <tr>
-                    <td><h4>HTML5 Playback</h4></td>
-                </tr>
-                <tr>
-                    <td>Enable</td>
-                    <td><input type="checkbox" name="nativevideo" /></td>
-                </tr>
-                <tr>
-                    <td>VideoInfo URL</td>
-                    <td><input type="text" name="nativequeryurl" size="30" /></td>
-                </tr>
-                <tr>
-                    <td>Format</td>
-                    <td>
-                        <select name="nativeformat">
-                            <option value="3GP">3GP</option>
-                            <option value="FLV">FLV</option>
-                            <option value="MP4">MP4</option>
-                            <option value="WebM">WebM</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><h4>Channel Order</h4></td>
-                </tr>
-                <tr>
-                    <td>Recent Activity</td>
-                    <td><input type="radio" name="chanorder" value="VIDDATE" /></td>
-                </tr>
-                <tr>
-                    <td>Alphabetical</td>
-                    <td><input type="radio" name="chanorder" value="CHANNAME" /></td>
-                </tr>
-                <tr>
-                    <td><h4>History</h4></td>
-                </tr>
-                <tr>
-                    <td>Enable</td>
-                    <td><input type="checkbox" name="markwatched" /></td>
-                </tr>
-                <tr>
-                    <td>Erase History</td>
-                    <td><button onclick="utube.unwatchAll()">Unsee</button></td>
-                </tr>
-                <tr>
-                    <td><h4>Styling</h4></td>
-                </tr>
-                <tr>
-                    <td>Theme</td>
-                    <td><select name="theme"></select></td>
-                </tr>
-                <tr>
-                    <td>CSS Transitions</td>
-                    <td><input type="checkbox" name="transitions" /></td>
-                </tr>
-            </table>
-            <button onclick="if(confirm('Delete channels and restore all settings to default?')) {
-                utube.conf.reset();}" class="ut_button">Reset</button>
-            <button onclick="if(!utube.conf.importAll(prompt('Copy exported settings below'))){
-                utube.error('Input not accepted :(');}" class="ut_button">Import</button>
-            <button onclick="prompt('Exported channels and settings',
-                utube.conf.exportAll())" class="ut_button">Export</button>
-            <a class="gh_ribbon" href="https://github.com/PolyFloyd/uTube" target="_blank"></a>
-            <p class="ut_about">v1.0.2</p>
-        </div>
-
-        <div id="ut_channelmenu_content">
-            <h1>Channels</h1>
-            <form onsubmit="utube.addChannelByForm(); return false">
-                <input class="ut_addchannel_txt" type="text"
-                    pattern="[a-zA-Z0-9]{1,20}" required autofocus />
-                <input type="submit" value="Add" />
-            </form>
-            <div class="ut_channelmenu_list"></div>
-        </div>
-
+    <div class="ut_cbar_button ut_cbar_channels"
+      onclick="utube.showChannelMenu()">
+      <h3>Channels</h3>
     </div>
+  </div>
+  <div class="ut_channelbox"></div>
+  <div hidden>
+
+    <div id="ut_configmenu_content">
+      <h1>Configuration</h1>
+      <table>
+        <tr>
+          <td><h4>When I Click A Video</h4></td>
+        </tr>
+        <tr>
+          <td>Embed on &mu;Tube</td>
+          <td><input type="radio" name="onvidclick" value="EMBED" /></td>
+        </tr>
+        <tr>
+          <td>Embed in new tab</td>
+          <td><input type="radio" name="onvidclick" value="EMBEDINTAB" /></td>
+        </tr>
+        <tr>
+          <td>Open YouTube</td>
+          <td><input type="radio" name="onvidclick" value="OPENYT" /></td>
+        </tr>
+        <tr>
+          <td>Autoplay</td>
+          <td><input type="checkbox" name="autoplay" /></td>
+        </tr>
+        <tr>
+          <td><h4>HTML5 Playback</h4></td>
+        </tr>
+        <tr>
+          <td>Enable</td>
+          <td><input type="checkbox" name="nativevideo" /></td>
+        </tr>
+        <tr>
+          <td>VideoInfo URL</td>
+          <td><input type="text" name="nativequeryurl" size="30" /></td>
+        </tr>
+        <tr>
+          <td>Format</td>
+          <td>
+            <select name="nativeformat">
+              <option value="3GP">3GP</option>
+              <option value="FLV">FLV</option>
+              <option value="MP4">MP4</option>
+              <option value="WebM">WebM</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><h4>Channel Order</h4></td>
+        </tr>
+        <tr>
+          <td>Recent Activity</td>
+          <td><input type="radio" name="chanorder" value="VIDDATE" /></td>
+        </tr>
+        <tr>
+          <td>Alphabetical</td>
+          <td><input type="radio" name="chanorder" value="CHANNAME" /></td>
+        </tr>
+        <tr>
+          <td><h4>History</h4></td>
+        </tr>
+        <tr>
+          <td>Enable</td>
+          <td><input type="checkbox" name="markwatched" /></td>
+        </tr>
+        <tr>
+          <td>Erase History</td>
+          <td><button onclick="utube.unwatchAll()">Unsee</button></td>
+        </tr>
+        <tr>
+          <td><h4>Styling</h4></td>
+        </tr>
+        <tr>
+          <td>Theme</td>
+          <td><select name="theme"></select></td>
+        </tr>
+        <tr>
+          <td>CSS Transitions</td>
+          <td><input type="checkbox" name="transitions" /></td>
+        </tr>
+      </table>
+      <button onclick="if(confirm('Delete channels and restore all settings to default?')){utube.conf.reset();}" class="ut_button">Reset</button>
+      <button onclick="if(!utube.conf.importAll(prompt('Copy exported settings below'))){utube.error('Input not accepted :(');}" class="ut_button">Import</button>
+      <button onclick="prompt('Exported channels and settings', utube.conf.exportAll())" class="ut_button">Export</button>
+      <a class="gh_ribbon" href="https://github.com/PolyFloyd/uTube" target="_blank"></a>
+      <p class="ut_about">v1.0.2</p>
+    </div>
+
+    <div id="ut_channelmenu_content">
+      <h1>Channels</h1>
+      <form onsubmit="utube.addChannelByForm(); return false">
+        <input class="ut_addchannel_txt" type="text" pattern="[a-zA-Z0-9]{1,20}" required autofocus />
+        <input type="submit" value="Add" />
+      </form>
+      <div class="ut_channelmenu_list"></div>
+    </div>
+
+  </div>
 </body>
 </html>
