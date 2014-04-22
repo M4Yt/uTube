@@ -23,8 +23,8 @@ You need a channelname, e.g "LuminosityEvents". Stuff like "UCi4JeT_3WuhXKOqfcOp
  *  K, Up = Move selector up
  *  L, Right = Move selector right
 
-### HTML5 Video
-To view videos in HTML5, µTube needs to access the youtube page of this video.
+### Native Video
+To view videos in the browser's native player, µTube needs to access the youtube page of this video.
 Since AJAX calls are denied, µTube proxies this information through [videoinfo.php](videoinfo.php).
 Make this file accessible with a PHP server, and link to it in the µTube config.
 This is set to `http://localhost/uTube/videoinfo.php?id=%ID` by default.
@@ -33,7 +33,7 @@ You can secure it with a password if you want. Just add `&passwd=PASSWORD` to th
 ### Request Policy
 µTube needs to get information from the following domains:
  *  ggpht.com (Channel images)
- *  googlevideo.com (HTML5 videos)
+ *  googlevideo.com (native videos)
  *  googleusercontent.com (More channel images)
  *  youtube.com (The YouTube API)
  *  youtube-nocookie.com (Embedded videos)
