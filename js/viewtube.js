@@ -33,35 +33,23 @@
 var viewtube = {
 
   FORMATS: {
-    '5': 'Very Low Definition FLV',
-    '17': 'Very Low Definition 3GP',
-    '18': 'Low Definition MP4',
-    '22': 'High Definition MP4',
-    '34': 'Low Definition FLV',
-    '35': 'Standard Definition FLV',
-    '36': 'Low Definition 3GP',
-    '37': 'Full High Definition MP4',
-    '38': 'Ultra High Definition MP4',
-    '43': 'Low Definition WebM',
-    '44': 'Standard Definition WebM',
-    '45': 'High Definition WebM',
-    '46': 'Full High Definition WebM',
-    '82': 'Low Definition 3D MP4',
-    '83': 'Standard Definition 3D MP4',
-    '84': 'High Definition 3D MP4',
-    '85': 'Full High Definition 3D MP4',
-    '100': 'Low Definition 3D WebM',
-    '101': 'Standard Definition 3D WebM',
-    '102': 'High Definition 3D WebM',
-    '135': 'Standard Definition Video MP4',
-    '136': 'High Definition Video MP4',
-    '137': 'Full High Definition Video MP4',
-    '138': 'Ultra High Definition Video MP4',
-    '139': 'Low Bitrate Audio MP4',
-    '140': 'Medium Bitrate Audio MP4',
-    '141': 'High Bitrate Audio MP4',
-    '171': 'Medium Bitrate Audio WebM',
-    '172': 'High Bitrate Audio WebM'
+    '5':   'video/x-flv', // Very Low Definition FLV
+    '17':  'video/3gpp',  // Very Low Definition 3GP
+    '18':  'video/mp4',   // Low Definition MP4
+    '22':  'video/webm',  // High Definition MP4
+    '34':  'video/x-flv', // Low Definition FLV
+    '35':  'video/x-flv', // Standard Definition FLV
+    '36':  'video/3gpp',  // Low Definition 3GP
+    '37':  'video/mp4',   // Full High Definition MP4
+    '38':  'video/mp4',   // Ultra High Definition MP4
+    '43':  'video/webm',  // Low Definition WebM
+    '44':  'video/webm',  // Standard Definition WebM
+    '45':  'video/webm',  // High Definition WebM
+    '46':  'video/webm',  // Full High Definition WebM
+    '135': 'video/mp4',   // Standard Definition Video MP4
+    '136': 'video/mp4',   // High Definition Video MP4
+    '137': 'video/mp4',   // Full High Definition Video MP4
+    '138': 'video/mp4'    // Ultra High Definition Video MP4
   },
 
   ytDecrypter: null,
@@ -128,17 +116,17 @@ var viewtube = {
             else ytVideo = ytVideo.replace(/&type=.*$/, '');
             if (ytVideo.match(/&sig=/)) ytVideo = ytVideo.replace(/&sig=/, '&signature=');
             else if (ytVideo.match(/&s=/)) {
-            var ytSig = ytVideo.match(/&s=(.*?)(&|$)/);
-            if (ytSig) {
-              var s = ytSig[1];
-              s = viewtube.decryptSignature(s);
-              if (s) ytVideo = ytVideo.replace(/&s=.*?(&|$)/, '&signature=' + s + '$1');
-              else ytVideo = '';
-            } else ytVideo = '';
+              var ytSig = ytVideo.match(/&s=(.*?)(&|$)/);
+              if (ytSig) {
+                var s = ytSig[1];
+                s = viewtube.decryptSignature(s);
+                if (s) ytVideo = ytVideo.replace(/&s=.*?(&|$)/, '&signature=' + s + '$1');
+                else ytVideo = '';
+              } else ytVideo = '';
             }
             ytVideo = viewtube.cleanMyContent(ytVideo, true);
             if (ytVideo && ytVideo.indexOf('http') === 0) {
-            ytVideoList[myVideoCode] = ytVideo;
+              ytVideoList[myVideoCode] = ytVideo;
             }
           }
         }

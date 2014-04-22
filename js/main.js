@@ -189,8 +189,6 @@ var utube = {
 
       nativequeryurl: 'http://localhost/uTube/videoinfo.php?id=%ID',
 
-      nativeformat: 'MP4',
-
       nativevideo: false,
 
       onvidclick: 'EMBED',
@@ -225,7 +223,7 @@ var utube = {
     menu.style.width = '500px';
     menu.innerHTML = document.querySelector('#ut_configmenu_content').innerHTML;
     utube.showOverlay(menu);
-    var themeSelect = menu.getElementsByTagName('select')[1];
+    var themeSelect = menu.querySelector('select');
     for (var i = 0; i < utube.conf.themes.length; i++) {
       var op = document.createElement('option');
       var theme = utube.conf.themes[i];
@@ -484,7 +482,7 @@ var utube = {
   },
 
   playVideo: function(id) {
-    function html5Video() {
+    function getNativeVideo() {
       var embedElem = document.createElement('video');
       embedElem.controls = 'controls';
       if (utube.conf.get('autoplay') == 'true') {
@@ -492,21 +490,15 @@ var utube = {
       }
       embedElem.poster = utube.VID_POSTER_URL.filter({vid: id});
       var vidList = viewtube.ytVideoList(utube.conf.get('nativequeryurl').replace('%ID', id));
-      var format = utube.conf.get('nativeformat');
-      for (var v in vidList) {
-        if (v.indexOf(format) != -1) {
-          embedElem.src = vidList[v];
-          break;
-        }
-      }
-      if (!embedElem.src) {
-        embedElem = document.createElement('h3');
-        embedElem.innerHTML = 'This video is not available in '+format;
-        embedElem.style.width = '500px';
+      for (var mime in vidList) {
+        var sourceElem = document.createElement('source');
+        sourceElem.src = vidList[mime];
+        sourceElem.type = mime;
+        embedElem.appendChild(sourceElem);
       }
       return embedElem;
     }
-    function embedVideo() {
+    function getEmbeddedVideo() {
       return utube.VID_EMDED_URL.filter({
         vid: id,
         args: utube.conf.get('autoplay') == 'true' ? '?autoplay=1' : ''
@@ -516,11 +508,11 @@ var utube = {
       case 'EMBED':
         var embedElem;
         if (utube.conf.get('nativevideo') == 'true') {
-          embedElem = html5Video();
+          embedElem = getNativeVideo();
         } else {
           embedElem = document.createElement('iframe');
           embedElem.classList.add('ut_embedvideo');
-          embedElem.src = embedVideo();
+          embedElem.src = getEmbeddedVideo();
           embedElem.setAttribute('allowfullscreen', 'allowfullscreen');
         }
         var height = window.innerHeight - 100;
@@ -537,13 +529,13 @@ var utube = {
         break;
       case 'EMBEDINTAB':
         if (utube.conf.get('nativevideo') == 'true') {
-          var video = html5Video();
+          var video = getNativeVideo();
           var page =
           '<!DOCTYPE html>'+
           '<html>'+
             '<head>'+
               '<title>&mu;Tube Video</title>'+
-              '<style type=\"text/css\">'+
+              '<style type="text/css">'+
                 '* { margin: 0; padding: 0; }'+
                 'html, body, video { height: 100%; }'+
                 'body { background-color: #000;  overflow: hidden; }'+
@@ -552,13 +544,11 @@ var utube = {
             '</head>'+
             '<body>'+video.outerHTML+'</body>'+
           '</html>';
-          if (video.getAttribute('src')) {
-            video.removeAttribute('src');
-          }
+          video.removeAll();
           video.remove();
           window.open('data:text/html;base64,'+btoa(page));
         } else {
-          window.open(embedVideo());
+          window.open(getEmbeddedVideo());
         }
         break;
       case 'OPENYT':

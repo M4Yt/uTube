@@ -1,5 +1,6 @@
 v 1.0.3
   - Remove theme comments
+  - The browser is now in charge of selecting the proper video format
 
 v 1.0.2
   - Dropped the Mickeysoft theme
