@@ -205,20 +205,15 @@ var utube = {
     themes: [
       {
         source: 'dusk.css',
-        name: 'Dusk',
-        description: 'Dark gradients composed in an ordinary way'
+        name: 'Dusk'
       },
-
       {
         source: 'newhorizons.css',
-        name: 'New Horizons',
-        description: 'A Simple Obligatory Theme'
+        name: 'New Horizons'
       },
-
       {
         source: 'ohesicks.css',
-        name: 'Oh Es Icks',
-        description: 'Inb4 lawsuit'
+        name: 'Oh Es Icks'
       }
     ]
 
@@ -235,7 +230,6 @@ var utube = {
       var op = document.createElement('option');
       var theme = utube.conf.themes[i];
       op.value = theme.source;
-      op.title = theme.description;
       op.innerHTML = theme.name;
       themeSelect.appendChild(op);
     }
