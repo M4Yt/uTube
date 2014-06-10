@@ -162,7 +162,14 @@ var utube = {
     },
 
     exportAll: function() {
-      return JSON.stringify(localStorage);
+      var temp = {};
+      for (var key in localStorage) {
+        if (key.startsWith('watched_')) {
+          continue;
+        }
+        temp[key] = localStorage[key];
+      }
+      return JSON.stringify(temp);
     },
 
     importAll: function(data) {
