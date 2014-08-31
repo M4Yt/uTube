@@ -1,3 +1,6 @@
+v 1.0.4
+  - Show hours and minutes on recent videos
+
 v 1.0.3
   - Remove theme comments
   - The browser is now in charge of selecting the proper video format
