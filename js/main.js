@@ -537,20 +537,9 @@ var utube = {
       case 'EMBEDINTAB':
         if (utube.conf.get('nativevideo') == 'true') {
           var video = getNativeVideo();
-          var page =
-          '<!DOCTYPE html>'+
-          '<html>'+
-            '<head>'+
-              '<title>&mu;Tube Video</title>'+
-              '<style type="text/css">'+
-                '* { margin: 0; padding: 0; }'+
-                'html, body, video { height: 100%; }'+
-                'body { background-color: #000;  overflow: hidden; }'+
-                'video { display: block; margin: auto; }'+
-              '</style>'+
-            '</head>'+
-            '<body>'+video.outerHTML+'</body>'+
-          '</html>';
+          var page = document.getElementById('ut_video_newtab_native').innerHTML.filter({
+            body: video.outerHTML,
+          });
           video.removeAll();
           video.remove();
           window.open('data:text/html;base64,'+btoa(page));
