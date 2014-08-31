@@ -5,10 +5,15 @@
 'use strict';
 
 Date.prototype.format = function(fmt) {
+  function pad(n, minLength) {
+    var str = ''+n;
+    for (; str.length < minLength; str = '0'+str);
+    return str;
+  }
   fmt = fmt.replace('%ms', this.getMilliseconds());
   fmt = fmt.replace('%s', this.getSeconds());
-  fmt = fmt.replace('%m', this.getMinutes());
-  fmt = fmt.replace('%h', this.getHours());
+  fmt = fmt.replace('%m', pad(this.getMinutes(), 2));
+  fmt = fmt.replace('%h', pad(this.getHours(), 2));
   fmt = fmt.replace('%d', this.getDate());
   fmt = fmt.replace('%M', this.getMonth() + 1);
   fmt = fmt.replace('%Y', this.getFullYear());
@@ -415,6 +420,8 @@ var utube = {
       }
       vidElem.setAttribute('onclick', 'utube.playVideo(\''+v.id+'\')');
       vidElem.title = v.title;
+      var timeFormat = v.time.getTime() > (new Date().getTime() - 1000 * 60 * 60 * 24)
+        ? '%h:%m' : '%d-%M-%Y';
       vidElem.innerHTML = (
         '<p class="ut_video_title">$title</p>'+
         '<p class="ut_video_time">$time</p>'+
@@ -422,9 +429,9 @@ var utube = {
         '<img src="$thumb" />'
       ).filter({
         duration: utube.timeString(v.duration),
-        thumb: utube.VID_THUMBNAIL_URL.filter({vid: v.id}),
-        time: v.time.format('%d-%M-%Y'),
-        title: v.title
+        thumb:    utube.VID_THUMBNAIL_URL.filter({vid: v.id}),
+        time:     v.time.format(timeFormat),
+        title:    v.title,
       });
       vidListElem.appendChild(vidElem);
     }
