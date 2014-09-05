@@ -65,6 +65,11 @@ Storage.prototype.getObject = function(key) {
   return JSON.parse(this.getItem(key));
 };
 
+// Meh, who needs jQuery anyway?
+window.$ = function() {
+  return document.querySelector.apply(document, arguments);
+};
+
 var utube = {
 
   CHANNEL_DATA: 'https://gdata.youtube.com/feeds/api/users/$chname?alt=json',
@@ -233,7 +238,7 @@ var utube = {
     var menu = document.createElement('div');
     menu.classList.add('ut_configmenu');
     menu.style.width = '500px';
-    menu.innerHTML = document.querySelector('#ut_configmenu_content').innerHTML;
+    menu.innerHTML = $('#ut_configmenu_content').innerHTML;
     utube.showOverlay(menu);
     var themeSelect = menu.querySelector('select');
     for (var i = 0; i < utube.conf.themes.length; i++) {
@@ -284,7 +289,7 @@ var utube = {
     var menu = document.createElement('div');
     menu.style.width = '500px';
     menu.classList.add('ut_channelmenu');
-    menu.innerHTML = document.querySelector('#ut_channelmenu_content').innerHTML;
+    menu.innerHTML = $('#ut_channelmenu_content').innerHTML;
     var list = menu.querySelector('.ut_channelmenu_list');
     list.style.height = (document.documentElement.clientHeight - 200)+'px';
     utube.showOverlay(menu);
@@ -292,7 +297,7 @@ var utube = {
   },
 
   updateChannelMenu: function() {
-    var list = document.querySelector('.ut_channelmenu_list');
+    var list = $('.ut_channelmenu_list');
     list.removeAll();
     var channels = utube.chan.getAll();
     for (var i = 0; i < channels.length; i++) {
@@ -312,21 +317,21 @@ var utube = {
   },
 
   updateTransitionRule: function(enable) {
-    var style = document.querySelector('#disabletransitions');
+    var style = $('#disabletransitions');
     if (!enable && !style) {
       style = document.createElement('style');
       style.id = 'disabletransitions';
       style.setAttribute('type', 'text/css');
       style.innerHTML = '*{transition:none !important;}';
-      document.querySelector('head').appendChild(style);
+      $('head').appendChild(style);
     } else if (style) {
       style.remove();
     }
   },
 
   addChannelByForm: function() {
-    var inputElem = document.querySelector('.ut_addchannel_txt');
-    var oldErr = document.querySelector('.ut_chanconf_err');
+    var inputElem = $('.ut_addchannel_txt');
+    var oldErr = $('.ut_chanconf_err');
     if (oldErr) oldErr.remove();
     var err = utube.chan.add(inputElem.value);
     if (err) {
@@ -346,7 +351,7 @@ var utube = {
   },
 
   reloadTheme: function() {
-    document.querySelector('.ut_theme')
+    $('.ut_theme')
       .setAttribute('href', 'css/theme/'+utube.conf.get('theme'));
   },
 
@@ -447,7 +452,7 @@ var utube = {
     utube.selectorX = utube.selectorY = 0;
     utube.selectorYSave = [];
     utube.chan.count = channels.length;
-    var chanBox = document.querySelector('.ut_channelbox');
+    var chanBox = $('.ut_channelbox');
     chanBox.removeAll();
     function insert(n, l, v) {
       return function() {
@@ -585,7 +590,7 @@ var utube = {
   },
 
   isOverlayOpen: function() {
-    return document.querySelector('.ut_overlay') !== null;
+    return $('.ut_overlay') !== null;
   },
 
   showOverlay: function(contentElem) {
@@ -616,13 +621,13 @@ var utube = {
     setTimeout(function() {
       ov.style.opacity = '1';
     }, utube.conf.get('transitions') == 'true' ? 20 : 0);
-    var body = document.querySelector('body');
+    var body = $('body');
     body.insertBefore(ov, body.childNodes[1]);
     wr.style.width = contentElem.clientWidth+'px';
   },
 
   removeOverlay: function() {
-    var ov = document.querySelector('.ut_overlay');
+    var ov = $('.ut_overlay');
     if (ov) {
       ov.style.opacity = '0';
       setTimeout(function() {
@@ -673,7 +678,7 @@ var utube = {
   },
 
   updateSelector: function() {
-    var old = document.querySelector('.ut_list_video.ut_selected');
+    var old = $('.ut_list_video.ut_selected');
     if (old) {
       old.classList.remove('ut_selected');
     }
@@ -692,7 +697,7 @@ var utube = {
   },
 
   getSelectedChannel: function() {
-    var cbox = document.querySelector('.ut_channelbox');
+    var cbox = $('.ut_channelbox');
     return cbox.childNodes[utube.selectorX];
   },
 
@@ -752,12 +757,12 @@ var utube = {
     utube.reloadTheme();
     utube.updateChannels();
     utube.updateTransitionRule(utube.conf.get('transitions') == 'true');
-    var cbox = document.querySelector('.ut_channelbox');
+    var cbox = $('.ut_channelbox');
     function scrollChannels(e) {
       cbox.scrollLeft -= e.wheelDelta / 2 || -e.detail * 20;
     }
     cbox.addMousewheel(scrollChannels);
-    document.querySelector('.ut_cbar').addMousewheel(scrollChannels);
+    $('.ut_cbar').addMousewheel(scrollChannels);
     document.addEventListener('keydown', function(e) {
       var func = utube.keybindings[e.keyCode];
       if (func && utube.keysEnabled) func(e);
