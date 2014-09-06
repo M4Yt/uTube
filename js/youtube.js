@@ -8,11 +8,14 @@ function getJSON(url, cb) {
   var req = new XMLHttpRequest();
   req.onreadystatechange = function() {
     if (req.readyState !== XMLHttpRequest.DONE) return;
+    var data = null;
     try {
-      cb(null, JSON.parse(req.responseText));
+      data = JSON.parse(req.responseText);
     } catch(err) {
       cb(err, null);
+      return;
     }
+    cb(null, data);
   };
   req.open('GET', url, true);
   req.send();
@@ -46,11 +49,12 @@ GenericAPI.Video.prototype.getThumb = function(type) {
   });
 };
 
-var YouTubeAPI2 = function() {};
+var YouTubeAPI2 = {};
 
 YouTubeAPI2.Channel = inherit(GenericAPI.Channel, function(options) {
   this.icon  = options.icon;
   this.id    = options.id;
+  this.name  = options.name;
   this.title = options.title;
 });
 
@@ -73,6 +77,7 @@ YouTubeAPI2.Channel.prototype.getVideos = function(offset, limit, cb) {
       cb(err, null);
       return;
     }
+    data.feed.entry = data.feed.entry || [];
     var videos = data.feed.entry.map(function(video) {
       return new YouTubeAPI2.Video({
         description: video.media$group.media$description.$t,
@@ -88,12 +93,13 @@ YouTubeAPI2.Channel.prototype.getVideos = function(offset, limit, cb) {
   });
 };
 
-YouTubeAPI2.prototype.getChannelByID = function(id, cb) {
+YouTubeAPI2.getChannelByID = function(id, cb) {
   var url = 'https://gdata.youtube.com/feeds/api/users/{{ id }}?alt=json';
   getJSON(url.template({ id: id }), function(err, data) {
     cb(err, err ? null : new YouTubeAPI2.Channel({
-      id:    id,
       icon:  data.entry.media$thumbnail.url,
+      id:    id,
+      name:  data.entry.yt$username.$t,
       title: data.entry.title.$t,
     }));
   });
