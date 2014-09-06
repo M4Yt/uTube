@@ -1,3 +1,6 @@
+v 2.0.0
+  - Use asynchronous XMLHttpRequests, improving loading speed
+
 v 1.0.4
   - Show hours and minutes on recent videos
 
