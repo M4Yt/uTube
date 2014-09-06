@@ -365,7 +365,7 @@ var utube = {
           vidElem.classList.add('ut_video_watched');
         }
         vidElem.setAttribute('onclick', 'utube.playVideo(\''+video.id+'\')');
-        vidElem.title = video.title;
+        vidElem.title = video.title+'\n'+video.description;
         var timeFormat = video.published.getTime() > (new Date().getTime() - 1000 * 60 * 60 * 24)
           ? '%h:%m' : '%d-%M-%Y';
         vidElem.innerHTML = (
