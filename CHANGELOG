@@ -2,6 +2,7 @@ v 2.0.0
   - Use asynchronous XMLHttpRequests, improving loading speed
   - Added a part of the video description to video tooltips
   - Native embedded videos now have the uTube favicon
+  - Added a config option to control the amount of videos loaded
 
 v 1.0.4
   - Show hours and minutes on recent videos

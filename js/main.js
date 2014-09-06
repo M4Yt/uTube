@@ -66,8 +66,6 @@ window.$ = function() {
 
 var utube = {
 
-  FEED_INCREMENTS: 6,
-
   chan: {
 
     getAll: function() {
@@ -194,6 +192,8 @@ var utube = {
 
       transitions: true,
 
+      loadincrement: 6,
+
     },
 
     themes: [
@@ -231,6 +231,7 @@ var utube = {
     for (var i = 0; i < inputElems.length; i++) {
       var input = inputElems[i];
       switch (input.type) {
+        case 'number':
         case 'text':
           input.value = utube.conf.get(input.name);
           input.setAttribute('onchange', 'utube.conf.set(this.name, this.value)');
@@ -405,7 +406,7 @@ var utube = {
       });
       chanElem.appendChild(vidListElem);
       chanBox.appendChild(chanElem);
-      utube.insertVideos(channel.name, 0, utube.FEED_INCREMENTS, vidListElem, function() {
+      utube.insertVideos(channel.name, 0, parseInt(utube.conf.get('loadincrement'), 10), vidListElem, function() {
         if (utube.conf.get('chanorder') === 'VIDDATE') {
           var channels = Array.prototype.slice.call(document.getElementsByClassName('ut_channel'));
           channels.sort(function(a, b) {
@@ -561,7 +562,7 @@ var utube = {
   loadVideos: function(n) {
     if (!n.classList.contains('ut_loading')) {
       n.classList.add('ut_loading');
-      utube.insertVideos(n.getAttribute('data-channelname'), parseInt(n.getAttribute('data-vidcount'), 10), utube.FEED_INCREMENTS, n, function() {
+      utube.insertVideos(n.getAttribute('data-channelname'), parseInt(n.getAttribute('data-vidcount'), 10), parseInt(utube.conf.get('loadincrement'), 10), n, function() {
         n.classList.remove('ut_loading');
       });
     }
