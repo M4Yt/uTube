@@ -1,5 +1,5 @@
 /*
-  
+
   This file was derived from the ViewTube project. Its contents were
   altered and reformatted to allow easier integration into µTube.
   The original is available at http://isebaro.com/viewtube

@@ -49,6 +49,19 @@ GenericAPI.Video.prototype.getThumb = function(type) {
   });
 };
 
+GenericAPI.Video.prototype.getLink = function() {
+  return 'http://www.youtube.com/watch?v={{ id }}'.template({
+    id: this.id,
+  });
+};
+
+GenericAPI.Video.prototype.getEmbedLink = function(options) {
+  return 'https://www.youtube-nocookie.com/embed/{{ id }}?autoplay={{ autoplay }}'.template({
+    autoplay: options.autoplay ? '1' : '0',
+    id:       this.id,
+  });
+};
+
 var YouTubeAPI2 = {};
 
 YouTubeAPI2.Channel = inherit(GenericAPI.Channel, function(options) {
