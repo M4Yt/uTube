@@ -20,12 +20,10 @@ Date.prototype.format = function(fmt) {
   return fmt;
 };
 
-String.prototype.filter = function(data) {
+String.prototype.template = function(args) {
   var str = this;
-  for (var arg in data) {
-    while (str.indexOf('$'+arg) != -1) {
-      str = str.replace('$'+arg, data[arg]);
-    }
+  for (var k in args) {
+    str = str.replace(new RegExp('\\{\\{ '+k+' \\}\\}', 'g'), args[k]);
   }
   return str;
 };
@@ -72,21 +70,21 @@ window.$ = function() {
 
 var utube = {
 
-  CHANNEL_DATA: 'https://gdata.youtube.com/feeds/api/users/$chname?alt=json',
+  CHANNEL_DATA: 'https://gdata.youtube.com/feeds/api/users/{{ chname }}?alt=json',
 
-  CHANNEL_URL: 'https://www.youtube.com/user/$chname/featured',
+  CHANNEL_URL: 'https://www.youtube.com/user/{{ chname }}/featured',
 
-  VID_FEED: 'https://gdata.youtube.com/feeds/api/users/$chname/uploads?alt=json&orderby=published&start-index=$offset&max-results=$limit',
+  VID_FEED: 'https://gdata.youtube.com/feeds/api/users/{{ chname }}/uploads?alt=json&orderby=published&start-index={{ offset }}&max-results={{ limit }}',
 
   VID_FEED_INCREMENTS: 6,
 
-  VID_EMDED_URL: 'https://www.youtube-nocookie.com/embed/$vid$args',
+  VID_EMBED_URL: 'https://www.youtube-nocookie.com/embed/{{ vid }}{{ args }}',
 
-  VID_THUMBNAIL_URL: 'https://i1.ytimg.com/vi/$vid/mqdefault.jpg',
+  VID_THUMBNAIL_URL: 'https://i1.ytimg.com/vi/{{ vid }}/mqdefault.jpg',
 
-  VID_POSTER_URL: 'https://i1.ytimg.com/vi/$vid/maxresdefault.jpg',
+  VID_POSTER_URL: 'https://i1.ytimg.com/vi/{{ vid }}/maxresdefault.jpg',
 
-  VID_PAGE_URL: 'http://www.youtube.com/watch?v=$vid',
+  VID_PAGE_URL: 'http://www.youtube.com/watch?v={{ vid }}',
 
   chan: {
 
@@ -300,18 +298,13 @@ var utube = {
     var list = $('.ut_channelmenu_list');
     list.removeAll();
     var channels = utube.chan.getAll();
+    var itemTemplate = $('#ut_channelmenu_item').innerHTML;
     for (var i = 0; i < channels.length; i++) {
       var c = channels[i];
-      list.innerHTML += (
-        '<div class="ut_channelmenu_item">'+
-          '<img src="$icon" />'+
-          '<h5>$title</h5>'+
-          '<button onclick="this.parentNode.remove();utube.removeChannelByForm(\'$name\');">Remove</button>'+
-        '</div>'
-      ).filter({
-        icon: c.icon,
+      list.innerHTML += itemTemplate.template({
+        icon:  c.icon,
+        name:  c.name,
         title: c.title,
-        name: c.name
       });
     }
   },
@@ -370,8 +363,8 @@ var utube = {
   },
 
   queryChannel: function(channelName) {
-    var json = utube.queryJSON(utube.CHANNEL_DATA.filter({
-      chname: channelName
+    var json = utube.queryJSON(utube.CHANNEL_DATA.template({
+      chname: channelName,
     }));
     if (json.error) return json;
     json = json.entry;
@@ -379,17 +372,17 @@ var utube = {
       name:  json.yt$username.$t,
       icon:  json.media$thumbnail.url,
       title: json.title.$t,
-      url:   utube.CHANNEL_URL.filter({
-        chname: channelName
+      url:   utube.CHANNEL_URL.template({
+        chname: channelName,
       })
     };
   },
 
   queryVideos: function(channelName, offset, limit) {
-    var json = utube.queryJSON(utube.VID_FEED.filter({
+    var json = utube.queryJSON(utube.VID_FEED.template({
       chname: channelName,
       limit:  limit,
-      offset: (offset + 1)
+      offset: (offset + 1),
     }));
     if (json.error) return json;
     var entries = json.feed.entry;
@@ -428,13 +421,13 @@ var utube = {
       var timeFormat = v.time.getTime() > (new Date().getTime() - 1000 * 60 * 60 * 24)
         ? '%h:%m' : '%d-%M-%Y';
       vidElem.innerHTML = (
-        '<p class="ut_video_title">$title</p>'+
-        '<p class="ut_video_time">$time</p>'+
-        '<p class="ut_video_duration">$duration</p>'+
-        '<img src="$thumb" />'
-      ).filter({
+        '<p class="ut_video_title">{{ title }}</p>'+
+        '<p class="ut_video_time">{{ time }}</p>'+
+        '<p class="ut_video_duration">{{ duration }}</p>'+
+        '<img src="{{ thumb }}" />'
+      ).template({
         duration: utube.timeString(v.duration),
-        thumb:    utube.VID_THUMBNAIL_URL.filter({vid: v.id}),
+        thumb:    utube.VID_THUMBNAIL_URL.template({ vid: v.id }),
         time:     v.time.format(timeFormat),
         title:    v.title,
       });
@@ -483,16 +476,16 @@ var utube = {
       vidListElem.addMousewheel(utube.scrollVideos);
       chanElem.classList.add('ut_channel');
       chanElem.innerHTML = (
-        '<a href="$url" target="_blank" title="$title">'+
+        '<a href="{{ url }}" target="_blank" title="{{ title }}">'+
           '<div class="ut_channel_head">'+
-            '<img src="$icon" />'+
-            '<h3>$title</h3>'+
+            '<img src="{{ icon }}" />'+
+            '<h3>{{ title }}</h3>'+
           '</div>'+
         '</a>'
-      ).filter({
-        icon: c.icon,
+      ).template({
+        icon:  c.icon,
         title: c.title,
-        url: c.url
+        url:   c.url,
       });
       chanElem.appendChild(vidListElem);
       chanBox.appendChild(chanElem);
@@ -507,7 +500,7 @@ var utube = {
       if (utube.conf.get('autoplay') == 'true') {
         embedElem.autoplay = 'autoplay';
       }
-      embedElem.poster = utube.VID_POSTER_URL.filter({vid: id});
+      embedElem.poster = utube.VID_POSTER_URL.template({ vid: id });
       var vidList = viewtube.ytVideoList(utube.conf.get('nativequeryurl').replace('%ID', id));
       for (var mime in vidList) {
         var sourceElem = document.createElement('source');
@@ -518,7 +511,7 @@ var utube = {
       return embedElem;
     }
     function getEmbeddedVideo() {
-      return utube.VID_EMDED_URL.filter({
+      return utube.VID_EMBED_URL.template({
         vid: id,
         args: utube.conf.get('autoplay') == 'true' ? '?autoplay=1' : ''
       });
@@ -549,7 +542,7 @@ var utube = {
       case 'EMBEDINTAB':
         if (utube.conf.get('nativevideo') == 'true') {
           var video = getNativeVideo();
-          var page = document.getElementById('ut_video_newtab_native').innerHTML.filter({
+          var page = $('#ut_video_newtab_native').innerHTML.template({
             body: video.outerHTML,
           });
           video.removeAll();
@@ -560,7 +553,7 @@ var utube = {
         }
         break;
       case 'OPENYT':
-        window.open(utube.VID_PAGE_URL.filter({vid: id}));
+        window.open(utube.VID_PAGE_URL.template({ vid: id }));
         break;
     }
     if (utube.conf.get('markwatched') == 'true') {
