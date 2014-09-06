@@ -469,12 +469,13 @@ var utube = {
         break;
       case 'EMBEDINTAB':
         if (utube.conf.get('nativevideo') == 'true') {
-          var video = getNativeVideo();
+          var videoElem = getNativeVideo();
           var page = $('#ut_video_newtab_native').innerHTML.template({
-            body: video.outerHTML,
+            body:    videoElem.outerHTML,
+            docRoot: window.location,
           });
-          video.removeAll();
-          video.remove();
+          videoElem.removeAll();
+          videoElem.remove();
           window.open('data:text/html;base64,'+btoa(page));
         } else {
           window.open(getEmbeddedVideo());
