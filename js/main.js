@@ -36,7 +36,7 @@ Array.prototype.remove = function(what) {
   return this;
 };
 
-Node.prototype.remove = Element.prototype.remove || function() {
+Node.prototype.remove = Node.prototype.remove || function() {
   this.parentNode.removeChild(this);
 };
 
@@ -44,6 +44,10 @@ Node.prototype.removeAll = function() {
   while (this.hasChildNodes()) {
     this.removeChild(this.lastChild);
   }
+};
+
+HTMLCollection.prototype.toArray = function() {
+  return Array.prototype.slice.call(this);
 };
 
 EventTarget.prototype.addMousewheel = function(callback) {
@@ -141,18 +145,14 @@ var utube = {
     exportAll: function() {
       var temp = {};
       for (var key in localStorage) {
-        if (key.indexOf('watched_') === 0) {
-          continue;
-        }
+        if (key.indexOf('watched_') === 0) continue;
         temp[key] = localStorage[key];
       }
       return JSON.stringify(temp);
     },
 
     importAll: function(data) {
-      if (!data) {
-        return true;
-      }
+      if (!data) return true;
       try {
         utube.conf.reset(JSON.parse(data));
         return true;
@@ -162,16 +162,16 @@ var utube = {
     },
 
     standard: {
-      autoplay: true,
-      channels: '[]',
-      chanorder: 'VIDDATE',
-      markwatched: true,
+      autoplay:       true,
+      channels:       '[]',
+      chanorder:      'VIDDATE',
+      loadincrement:  6,
+      markwatched:    true,
       nativequeryurl: 'http://localhost/uTube/videoinfo.php?id=%ID',
-      nativevideo: false,
-      onvidclick: 'EMBED',
-      theme: 'dusk.css',
-      transitions: true,
-      loadincrement: 6,
+      nativevideo:    false,
+      onvidclick:     'EMBED',
+      theme:          'dusk.css',
+      transitions:    true,
     },
 
     themes: [
@@ -198,16 +198,13 @@ var utube = {
     menu.innerHTML = $('#ut_configmenu_content').innerHTML;
     utube.showOverlay(menu);
     var themeSelect = menu.querySelector('select');
-    for (var i = 0; i < utube.conf.themes.length; i++) {
+    utube.conf.themes.forEach(function(theme) {
       var op = document.createElement('option');
-      var theme = utube.conf.themes[i];
-      op.value = theme.source;
+      op.value     = theme.source;
       op.innerHTML = theme.name;
       themeSelect.appendChild(op);
-    }
-    var inputElems = menu.getElementsByTagName('input');
-    for (var i = 0; i < inputElems.length; i++) {
-      var input = inputElems[i];
+    });
+    menu.getElementsByTagName('input').toArray().forEach(function(input) {
       switch (input.type) {
         case 'number':
         case 'text':
@@ -227,10 +224,8 @@ var utube = {
           input.setAttribute('onchange', 'utube.conf.set(this.name, this.value)');
           break;
       }
-    }
-    var selectElems = menu.getElementsByTagName('select');
-    for (var i = 0; i < selectElems.length; i++) {
-      var select = selectElems[i];
+    });
+    menu.getElementsByTagName('select').toArray().forEach(function(select) {
       select.setAttribute('onchange', 'utube.conf.set(this.name, this.value)');
       var value =  utube.conf.get(select.name);
       for (var j = select.childNodes.length - 1; j >= 0; j--) {
@@ -240,7 +235,7 @@ var utube = {
           break;
         }
       }
-    }
+    });
   },
 
   showChannelMenu: function() {
@@ -255,18 +250,10 @@ var utube = {
   },
 
   updateChannelMenu: function() {
-    var list = $('.ut_channelmenu_list');
-    list.removeAll();
-    var channels = utube.chan.getAll();
     var itemTemplate = $('#ut_channelmenu_item').innerHTML;
-    for (var i = 0; i < channels.length; i++) {
-      var c = channels[i];
-      list.innerHTML += itemTemplate.template({
-        icon:  c.icon,
-        id:    c.id,
-        title: c.title,
-      });
-    }
+    $('.ut_channelmenu_list').innerHTML = utube.chan.getAll().reduce(function(prev, channel) {
+      return prev+itemTemplate.template(channel);
+    }, '');
   },
 
   updateTransitionRule: function(enable) {
@@ -403,15 +390,14 @@ var utube = {
       });
       chanElem.appendChild(vidListElem);
       chanBox.appendChild(chanElem);
-      utube.insertVideos(channel.name, 0, parseInt(utube.conf.get('loadincrement'), 10), vidListElem, function() {
+      var increment = parseInt(utube.conf.get('loadincrement'), 10);
+      utube.insertVideos(channel.name, 0, increment, vidListElem, function() {
         if (utube.conf.get('chanorder') === 'VIDDATE') {
-          var channels = Array.prototype.slice.call(document.getElementsByClassName('ut_channel'));
-          channels.sort(function(a, b) {
+          document.getElementsByClassName('ut_channel').toArray().sort(function(a, b) {
             var ta = parseInt(a.getAttribute('data-mostrecent'), 10);
             var tb = parseInt(b.getAttribute('data-mostrecent'), 10);
-            return ta < tb ? 1 : -1;
-          });
-          channels.forEach(function(channel) {
+            return ta < tb;
+          }).forEach(function(channel) {
             channel.parentNode.appendChild(channel);
           });
         }
@@ -454,7 +440,7 @@ var utube = {
           embedElem.setAttribute('allowfullscreen', 'allowfullscreen');
         }
         var height = window.innerHeight - 100;
-        var width = window.innerWidth - 100;
+        var width  = window.innerWidth  - 100;
         var w = height * (16 / 9);
         var h = height;
         if (w > width) {
@@ -503,10 +489,9 @@ var utube = {
         localStorage.removeItem(k);
       }
     }
-    var v = document.getElementsByClassName('ut_video_watched');
-    for (var i = v.length - 1; i >= 0; i--) {
-      v[i].classList.remove('ut_video_watched');
-    }
+    document.getElementsByClassName('ut_video_watched').toArray().forEach(function(v) {
+      v.classList.remove('ut_video_watched');
+    });
   },
 
   isOverlayOpen: function() {
@@ -521,9 +506,7 @@ var utube = {
     var wr = document.createElement('div');
     wr.classList.add('ut_overlay_wrapper');
     contentElem.classList.add('ut_overlay_content');
-    contentElem.onclick = function(e) {
-      e.stopPropagation();
-    };
+    contentElem.onclick = function(e) { e.stopPropagation(); };
     wr.appendChild(contentElem);
     td.appendChild(wr);
     tr.appendChild(td);
@@ -531,13 +514,12 @@ var utube = {
     ov.classList.add('ut_overlay');
     ov.style.opacity = '0';
     td.onclick = utube.removeOverlay;
-    var inputs = contentElem.getElementsByTagName('input');
-    for (var i = 0; i < inputs.length; i++) {
-      if (inputs[i].type == 'text') {
-        inputs[i].setAttribute('onfocus', 'utube.keysEnabled=false');
-        inputs[i].setAttribute('onblur', 'utube.keysEnabled=true');
+    contentElem.getElementsByTagName('input').toArray().forEach(function(input) {
+      if (input.type === 'text') {
+        input.setAttribute('onfocus', 'utube.keysEnabled=false');
+        input.setAttribute('onblur', 'utube.keysEnabled=true');
       }
-    }
+    });
     setTimeout(function() {
       ov.style.opacity = '1';
     }, utube.conf.get('transitions') == 'true' ? 20 : 0);
@@ -556,11 +538,13 @@ var utube = {
     }
   },
 
-  loadVideos: function(n) {
-    if (!n.classList.contains('ut_loading')) {
-      n.classList.add('ut_loading');
-      utube.insertVideos(n.getAttribute('data-channelname'), parseInt(n.getAttribute('data-vidcount'), 10), parseInt(utube.conf.get('loadincrement'), 10), n, function() {
-        n.classList.remove('ut_loading');
+  loadVideos: function(vidList) {
+    if (!vidList.classList.contains('ut_loading')) {
+      vidList.classList.add('ut_loading');
+      var increment = parseInt(utube.conf.get('loadincrement'), 10);
+      var vidCount  = parseInt(n.getAttribute('data-vidcount'), 10);
+      utube.insertVideos(n.getAttribute('data-channelname'), vidCount, increment, vidList, function() {
+        vidList.classList.remove('ut_loading');
       });
     }
   },
