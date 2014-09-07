@@ -542,8 +542,8 @@ var utube = {
     if (!vidList.classList.contains('ut_loading')) {
       vidList.classList.add('ut_loading');
       var increment = parseInt(utube.conf.get('loadincrement'), 10);
-      var vidCount  = parseInt(n.getAttribute('data-vidcount'), 10);
-      utube.insertVideos(n.getAttribute('data-channelname'), vidCount, increment, vidList, function() {
+      var vidCount  = parseInt(vidList.getAttribute('data-vidcount'), 10);
+      utube.insertVideos(vidList.getAttribute('data-channelname'), vidCount, increment, vidList, function() {
         vidList.classList.remove('ut_loading');
       });
     }
