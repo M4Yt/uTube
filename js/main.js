@@ -51,11 +51,11 @@ EventTarget.prototype.addMousewheel = function(callback) {
   this.addEventListener('DOMMouseScroll', callback, false);
 };
 
-Storage.prototype.setObject = function(key, value) {
+Storage.prototype.set = function(key, value) {
   this.setItem(key, JSON.stringify(value));
 };
 
-Storage.prototype.getObject = function(key) {
+Storage.prototype.get = function(key) {
   return JSON.parse(this.getItem(key));
 };
 
@@ -69,48 +69,37 @@ var utube = {
   chan: {
 
     getAll: function() {
-      return (localStorage.getObject('channels') || []).map(function(chan) {
+      return (localStorage.get('channels') || []).map(function(chan) {
           return new utube.yt.Channel(chan);
       });
     },
 
-    exists: function(channelName) {
+    exists: function(channel) {
+      return utube.chan.getAll().some(function(chan) {
+        return chan.id === channel.id;
+      });
+    },
+
+    add: function(channel, cb) {
+      if (utube.chan.exists(channel)) {
+        cb(new Error(channel.title+' is already added'));
+        return;
+      }
       var channels = utube.chan.getAll();
-      for (var i = channels.length - 1; i >= 0; i--) {
-        if (channels[i].name.toLowerCase() == channelName.toLowerCase()) {
-          return true;
-        }
-      }
-      return false;
+      channels.push(channel);
+      channels.sort(function(a, b) {
+        return a.name > b.name;
+      });
+      localStorage.set('channels', channels);
+      cb(null);
     },
 
-    add: function(channelName, cb) {
-      var isNew = !utube.chan.exists(channelName);
-      if (isNew) {
-        var channels = utube.chan.getAll();
-        utube.yt.getChannelByID(channelName, function(err, channel) {
-          if (err) {
-            cb(err);
-            return;
-          }
-          channels.push(channel);
-          channels.sort(function(a, b) {
-            return a.name > b.name ? 1 : -1;
-          });
-          localStorage.setObject('channels', channels);
-          cb(null);
-        });
-      } else {
-        cb(new Error(channelName+' is already added'));
-      }
-    },
-
-    remove: function(channelName) {
+    remove: function(id) {
       var channels = utube.chan.getAll();
       channels = channels.filter(function(chan) {
-        return chan.name !== channelName;
+        return chan.id !== id;
       });
-      localStorage.setObject('channels', channels);
+      localStorage.set('channels', channels);
     }
 
   },
@@ -173,27 +162,16 @@ var utube = {
     },
 
     standard: {
-
       autoplay: true,
-
       channels: '[]',
-
       chanorder: 'VIDDATE',
-
       markwatched: true,
-
       nativequeryurl: 'http://localhost/uTube/videoinfo.php?id=%ID',
-
       nativevideo: false,
-
       onvidclick: 'EMBED',
-
       theme: 'dusk.css',
-
       transitions: true,
-
       loadincrement: 6,
-
     },
 
     themes: [
@@ -209,7 +187,7 @@ var utube = {
         source: 'ohesicks.css',
         name: 'Oh Es Icks',
       }
-    ]
+    ],
 
   },
 
@@ -285,7 +263,7 @@ var utube = {
       var c = channels[i];
       list.innerHTML += itemTemplate.template({
         icon:  c.icon,
-        name:  c.name,
+        id:    c.id,
         title: c.title,
       });
     }
@@ -306,23 +284,42 @@ var utube = {
 
   addChannelByForm: function() {
     var inputElem = $('.ut_addchannel_txt');
-    var oldErr = $('.ut_chanconf_err');
+    var oldErr    = $('.ut_chanconf_err');
     if (oldErr) oldErr.remove();
-    utube.chan.add(inputElem.value, function(err) {
+
+    function error(err) {
+      var errElem = document.createElement('h6');
+      errElem.classList.add('ut_chanconf_err');
+      errElem.innerHTML = err.message;
+      inputElem.parentNode.appendChild(errElem);
+    }
+
+    var string = inputElem.value;
+    var m;
+    if (m = string.match(/https?:\/\/www\.youtube\.com\/user\/([a-zA-Z0-9]{1,20}).*/)) {
+      string = m[1];
+    } else if (m = string.match(/https?:\/\/www\.youtube\.com\/channel\/([a-zA-Z0-9_-]{24}).*/)) {
+      string = m[1];
+    }
+
+    utube.yt.getChannelByID(string, function(err, channel) {
       if (err) {
-        var errElem = document.createElement('h6');
-        errElem.classList.add('ut_chanconf_err');
-        errElem.innerHTML = err;
-        inputElem.parentNode.appendChild(errElem);
-      } else {
+        error(err);
+        return;
+      }
+      utube.chan.add(channel, function(err) {
+        if (err) {
+          error(err);
+          return;
+        }
         utube.updateChannelMenu();
         utube.updateChannels();
-      }
+      });
     });
   },
 
-  removeChannelByForm: function(name) {
-    utube.chan.remove(name);
+  removeChannelByForm: function(id) {
+    utube.chan.remove(id);
     utube.updateChannels();
   },
 

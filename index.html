@@ -129,7 +129,7 @@
   <script type="text/x-template" id="ut_channelmenu_content">
     <h1>Channels</h1>
     <form onsubmit="utube.addChannelByForm(); return false">
-      <input class="ut_addchannel_txt" type="text" pattern="[a-zA-Z0-9]{1,20}" required autofocus />
+      <input class="ut_addchannel_txt" type="text" required autofocus />
       <input type="submit" value="Add" />
     </form>
     <div class="ut_channelmenu_list"></div>
@@ -138,7 +138,7 @@
     <div class="ut_channelmenu_item">
       <img src="{{ icon }}" />
       <h5>{{ title }}</h5>
-      <button onclick="this.parentNode.remove();utube.removeChannelByForm('{{ name }}');">Remove</button>
+      <button onclick="this.parentNode.remove();utube.removeChannelByForm('{{ id }}');">Remove</button>
     </div>
   </script>
 
