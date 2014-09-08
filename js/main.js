@@ -109,7 +109,7 @@ var utube = {
       chanorder:      'VIDDATE',
       loadincrement:  6,
       markwatched:    true,
-      nativequeryurl: 'http://localhost/uTube/videoinfo.php?id=%ID',
+      nativequeryurl: 'http://localhost/uTube/videoinfo.php?id={{ id }}',
       nativevideo:    false,
       onvidclick:     'EMBED',
       theme:          'dusk.css',
@@ -395,7 +395,7 @@ var utube = {
         embedElem.autoplay = 'autoplay';
       }
       embedElem.poster = video.getThumb('max');
-      var vidList = viewtube.ytVideoList(utube.conf.get('nativequeryurl').replace('%ID', video.id));
+      var vidList = viewtube.ytVideoList(utube.conf.get('nativequeryurl').template({ id: video.id }));
       for (var mime in vidList) {
         var sourceElem = document.createElement('source');
         sourceElem.src = vidList[mime];
