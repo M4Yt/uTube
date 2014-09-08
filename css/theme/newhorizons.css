@@ -38,14 +38,18 @@ input,
 button,
 select,
 option {
-  padding: 1px 2px;
-  background-color: #fff;
-  border: 2px solid #e9e9e9;
+  padding: 2px 4px;
+  border: none;
+  background-color: #e9e9e9;
   font-size: 14px;
 }
 
-input {
-  padding: 2px 4px;
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="submit"]:active,
+button:active,
+select:active {
+  background-color: #ddd;
 }
 
 input[type="submit"],
@@ -173,7 +177,7 @@ option {
 .ut_list_video .ut_video_duration {
   bottom: 0px;
   font-size: 11px;
-  color: #ccc;
+  color: #888;
 }
 
 .ut_list_video .ut_video_time {
