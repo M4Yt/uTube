@@ -32,7 +32,13 @@ var GenericAPI = {
 };
 
 GenericAPI.Channel.prototype.getLink = function() {
-  return 'https://www.youtube.com/user/{{ id }}/featured'.template({
+  var url;
+  if (this.id.match(/^[a-zA-Z0-9]{1,20}$/)) {
+    url = 'https://www.youtube.com/user/{{ id }}/featured';
+  } else {
+    url = 'https://www.youtube.com/channel/{{ id }}/featured';
+  }
+  return url.template({
     id: this.id,
   });
 };
