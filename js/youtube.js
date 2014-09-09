@@ -43,7 +43,6 @@ GenericAPI.Channel.prototype.getLink = function() {
   });
 };
 
-
 GenericAPI.Video.prototype.getThumb = function(type) {
   type = type || 'def';
   return 'https://i1.ytimg.com/vi/{{ id }}/{{ type }}.jpg'.template({
@@ -73,7 +72,6 @@ var YouTubeAPI2 = {};
 YouTubeAPI2.Channel = inherit(GenericAPI.Channel, function(options) {
   this.icon  = options.icon;
   this.id    = options.id;
-  this.name  = options.name;
   this.title = options.title;
 });
 
@@ -118,7 +116,6 @@ YouTubeAPI2.getChannelByID = function(id, cb) {
     cb(err, err ? null : new YouTubeAPI2.Channel({
       icon:  data.entry.media$thumbnail.url,
       id:    id,
-      name:  data.entry.yt$username.$t,
       title: data.entry.title.$t,
     }));
   });

@@ -155,7 +155,7 @@ var utube = {
       var channels = utube.chan.getAll();
       channels.push(channel);
       channels.sort(function(a, b) {
-        return a.name > b.name;
+        return a.title > b.title;
       });
       utube.conf.set('channels', channels);
       cb(null);
