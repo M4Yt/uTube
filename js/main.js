@@ -295,11 +295,10 @@ var utube = {
     $('.ut_theme').setAttribute('href', 'css/theme/'+utube.conf.get('theme'));
   },
 
-  insertVideos: function(channelName, offset, limit, vidListElem, cb) {
-    var channel = utube.chan.getAll().filter(function(chan) {
-      return chan.name === channelName;
-    })[0];
-    channel.getVideos(offset, limit, function(err, videos) {
+  insertVideos: function(channelID, offset, limit, vidListElem, cb) {
+    utube.chan.getAll().filter(function(chan) {
+      return chan.id === channelID;
+    })[0].getVideos(offset, limit, function(err, videos) {
       if (err) {
         var errElem = document.createElement('p');
         errElem.innerHTML = err.message;
@@ -353,7 +352,7 @@ var utube = {
       var chanElem = document.createElement('div');
       var vidListElem = document.createElement('div');
       vidListElem.classList.add('ut_channel_videos');
-      vidListElem.setAttribute('data-channelname', channel.name);
+      vidListElem.setAttribute('data-channelid', channel.id);
       vidListElem.setAttribute('data-vidcount', 0);
       vidListElem.addMousewheel(utube.scrollVideos);
       chanElem.classList.add('ut_channel');
@@ -372,7 +371,7 @@ var utube = {
       chanElem.appendChild(vidListElem);
       chanBox.appendChild(chanElem);
       var increment = utube.conf.get('loadincrement');
-      utube.insertVideos(channel.name, 0, increment, vidListElem, function() {
+      utube.insertVideos(channel.id, 0, increment, vidListElem, function() {
         if (utube.conf.get('chanorder') === 'VIDDATE') {
           document.getElementsByClassName('ut_channel').toArray().sort(function(a, b) {
             var ta = parseInt(a.getAttribute('data-mostrecent'), 10);
@@ -524,7 +523,7 @@ var utube = {
       vidList.classList.add('ut_loading');
       var increment = utube.conf.get('loadincrement')
       var vidCount  = parseInt(vidList.getAttribute('data-vidcount'), 10);
-      utube.insertVideos(vidList.getAttribute('data-channelname'), vidCount, increment, vidList, function() {
+      utube.insertVideos(vidList.getAttribute('data-channelid'), vidCount, increment, vidList, function() {
         vidList.classList.remove('ut_loading');
       });
     }
