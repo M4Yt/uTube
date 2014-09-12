@@ -54,15 +54,17 @@ GenericAPI.Video.prototype.getThumb = function(type) {
   });
 };
 
-GenericAPI.Video.prototype.getLink = function() {
-  return 'http://www.youtube.com/watch?v={{ id }}'.template({
-    id: this.id,
+GenericAPI.Video.prototype.getLink = function(options) {
+  return 'http://www.youtube.com/watch?v={{ id }}&html5={{ html5 }}'.template({
+    html5: options.html5 ? '1' : '0',
+    id:    this.id,
   });
 };
 
 GenericAPI.Video.prototype.getEmbedLink = function(options) {
-  return 'https://www.youtube-nocookie.com/embed/{{ id }}?autoplay={{ autoplay }}'.template({
+  return 'https://www.youtube-nocookie.com/embed/{{ id }}?autoplay={{ autoplay }}&html5={{ html5 }}'.template({
     autoplay: options.autoplay ? '1' : '0',
+    html5:    options.html5    ? '1' : '0',
     id:       this.id,
   });
 };

@@ -110,7 +110,7 @@ var utube = {
       loadincrement:  6,
       markwatched:    true,
       nativequeryurl: 'http://localhost/uTube/videoinfo.php?id={{ id }}',
-      nativevideo:    false,
+      playback:       'HTML5',
       onvidclick:     'EMBED',
       theme:          'dusk.css',
       transitions:    true,
@@ -406,12 +406,13 @@ var utube = {
     function getEmbeddedVideo() {
       return video.getEmbedLink({
         autoplay: utube.conf.get('autoplay'),
+        html5:    utube.conf.get('playback') === 'HTML5',
       });
     }
     switch (utube.conf.get('onvidclick')) {
       case 'EMBED':
         var embedElem;
-        if (utube.conf.get('nativevideo')) {
+        if (utube.conf.get('playback') === 'NATIVE') {
           embedElem = getNativeVideo();
         } else {
           embedElem = document.createElement('iframe');
@@ -432,7 +433,7 @@ var utube = {
         utube.showOverlay(embedElem);
         break;
       case 'EMBEDINTAB':
-        if (utube.conf.get('nativevideo')) {
+        if (utube.conf.get('playback') === 'NATIVE') {
           var videoElem = getNativeVideo();
           var page = $('#ut_video_newtab_native').innerHTML.template({
             body:    videoElem.outerHTML,
@@ -446,7 +447,9 @@ var utube = {
         }
         break;
       case 'OPENYT':
-        window.open(video.getLink());
+        window.open(video.getLink({
+          html5: utube.conf.get('playback') === 'HTML5',
+        }));
         break;
     }
     if (utube.conf.get('markwatched')) {

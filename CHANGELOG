@@ -6,6 +6,7 @@ v 2.0.0
   - Channels can now be added by name, ID and URL
   - Fixed a few graphical quirks
   - The %ID in the native video URL has been replaced with {{ id }}
+  - Added support for YouTube Native playback
 
 v 1.0.4
   - Show hours and minutes on recent videos
