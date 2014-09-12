@@ -262,12 +262,18 @@ var utube = {
       inputElem.parentNode.appendChild(errElem);
     }
 
-    var string = inputElem.value;
-    var m;
-    if (m = string.match(/https?:\/\/www\.youtube\.com\/user\/([a-zA-Z0-9]{1,20}).*/)) {
-      string = m[1];
-    } else if (m = string.match(/https?:\/\/www\.youtube\.com\/channel\/([a-zA-Z0-9_-]{24}).*/)) {
-      string = m[1];
+    var string = [
+      /^([a-zA-Z0-9]{1,20})$/,
+      /^([a-zA-Z0-9_-]{24})$/,
+      /^https?:\/\/www\.youtube\.com\/user\/([a-zA-Z0-9]{1,20}).*/,
+      /^https?:\/\/www\.youtube\.com\/channel\/([a-zA-Z0-9_-]{24}).*/,
+    ].reduce(function(prev, regex) {
+      var m = inputElem.value.match(regex);
+      return prev || (m ? m[1] : null);
+    }, null);
+    if (!string) {
+      error(new Error('No valid channel identifier not found in input'));
+      return;
     }
 
     utube.yt.getChannelByID(string, function(err, channel) {
