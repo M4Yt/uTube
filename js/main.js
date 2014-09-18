@@ -81,7 +81,12 @@ var utube = {
 
     set: function(key, value, noapply) {
       localStorage.setItem(key, JSON.stringify(value));
-      if (!noapply && utube.conf.onchange[key]) utube.conf.onchange[key](value);
+      if (!noapply && utube.conf.onchange[key]) utube.conf.fireChanged(key, value);
+    },
+
+    fireChanged: function(key, value) {
+      if (typeof value === 'undefined') value = utube.conf.get(key);
+      utube.conf.onchange[key](value);
     },
 
     exportAll: function() {
@@ -104,14 +109,17 @@ var utube = {
     },
 
     standard: {
+      api:            'YouTubeAPI2',
+      apiyt3key:      '',
+      apiyt3url:      'https://www.googleapis.com/youtube/v3/',
       autoplay:       true,
       channels:       [],
       chanorder:      'VIDDATE',
       loadincrement:  6,
       markwatched:    true,
       nativequeryurl: 'http://localhost/uTube/videoinfo.php?id={{ id }}',
-      playback:       'HTML5',
       onvidclick:     'EMBED',
+      playback:       'HTML5',
       theme:          'dusk.css',
       transitions:    true,
     },
@@ -237,19 +245,6 @@ var utube = {
     }, '');
   },
 
-  updateTransitionRule: function(enable) {
-    var style = $('#disabletransitions');
-    if (!enable && !style) {
-      style = document.createElement('style');
-      style.id = 'disabletransitions';
-      style.setAttribute('type', 'text/css');
-      style.innerHTML = '*{transition:none !important;}';
-      $('head').appendChild(style);
-    } else if (style) {
-      style.remove();
-    }
-  },
-
   addChannelByForm: function() {
     var inputElem = $('.ut_addchannel_txt');
     var oldErr    = $('.ut_chanconf_err');
@@ -299,10 +294,6 @@ var utube = {
   removeChannelByForm: function(id) {
     utube.chan.remove(id);
     utube.updateChannels();
-  },
-
-  reloadTheme: function() {
-    $('.ut_theme').setAttribute('href', 'css/theme/'+utube.conf.get('theme'));
   },
 
   insertVideos: function(channelID, next, limit, vidListElem, cb) {
@@ -648,10 +639,6 @@ var utube = {
     if (!localStorage.theme) {
       utube.conf.reset();
     }
-    utube.yt = YouTubeAPI2;
-    utube.reloadTheme();
-    utube.updateChannels();
-    utube.updateTransitionRule(utube.conf.get('transitions'));
     var cbox = $('.ut_channelbox');
     function scrollChannels(e) {
       cbox.scrollLeft -= e.wheelDelta / 2 || -e.detail * 20;
@@ -680,8 +667,42 @@ var utube = {
     utube.addKey(39, utube.selectorMoveRight); // Right
     utube.addKey(13, utube.playSelectedVideo); // Return
     utube.conf.onchange.chanorder   = utube.updateChannels;
-    utube.conf.onchange.theme       = utube.reloadTheme;
-    utube.conf.onchange.transitions = utube.updateTransitionRule;
+    utube.conf.onchange.theme       = function() {
+      $('.ut_theme').setAttribute('href', 'css/theme/'+utube.conf.get('theme'));
+    };
+    utube.conf.onchange.transitions = function(enable) {
+      var style = $('#disabletransitions');
+      if (!enable && !style) {
+        style = document.createElement('style');
+        style.id = 'disabletransitions';
+        style.setAttribute('type', 'text/css');
+        style.innerHTML = '*{transition:none !important;}';
+        $('head').appendChild(style);
+      } else if (style) {
+        style.remove();
+      }
+    };
+    utube.conf.onchange.api         = function(api) {
+      utube.yt = {
+        YouTubeAPI2: YouTubeAPI2,
+        YouTubeAPI3: YouTubeAPI3,
+      }[api];
+    };
+    utube.conf.onchange.apiyt3key   = function(key) {
+      YouTubeAPI3.key = key;
+    };
+    utube.conf.onchange.apiyt3url   = function(url) {
+      YouTubeAPI3.url = url;
+    };
+    [
+      'api',
+      'apiyt3key',
+      'apiyt3url',
+      'apiyt3url',
+      'transitions',
+      'theme',
+    ].forEach(function(k) { utube.conf.fireChanged(k); });
+    utube.updateChannels();
   },
 
 };

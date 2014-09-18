@@ -130,8 +130,8 @@ YouTubeAPI2.getChannelByID = function(id, cb) {
 
 var YouTubeAPI3 = {};
 
-YouTubeAPI3.KEY  = '';
-YouTubeAPI3.ROOT = 'https://www.googleapis.com/youtube/v3/';
+YouTubeAPI3.key = '';
+YouTubeAPI3.url = '';
 
 YouTubeAPI3.Channel = inherit(GenericAPI.Channel, function(options) {
   this.icon    = options.icon;
@@ -152,10 +152,10 @@ YouTubeAPI3.Channel.prototype.getVideos = function(next, limit, cb) {
   var url = '{{ root }}playlistItems?part=id%2CcontentDetails%2Csnippet&maxResults={{ limit }}&pageToken={{ next }}&playlistId={{ id }}&key={{ key }}';
   getJSON(url.template({
     id:    this.uploads,
-    key:   YouTubeAPI3.KEY,
+    key:   YouTubeAPI3.key,
     limit: limit,
     next:  next || '',
-    root:  YouTubeAPI3.ROOT,
+    root:  YouTubeAPI3.url,
   }), function(err, data) {
     if (err) {
       cb(err, null);
@@ -181,8 +181,8 @@ YouTubeAPI3.getChannelByID = function(id, cb) {
   var url = '{{ root }}channels?part=id%2Csnippet%2CcontentDetails&{{ selector }}={{ id }}&key={{ key }}';
   getJSON(url.template({
     id:       id,
-    key:      YouTubeAPI3.KEY,
-    root:     YouTubeAPI3.ROOT,
+    key:      YouTubeAPI3.key,
+    root:     YouTubeAPI3.url,
     selector: GenericAPI.Channel.prototype.idIsID.call({ id: id }, {}) ? 'id' : 'forUsername',
   }), function(err, data) {
     if (!data.items[0]) {
