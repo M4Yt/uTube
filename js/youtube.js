@@ -111,7 +111,7 @@ YouTubeAPI2.Channel.prototype.getVideos = function(next, limit, cb) {
       });
     });
     cb(err, err ? null : {
-      next:   offset,
+      next:   offset + limit,
       videos: videos,
     });
   });
