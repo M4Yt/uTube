@@ -10,42 +10,10 @@
   <link rel="stylesheet" type="text/css" class="ut_theme" />
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/youtube.js"></script>
-  <script type="text/javascript" src="js/viewtube.js"></script>
   <title>&mu;Tube</title>
   <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
 </head>
 <body onload="utube.init()">
-  <script type="text/x-template" id="ut_video_newtab_native">
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>&mu;Tube Video</title>
-        <link rel="shortcut icon" type="image/png" href="{{ docRoot }}img/favicon.png" />
-        <style type="text/css">
-          * {
-            margin: 0;
-          }
-
-          html,
-          body,
-          video {
-            height: 100%;
-          }
-
-          body {
-            background-color: #000;
-            overflow: hidden;
-          }
-
-          video {
-            display: block;
-            margin: auto;
-          }
-        </style>
-      </head>
-      <body>{{ body }}</body>
-    </html>
-  </script>
   <script type="text/x-template" id="ut_configmenu_content">
     <h1>Configuration</h1>
     <table>
@@ -78,14 +46,6 @@
       <tr>
         <td>YouTube HTML5</td>
         <td><input type="radio" name="playback" value="HTML5" /></td>
-      </tr>
-      <tr>
-        <td>Native</td>
-        <td><input type="radio" name="playback" value="NATIVE" /></td>
-      </tr>
-      <tr>
-        <td>VideoInfo URL</td>
-        <td><input type="text" name="nativequeryurl" size="30" /></td>
       </tr>
       <tr>
         <td><h4>Channels</h4></td>

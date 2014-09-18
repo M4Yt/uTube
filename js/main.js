@@ -117,7 +117,6 @@ var utube = {
       chanorder:      'VIDDATE',
       loadincrement:  6,
       markwatched:    true,
-      nativequeryurl: 'http://localhost/uTube/videoinfo.php?id={{ id }}',
       onvidclick:     'EMBED',
       playback:       'HTML5',
       theme:          'dusk.css',
@@ -386,22 +385,6 @@ var utube = {
 
   playVideo: function(id) {
     var video = new utube.yt.Video({ id: id });
-    function getNativeVideo() {
-      var embedElem = document.createElement('video');
-      embedElem.controls = 'controls';
-      if (utube.conf.get('autoplay')) {
-        embedElem.autoplay = 'autoplay';
-      }
-      embedElem.poster = video.getThumb('max');
-      var vidList = viewtube.ytVideoList(utube.conf.get('nativequeryurl').template({ id: video.id }));
-      for (var mime in vidList) {
-        var sourceElem = document.createElement('source');
-        sourceElem.src = vidList[mime];
-        sourceElem.type = mime;
-        embedElem.appendChild(sourceElem);
-      }
-      return embedElem;
-    }
     function getEmbeddedVideo() {
       return video.getEmbedLink({
         autoplay: utube.conf.get('autoplay'),
@@ -410,15 +393,10 @@ var utube = {
     }
     switch (utube.conf.get('onvidclick')) {
       case 'EMBED':
-        var embedElem;
-        if (utube.conf.get('playback') === 'NATIVE') {
-          embedElem = getNativeVideo();
-        } else {
-          embedElem = document.createElement('iframe');
-          embedElem.classList.add('ut_embedvideo');
-          embedElem.src = getEmbeddedVideo();
-          embedElem.setAttribute('allowfullscreen', 'allowfullscreen');
-        }
+        var embedElem = document.createElement('iframe');
+        embedElem.classList.add('ut_embedvideo');
+        embedElem.src = getEmbeddedVideo();
+        embedElem.setAttribute('allowfullscreen', 'allowfullscreen');
         var height = window.innerHeight - 100;
         var width  = window.innerWidth  - 100;
         var w = height * (16 / 9);
@@ -432,18 +410,7 @@ var utube = {
         utube.showOverlay(embedElem);
         break;
       case 'EMBEDINTAB':
-        if (utube.conf.get('playback') === 'NATIVE') {
-          var videoElem = getNativeVideo();
-          var page = $('#ut_video_newtab_native').innerHTML.template({
-            body:    videoElem.outerHTML,
-            docRoot: window.location,
-          });
-          videoElem.removeAll();
-          videoElem.remove();
-          window.open('data:text/html;base64,'+btoa(page));
-        } else {
-          window.open(getEmbeddedVideo());
-        }
+        window.open(getEmbeddedVideo());
         break;
       case 'OPENYT':
         window.open(video.getLink({
