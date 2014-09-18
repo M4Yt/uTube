@@ -7,6 +7,7 @@ v 2.0.0
   - Fixed a few graphical quirks
   - The %ID in the native video URL has been replaced with {{ id }}
   - Added support for YouTube Native playback
+  - Added support for YouTube API V3
 
 v 1.0.4
   - Show hours and minutes on recent videos
