@@ -149,7 +149,7 @@ YouTubeAPI3.Video = inherit(GenericAPI.Video, function(options) {
 });
 
 YouTubeAPI3.Channel.prototype.getVideos = function(next, limit, cb) {
-  var url = '{{ root }}playlistItems?part=id%2CcontentDetails%2Csnippet&maxResults={{ limit }}&pageToken={{ next }}&playlistId={{ id }}&key={{ key }}';
+  var url = '{{ root }}playlistItems?part=id%2Csnippet&maxResults={{ limit }}&pageToken={{ next }}&playlistId={{ id }}&key={{ key }}';
   getJSON(url.template({
     id:    this.uploads,
     key:   YouTubeAPI3.key,
@@ -165,7 +165,7 @@ YouTubeAPI3.Channel.prototype.getVideos = function(next, limit, cb) {
       return new YouTubeAPI3.Video({
         description: video.snippet.description,
         duration:    0, // TODO
-        id:          video.contentDetails.videoId,
+        id:          video.snippet.resourceId.videoId,
         published:   new Date(video.snippet.publishedAt),
         title:       video.snippet.title,
       });
