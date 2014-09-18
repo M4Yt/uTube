@@ -332,7 +332,7 @@ var utube = {
         });
         vidListElem.appendChild(vidElem);
       });
-      if (next === '') {
+      if (!next) {
         var mostRecent = result.videos[0] || { published: new Date(0) };
         vidListElem.parentNode.setAttribute('data-mostrecent', mostRecent.published.getTime());
       }
@@ -370,7 +370,7 @@ var utube = {
       chanElem.appendChild(vidListElem);
       chanBox.appendChild(chanElem);
       var increment = utube.conf.get('loadincrement');
-      utube.insertVideos(channel.id, 0, increment, vidListElem, function() {
+      utube.insertVideos(channel.id, null, increment, vidListElem, function() {
         if (utube.conf.get('chanorder') === 'VIDDATE') {
           document.getElementsByClassName('ut_channel').toArray().sort(function(a, b) {
             var ta = parseInt(a.getAttribute('data-mostrecent'), 10);

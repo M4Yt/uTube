@@ -88,7 +88,7 @@ YouTubeAPI2.Video = inherit(GenericAPI.Video, function(options) {
 
 YouTubeAPI2.Channel.prototype.getVideos = function(next, limit, cb) {
   var url = 'https://gdata.youtube.com/feeds/api/users/{{ id }}/uploads?alt=json&orderby=published&start-index={{ offset }}&max-results={{ limit }}';
-  var offset = parseInt(next, 10) + 1;
+  var offset = next ? parseInt(next, 10) + 1 : 1;
   getJSON(url.template({
     id:     this.id,
     limit:  limit,
