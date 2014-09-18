@@ -31,15 +31,16 @@ var GenericAPI = {
   Video:   function() {},
 };
 
+GenericAPI.Channel.prototype.idIsID = function() {
+  return !!this.id.match(/^[a-zA-Z0-9_-]{24}$/);
+};
+
+
 GenericAPI.Channel.prototype.getLink = function() {
-  var url;
-  if (this.id.match(/^[a-zA-Z0-9]{1,20}$/)) {
-    url = 'https://www.youtube.com/user/{{ id }}/featured';
-  } else {
-    url = 'https://www.youtube.com/channel/{{ id }}/featured';
-  }
+  var url = 'https://www.youtube.com/{{ selector }}/{{ id }}/featured';
   return url.template({
-    id: this.id,
+    id:       this.id,
+    selector: this.idIsID() ? 'channel' : 'user',
   });
 };
 
@@ -85,12 +86,13 @@ YouTubeAPI2.Video = inherit(GenericAPI.Video, function(options) {
   this.title       = options.title;
 });
 
-YouTubeAPI2.Channel.prototype.getVideos = function(offset, limit, cb) {
+YouTubeAPI2.Channel.prototype.getVideos = function(next, limit, cb) {
   var url = 'https://gdata.youtube.com/feeds/api/users/{{ id }}/uploads?alt=json&orderby=published&start-index={{ offset }}&max-results={{ limit }}';
+  var offset = parseInt(next, 10) + 1;
   getJSON(url.template({
     id:     this.id,
     limit:  limit,
-    offset: offset + 1,
+    offset: offset,
   }), function(err, data) {
     if (err) {
       cb(err, null);
@@ -108,7 +110,10 @@ YouTubeAPI2.Channel.prototype.getVideos = function(offset, limit, cb) {
         title:       video.title.$t,
       });
     });
-    cb(err, err ? null : videos);
+    cb(err, err ? null : {
+      next:   offset,
+      videos: videos,
+    });
   });
 };
 
@@ -119,6 +124,76 @@ YouTubeAPI2.getChannelByID = function(id, cb) {
       icon:  data.entry.media$thumbnail.url,
       id:    id,
       title: data.entry.title.$t,
+    }));
+  });
+};
+
+var YouTubeAPI3 = {};
+
+YouTubeAPI3.KEY  = '';
+YouTubeAPI3.ROOT = 'https://www.googleapis.com/youtube/v3/';
+
+YouTubeAPI3.Channel = inherit(GenericAPI.Channel, function(options) {
+  this.icon    = options.icon;
+  this.id      = options.id;
+  this.title   = options.title;
+  this.uploads = options.uploads;
+});
+
+YouTubeAPI3.Video = inherit(GenericAPI.Video, function(options) {
+  this.description = options.description;
+  this.duration    = options.duration;
+  this.id          = options.id;
+  this.published   = options.published;
+  this.title       = options.title;
+});
+
+YouTubeAPI3.Channel.prototype.getVideos = function(next, limit, cb) {
+  var url = '{{ root }}playlistItems?part=id%2CcontentDetails%2Csnippet&maxResults={{ limit }}&pageToken={{ next }}&playlistId={{ id }}&key={{ key }}';
+  getJSON(url.template({
+    id:    this.uploads,
+    key:   YouTubeAPI3.KEY,
+    limit: limit,
+    next:  next || '',
+    root:  YouTubeAPI3.ROOT,
+  }), function(err, data) {
+    if (err) {
+      cb(err, null);
+      return;
+    }
+    var videos = data.items.map(function(video) {
+      return new YouTubeAPI3.Video({
+        description: video.snippet.description,
+        duration:    0, // TODO
+        id:          video.contentDetails.videoId,
+        published:   new Date(video.snippet.publishedAt),
+        title:       video.snippet.title,
+      });
+    });
+    cb(err, err ? null : {
+      next:   data.nextPageToken,
+      videos: videos,
+    });
+  });
+};
+
+YouTubeAPI3.getChannelByID = function(id, cb) {
+  var url = '{{ root }}channels?part=id%2Csnippet%2CcontentDetails&{{ selector }}={{ id }}&key={{ key }}';
+  getJSON(url.template({
+    id:       id,
+    key:      YouTubeAPI3.KEY,
+    root:     YouTubeAPI3.ROOT,
+    selector: GenericAPI.Channel.prototype.idIsID.call({ id: id }, {}) ? 'id' : 'forUsername',
+  }), function(err, data) {
+    if (!data.items[0]) {
+      cb(null, null)
+      return;
+    }
+    cb(err, err ? null : new YouTubeAPI3.Channel({
+      icon:    data.items[0].snippet.thumbnails.default.url,
+      id:      data.items[0].id,
+      title:   data.items[0].snippet.title,
+      uploads: data.items[0].contentDetails.relatedPlaylists.uploads,
     }));
   });
 };
