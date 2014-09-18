@@ -2,17 +2,30 @@
 =====
 
 ### What is µTube?
-µTube is an application for managing subscriptions on YouTube without needing a Google+ account.
+µTube is an alternative subscription manager for YouTube.
 
 ### Getting started
-Set up a HTTP server, clone the repository and open it in a webbrowser.
+[Click here](http://polyfloyd.github.io/uTube/) for the latest stable live
+version. You can also run µTube yourself by cloning it into the public
+directory of a webserver.
 
-If you have no idea what all of that means, then [click here](http://polyfloyd.github.io/uTube/) for a live version.
+To add a channel, click in the list-icon thinghy in the top-right (or left
+depending on the theme) of the screen and gently input the channel.
+Accepted inputs are:
+ *  A channelname
+ *  A channelID
+ *  The URL of the channel
 
-To add a channel, click in the list-icon thinghy in the top-right of the screen and mash the channelname in the textbox.
-You need a channelname, e.g "LuminosityEvents". Stuff like "UCi4JeT_3WuhXKOqfcOp9-Sw" will not work (yet). You can find the channelname in the URL of the channel e.g. "https://www.youtube.com/user/LuminosityEvents".
+### YouTube API V3
+The new V3 API requires all requests to be authorized using a key. Since no such
+key is included by default, you will have to create one yourself from the
+[Google Developers Console](https://console.developers.google.com/project).
+You can change the key in the configuration menu. There is also an option to
+change the root URL of the YouTube API should you desire so.
+__Finding a creative way to circumvent this limitation is against YouTube's TOS
+and should not be attempted.__
 
-### Keybindings
+### Hotkeys
  *  R = Reload all channels
  *  C = Open the µTube configuration dialog
  *  I = Open the channel menu
@@ -23,26 +36,22 @@ You need a channelname, e.g "LuminosityEvents". Stuff like "UCi4JeT_3WuhXKOqfcOp
  *  K, Up = Move selector up
  *  L, Right = Move selector right
 
-### Native Video
-To view videos in the browser's native player, µTube needs to access the youtube page of this video.
-Since AJAX calls are denied, µTube proxies this information through [videoinfo.php](videoinfo.php).
-Make this file accessible with a PHP server, and link to it in the µTube config.
-This is set to `http://localhost/uTube/videoinfo.php?id=%ID` by default.
-You can secure it with a password if you want. Just add `&passwd=PASSWORD` to the URL and update [videoinfo.php](videoinfo.php) accordingly.
-
 ### Request Policy
 µTube needs to get information from the following domains:
  *  ggpht.com (Channel images)
- *  googlevideo.com (native videos)
+ *  googleapis.com (The YouTube API)
  *  googleusercontent.com (More channel images)
- *  youtube.com (The YouTube API)
+ *  googlevideo.com (Native videos)
  *  youtube-nocookie.com (Embedded videos)
+ *  youtube.com (The old YouTube API)
  *  ytimg.com (Video thumbnails images)
 
 ### FAQ
  *  What about playlists?
 
-    I have never used YouTube playlists myself, so I have no idea how to implement them in a sensible way. Contact me if you want to be the ideas guy.
+    I have never used YouTube playlists myself, so I have no idea how to
+    implement them in a sensible way. Contact me if you want to be the ideas
+    guy.
 
  *  How do I pronounce the name?
 
@@ -60,7 +69,4 @@ If something doesn't work, try some of the following:
  *  Panic.
 
 ### License
-µTube is available under the MIT license. EXCEPT the following files:
- *  [js/viewtube.js](js/viewtube.js)
-
-    Which is copyrighted by Sebastian Luncan under GPLv3.
+µTube is available under the MIT license.
