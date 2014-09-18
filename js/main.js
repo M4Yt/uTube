@@ -169,9 +169,9 @@ var utube = {
       cb(null);
     },
 
-    remove: function(id) {
+    remove: function(channel) {
       utube.conf.set('channels', utube.chan.getAll().filter(function(chan) {
-        return chan.id !== id;
+        return chan.id !== channel.id;
       }));
     },
 
@@ -292,7 +292,7 @@ var utube = {
   },
 
   removeChannelByForm: function(id) {
-    utube.chan.remove(id);
+    utube.chan.remove(new utube.yt.Channel({ id: id }));
     utube.updateChannels();
   },
 
@@ -687,6 +687,18 @@ var utube = {
         YouTubeAPI2: YouTubeAPI2,
         YouTubeAPI3: YouTubeAPI3,
       }[api];
+      if (api === 'YouTubeAPI3') {
+        utube.chan.getAll().filter(function(channel) {
+          return !channel.uploads;
+        }).forEach(function(channel) {
+          utube.yt.getChannelByID(channel.id, function(err, newChannel) {
+            if (!err && newChannel) {
+              utube.chan.remove(channel);
+              utube.chan.add(newChannel, function() {});
+            }
+          });
+        });
+      }
     };
     utube.conf.onchange.apiyt3key   = function(key) {
       YouTubeAPI3.key = key;
