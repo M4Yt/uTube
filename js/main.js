@@ -60,6 +60,8 @@ window.$ = function() {
   return document.querySelector.apply(document, arguments);
 };
 
+var VERSION = '2.0.0';
+
 var utube = {
 
   conf: {
@@ -76,7 +78,11 @@ var utube = {
     },
 
     get: function(key) {
-      return JSON.parse(localStorage.getItem(key));
+      try {
+        return JSON.parse(localStorage.getItem(key));
+      } catch (err) {
+        return null;
+      }
     },
 
     set: function(key, value, noapply) {
@@ -121,6 +127,7 @@ var utube = {
       playback:       'HTML5',
       theme:          'dusk.css',
       transitions:    true,
+      version:        VERSION,
     },
 
     themes: [
@@ -180,7 +187,9 @@ var utube = {
     var menu = document.createElement('div');
     menu.classList.add('ut_configmenu');
     menu.style.width = '500px';
-    menu.innerHTML = $('#ut_configmenu_content').innerHTML;
+    menu.innerHTML = $('#ut_configmenu_content').innerHTML.template({
+      version: VERSION,
+    });
     utube.showOverlay(menu);
     var themeSelect = menu.querySelector('select');
     utube.conf.themes.forEach(function(theme) {
@@ -603,8 +612,9 @@ var utube = {
   },
 
   init: function() {
-    if (!localStorage.theme) {
+    if (!utube.conf.get('version')) {
       utube.conf.reset();
+      return;
     }
     var cbox = $('.ut_channelbox');
     function scrollChannels(e) {
