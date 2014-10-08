@@ -1,11 +1,9 @@
 v 2.0.0
   - Use asynchronous XMLHttpRequests, improving loading speed
   - Added a part of the video description to video tooltips
-  - Native embedded videos now have the uTube favicon
   - Added a config option to control the amount of videos loaded
   - Channels can now be added by name, ID and URL
   - Fixed a few graphical quirks
-  - The %ID in the native video URL has been replaced with {{ id }}
   - Added support for YouTube Native playback
   - Added support for YouTube API V3
   - Drop native playback using ViewTube. Use YouTube HTML5 instead.
