@@ -9,6 +9,7 @@ v 2.0.0
   - Added support for YouTube Native playback
   - Added support for YouTube API V3
   - Drop native playback using ViewTube. Use YouTube HTML5 instead.
+  - Added an option to disable the alternative horizontal scrolling
 
 v 1.0.4
   - Show hours and minutes on recent videos

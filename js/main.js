@@ -50,9 +50,14 @@ HTMLCollection.prototype.toArray = function() {
   return Array.prototype.slice.call(this);
 };
 
-EventTarget.prototype.addMousewheel = function(callback) {
-  this.addEventListener('mousewheel', callback, false);
-  this.addEventListener('DOMMouseScroll', callback, false);
+EventTarget.prototype.addMousewheel = function(listener) {
+  this.addEventListener('mousewheel',     listener, false);
+  this.addEventListener('DOMMouseScroll', listener, false);
+};
+
+EventTarget.prototype.removeMousewheel = function(listener) {
+  this.removeEventListener('mousewheel',     listener, false);
+  this.removeEventListener('DOMMouseScroll', listener, false);
 };
 
 // Meh, who needs jQuery anyway?
@@ -115,6 +120,7 @@ var utube = {
     },
 
     standard: {
+      althscroll:     true,
       api:            'YouTubeAPI2',
       apiyt3key:      '',
       apiyt3url:      'https://www.googleapis.com/youtube/v3/',
@@ -611,17 +617,15 @@ var utube = {
     utube.keybindings[key] = callback;
   },
 
+  alternativeHorizontalScroll: function(e) {
+    $('.ut_channelbox').scrollLeft -= e.wheelDelta / 2 || -e.detail * 20;
+  },
+
   init: function() {
     if (!utube.conf.get('version')) {
       utube.conf.reset();
       return;
     }
-    var cbox = $('.ut_channelbox');
-    function scrollChannels(e) {
-      cbox.scrollLeft -= e.wheelDelta / 2 || -e.detail * 20;
-    }
-    cbox.addMousewheel(scrollChannels);
-    $('.ut_cbar').addMousewheel(scrollChannels);
     document.addEventListener('keydown', function(e) {
       var func = utube.keybindings[e.keyCode];
       if (func && utube.keysEnabled) func(e);
@@ -646,6 +650,15 @@ var utube = {
     utube.conf.onchange.chanorder   = utube.updateChannels;
     utube.conf.onchange.theme       = function() {
       $('.ut_theme').setAttribute('href', 'css/theme/'+utube.conf.get('theme'));
+    };
+    utube.conf.onchange.althscroll = function(enable) {
+      if (enable) {
+        $('.ut_channelbox').addMousewheel(utube.alternativeHorizontalScroll);
+        $('.ut_cbar').addMousewheel(utube.alternativeHorizontalScroll);
+      } else {
+        $('.ut_channelbox').removeMousewheel(utube.alternativeHorizontalScroll);
+        $('.ut_cbar').removeMousewheel(utube.alternativeHorizontalScroll);
+      }
     };
     utube.conf.onchange.transitions = function(enable) {
       var style = $('#disabletransitions');
@@ -687,6 +700,7 @@ var utube = {
     };
     [
       'api',
+      'althscroll',
       'transitions',
       'theme',
     ].forEach(function(k) { utube.conf.fireChanged(k); });

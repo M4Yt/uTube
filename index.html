@@ -106,6 +106,10 @@
         <td>CSS Transitions</td>
         <td><input type="checkbox" name="transitions" /></td>
       </tr>
+      <tr>
+        <td>Alternative Scrolling</td>
+        <td><input type="checkbox" name="althscroll" /></td>
+      </tr>
     </table>
     <button onclick="if(confirm('Delete channels and restore all settings to default?')){utube.conf.reset();}" class="ut_button">Reset</button>
     <button onclick="if(!utube.conf.importAll(prompt('Copy exported settings below'))){utube.error('Input not accepted :(');}" class="ut_button">Import</button>
