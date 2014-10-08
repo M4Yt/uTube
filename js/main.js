@@ -665,6 +665,8 @@ var utube = {
         YouTubeAPI3: YouTubeAPI3,
       }[api];
       if (api === 'YouTubeAPI3') {
+        utube.conf.fireChanged('apiyt3key');
+        utube.conf.fireChanged('apiyt3url');
         utube.chan.getAll().filter(function(channel) {
           return !channel.uploads;
         }).forEach(function(channel) {
@@ -685,9 +687,6 @@ var utube = {
     };
     [
       'api',
-      'apiyt3key',
-      'apiyt3url',
-      'apiyt3url',
       'transitions',
       'theme',
     ].forEach(function(k) { utube.conf.fireChanged(k); });
