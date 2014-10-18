@@ -65,7 +65,7 @@ window.$ = function() {
   return document.querySelector.apply(document, arguments);
 };
 
-var VERSION = '2.0.0';
+var VERSION = '2.0.1';
 
 var utube = {
 
