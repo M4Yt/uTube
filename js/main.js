@@ -102,9 +102,8 @@ var utube = {
 
     exportAll: function() {
       var temp = {};
-      for (var key in localStorage) {
-        if (key.indexOf('watched_') === 0) continue;
-        temp[key] = localStorage[key];
+      for (var k in utube.conf.standard) {
+        temp[k] = utube.conf.get(k);
       }
       return JSON.stringify(temp);
     },
