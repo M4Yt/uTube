@@ -443,7 +443,7 @@ var utube = {
   },
 
   hasWatched: function(id) {
-    return utube.conf.get('watched_'+id) == 'true';
+    return utube.conf.get('watched_'+id);
   },
 
   unwatchAll: function() {

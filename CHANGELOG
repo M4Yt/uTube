@@ -1,3 +1,6 @@
+v 2.0.2
+  - Fixed watched videos not being marked on reload.
+
 v 2.0.1
   - Fixed videos not showing up when using YTAPI2 (off by one)
   - Fixed configuration export
