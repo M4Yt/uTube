@@ -1,0 +1,618 @@
+/*
+AuthPG - Simple GnuPG user authorization
+Copyright (C) 2015 Roelof Roos <https://github.com/roelofr/>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/*
+    Created on : 07-Mar-2015, 09:25:50
+    Author     : Roelof Roos <roelof.roos@outlook.com>
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #fff;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.42;
+
+    margin: 0;
+    padding: 0;
+}
+
+input, button, select {
+    font-family: inherit;
+    border: 0px none;
+    font-size: 14px;
+    line-height: 1.42;
+}
+input[type=url],
+input[type=tel],
+input[type=text],
+input[type=search],
+input[type=number],
+input[type=color] {
+    background-image: linear-gradient(#F44336, #F44336), linear-gradient(#D2D2D2, #D2D2D2);
+    background-size: 0px 2px, 100% 1px;
+    background-repeat: no-repeat;
+    background-position: center bottom, center calc(100% - 1px);
+    background-color: transparent;
+
+    transition: background-size 200ms linear;
+
+    font-family: "Roboto", "Helvetica Neue", helvetica, arial, sans-serif;
+    font-weight: 400;
+}
+input[type=url],
+input[type=tel],
+input[type=text],
+input[type=search],
+input[type=number],
+input[type=color],
+select {
+    margin-bottom: 15px;
+    height: 28px;
+    width: 100%;
+}
+input[type=url]:active,
+input[type=tel]:active,
+input[type=text]:active,
+input[type=search]:active,
+input[type=number]:active,
+input[type=color]:active,
+input[type=url]:focus,
+input[type=tel]:focus,
+input[type=text]:focus,
+input[type=search]:focus,
+input[type=number]:focus,
+input[type=color]:focus {
+    background-size: 100% 2px, 100% 1px;
+}
+
+input[type=button],
+input[type=reset]
+input[type=submit],
+button {
+    font-family: "Roboto", "Helvetica Neue", helvetica, arial, sans-serif;
+    font-weight: 500;
+
+    padding: 8px 24px;
+    margin: 10px 1px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    background-color: #fff;
+    color: #333333;
+
+    line-height: 1.42857;
+    text-align: center;
+    white-space: nowrap;
+
+    vertical-align: middle;
+
+    display: inline-block;
+    position: relative;
+
+    cursor: pointer;
+
+    border-radius: 2px;
+    border: 0px none;
+
+    text-transform: uppercase;
+    text-decoration: none;
+
+    /* Make the buttons pop up in case of hover */
+    transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+
+    /* Prevent outline and selection */
+    outline: medium none !important;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+input[type=submit] {
+    color: #F44336;
+}
+input[type=button]:hover,
+input[type=reset]:hover
+input[type=submit]:hover,
+button:hover {
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.23), 0px 10px 30px rgba(0, 0, 0, 0.19);
+}
+
+option {
+    background-color: #fff;
+    border: none;
+}
+
+/**
+    Header styling
+*/
+.ut_cbar {
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.23), 0px 3px 10px rgba(0, 0, 0, 0.16);
+    /*height: 66px;*/
+    padding: 18px 18px 18px 18px;
+
+    background-color:#F44336;
+
+    min-height: 60px;
+}
+
+.ut_cbar > h1 {
+
+    margin: 0;
+    padding: 0;
+
+    float: left;
+    color: #FFFFFF;
+
+    line-height: 24px;
+
+    font-size: 20px;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+
+    padding-left: 40px;
+
+    background-image: none;
+    background-position: center left;
+    background-size: 24px 24px;
+    background-repeat: no-repeat
+}
+
+.ut_cbar_button {
+    float: right;
+    height: 24px;
+    padding: 0 0.4em;
+    margin: 6px 0;
+    cursor: pointer;
+}
+.ut_cbar_button.ut_cbar_settings,
+.ut_cbar_button.ut_cbar_channels {
+    padding: 0px 0px;
+    margin: 0px 8px;
+    width: 24px;
+    height: 24px;
+
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: none;
+}
+
+.ut_cbar_button.ut_cbar_settings > h3,
+.ut_cbar_button.ut_cbar_channels > h3{
+    display: none;
+}
+
+/**
+    Main body
+*/
+.ut_channelbox {
+    height: calc(100% - 60px);
+    padding: 24px 24px 0px 24px;
+
+    background-color: transparent;
+}
+
+/**
+    A single channel column
+*/
+.ut_channel {
+    width: 300px;
+    margin-right: 24px;
+    background-color: transparent;
+    border: 0px;
+}
+
+.ut_channel_head {
+    background: transparent;
+
+    margin: 0 0 16px 0;
+    padding: 0px 16px;
+}
+
+.ut_channel_head img {
+    width: 42px;
+    height: 42px;
+    float: left;
+
+    border-radius: 21px;
+}
+
+.ut_channel_head h3 {
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 17px;
+
+    color: rgba(0,0,0,0.8);
+
+    padding: 12px 12px;
+    line-height: 18px;
+    text-align: left;
+
+    float:left;
+}
+
+/**
+    Video panel
+*/
+.ut_channel_videos {
+    width: calc(100% + 30px);
+    height: calc(100% - 40px);
+    overflow-x: visible;
+    overflow-y: scroll;
+}
+
+.ut_list_video {
+    z-index: 4;
+    width: 268px;
+    margin: 8px 16px 16px 16px;
+    padding: 0 0 0px 0;
+    position: relative;
+    cursor: pointer;
+
+    background-color: transparent;
+
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.12), 0px 1px 6px rgba(0, 0, 0, 0.12);
+    border-radius: 2px;
+
+    /* Pop the video out in case of activation */
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0s;
+    transition-duration: 300ms;
+    transition-property: box-shadow, margin, padding-bottom;
+
+    overflow-y: hidden;
+}
+.ut_list_video img {
+    margin: 0;
+    width: 100%;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
+
+.ut_list_video::before {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    height: 48px;
+    width: 48px;
+
+    content: " ";
+    display: block;
+    z-index: 3;
+
+    background-image: url(./img/ico-watched.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 0px 0px;
+
+    transition-timing-function: cubic-bezier(0.305, 0.005, 0.230, 1.245);
+    transition-delay: 0s;
+    transition-duration: 500ms;
+    transition-property: background-size;
+}
+.ut_list_video.ut_video_watched::before {
+    background-size: 48px 48px;
+}
+.ut_list_video.ut_video_watched img {
+    opacity: 0.8;
+}
+
+.ut_list_video p {
+    position: absolute;
+    line-height: 20px;
+    font-size: 13px;
+    display: block;
+    z-index: 3;
+
+    /* Pop the video out in case of activation */
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0s;
+    transition-duration: 300ms;
+    transition-property: bottom, opacity, padding-bottom;
+}
+
+.ut_list_video .ut_video_title {
+    font-family: "Roboto Slab", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+
+    color: #fff;
+
+    padding: 8px;
+    bottom: 0px;
+    width: 268px;
+
+    overflow-x: hidden;
+    text-shadow: 1px 1px 2px rgba(50, 50, 50, 0.6);
+
+    background-color: rgba(100,100,100, 0.3);
+}
+
+.ut_list_video .ut_video_time, .ut_list_video .ut_video_duration {
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+
+    line-height: 20px;
+    padding: 0px 8px;
+
+    color: #fff;
+}
+
+.ut_list_video .ut_video_time {
+    bottom: -20px;
+    left: 4px;
+    font-weight: 500;
+}
+
+.ut_list_video .ut_video_duration {
+    bottom: 26px;
+    right: 4px;
+    opacity: 0;
+
+    background: rgba(0,0,0,0.5);
+    padding: 1px 4px;
+    border-radius: 2px;
+}
+
+.ut_overlay {
+    transition: opacity 0.3s;
+    z-index: 15;
+}
+
+.ut_overlay_content {
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.23), 0px 10px 30px rgba(0, 0, 0, 0.19);
+}
+
+.ut_overlay_content h1 {
+    padding: 8px;
+
+    font-family: "Roboto", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: 24px;
+    color: #333;
+
+    font-weight: 400;
+    line-height: 26.4px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+/**
+    The embed video
+*/
+.ut_embedvideo {
+    background-color: #000;
+}
+
+/**
+    Configuration menu
+*/
+.ut_configmenu table {
+    padding: 3px 6px;
+}
+
+.ut_configmenu td > h2,
+.ut_configmenu td > h4 {
+    font-family: RobotoDraft,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-weight: 400;
+}
+.ut_configmenu td > h2 {
+    margin-left: -16px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+.ut_configmenu td > h4 {
+    margin-left: -10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.ut_configmenu td {
+    font-size: 12px;
+    vertical-align: middle;
+}
+.ut_configmenu td:first-child {
+    padding-left: 24px;
+}
+
+.ut_channelmenu {
+    position: relative;
+}
+/**
+    Channel picker menu
+*/
+.ut_channelmenu h1 {
+    text-align: left;
+    padding: 12px 0 0 12px;
+}
+.ut_channelmenu form {
+    position: relative;
+    padding: 10px 15px;
+}
+
+.ut_channelmenu input[type="text"] {
+    padding-right: 30px;
+    position: relative;
+
+    display: block;
+    width: 100%;
+
+    box-shadow: none;
+}
+.ut_channelmenu input[type="submit"] {
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    color: transparent;
+    background: url('./img/ico-search.png') no-repeat center center;
+    background-size: 24px 24px;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.ut_channelmenu h6::before {
+    content: " ";
+    background-image: url(./img/ico-warning.png);
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    position: relative;
+    left: -20px;
+    margin-right: -16px;
+}
+.ut_channelmenu h6 {
+    padding: 2px 6px 2px 26px;
+    color: #FF5722;
+    font-family: "Roboto", "Helvetica Neue", helvetica, arial, sans-serif;
+    font-size: inherit;
+    font-weight: 400;
+
+    margin: 5px 5px 20px 5px;
+    line-height: 16px;
+}
+
+.ut_channelmenu_item {
+    width: calc(100% - 12px);
+    margin: 4px 4px 8px 4px;
+    overflow: visible;
+    padding: 6px 4px;
+}
+
+.ut_channelmenu_item h5 {
+    margin-top: 12px;
+    float: left;
+
+    font-family: "Roboto", "Helvetica Neue", helvetica, arial, sans-serif;
+    font-size: inherit;
+    font-weight: 400;
+    color: #333;
+}
+
+.ut_channelmenu_item img {
+    width: 42px;
+    height: 42px;
+    margin: 0px 8px 0px 0px;
+    float: left;
+    border-radius: 24px;
+}
+
+.ut_channelmenu_item button {
+    margin: 0px;
+    float: right;
+}
+
+/**
+    Clearfixes
+*/
+.ut_channel_head h3::after,
+.ut_channelmenu input[type=submit]::after,
+.ut_channelmenu_item::after {
+    display: table;
+    content: " ";
+    clear: both;
+}
+
+/**
+    Animation
+*//*
+.ut_list_video:hover,
+.ut_list_video:active {
+    padding: 0 0 20px 0;
+    z-index: 8;
+}*/
+
+.ut_list_video.ut_selected,
+.ut_list_video:hover,
+.ut_list_video:active {
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.23), 0px 3px 10px rgba(0, 0, 0, 0.16);
+}
+
+.ut_list_video:hover .ut_video_title,
+.ut_list_video:active .ut_video_title {
+    padding-bottom: 28px;
+}
+.ut_list_video:hover .ut_video_duration,
+.ut_list_video:active .ut_video_duration {
+    bottom: 60px;
+    opacity: 1
+}
+
+.ut_list_video:hover .ut_video_time,
+.ut_list_video:active .ut_video_time {
+    bottom: 0px;
+    opacity: 1;
+}
+
+/**
+    Graphics
+*/
+.ut_cbar > h1 {
+    background-image: url(./img/ico-app.png);
+}
+.ut_cbar_button.ut_cbar_channels {
+    background-image: url(./img/ico-channels.png);
+}
+.ut_cbar_button.ut_cbar_settings {
+    background-image: url(./img/ico-settings.png);
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto Regular'), local('Roboto-Regular'), url(./fonts/roboto-regular.woff2) format('woff2'), url(./fonts/roboto-regular.woff) format('woff');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Roboto Medium'), local('Roboto-Medium'), url(./fonts/roboto-medium.woff2) format('woff2'), url(./fonts/roboto-medium.woff) format('woff');
+}
+@font-face {
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto Slab Regular'), local('RobotoSlab-Regular'), url(./fonts/roboto-slab.woff2) format('woff2'), url(./fonts/roboto-slab.woff) format('woff');
+}
+
+
+/**
+    Dark variant
+*/
+body.dark {
+    background-color: #2d2d2d;
+}
+body.dark .ut_cbar {
+    background-color: #D32F2F;
+}
+body.dark .ut_channel_head h3 {
+    color: #e2e2e2;
+}
