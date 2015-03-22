@@ -79,7 +79,7 @@ window.$ = function() {
   return document.querySelector.apply(document, arguments);
 };
 
-var VERSION = '2.0.2';
+var VERSION = '2.1.0';
 
 var utube = {
 
