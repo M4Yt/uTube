@@ -644,6 +644,9 @@ var utube = {
       utube.conf.reset();
       return;
     }
+    if (utube.conf.get('version') <= '2.1.0') {
+      utube.conf.set('analytics', true);
+    }
     document.addEventListener('keydown', function(e) {
       var func = utube.keybindings[e.keyCode];
       if (func && utube.keysEnabled) func(e);
