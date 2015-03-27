@@ -32,53 +32,48 @@
     <h1>Configuration</h1>
     <table>
       <tr>
-        <td><h4>When I Click A Video</h4></td>
-      </tr>
-      <tr>
-        <td>Embed on &mu;Tube</td>
-        <td><input type="radio" name="onvidclick" value="EMBED" /></td>
-      </tr>
-      <tr>
-        <td>Embed in new tab</td>
-        <td><input type="radio" name="onvidclick" value="EMBEDINTAB" /></td>
-      </tr>
-      <tr>
-        <td>Open YouTube</td>
-        <td><input type="radio" name="onvidclick" value="OPENYT" /></td>
+        <td><h4>Playback</h4></td>
       </tr>
       <tr>
         <td>Autoplay</td>
         <td><input type="checkbox" name="autoplay" /></td>
       </tr>
       <tr>
-        <td><h4>Playback</h4></td>
+        <td>Location</td>
+        <td>
+          <label><input type="radio" name="onvidclick" value="EMBED" /> Embed on &mu;Tube</label>
+          </br >
+          <label><input type="radio" name="onvidclick" value="EMBEDINTAB" /> Embed in new tab</label>
+          </br >
+          <label><input type="radio" name="onvidclick" value="OPENYT" /> Open on YouTube</label>
+        </td>
       </tr>
+
       <tr>
-        <td>YouTube Default</td>
-        <td><input type="radio" name="playback" value="DEFAULT" /></td>
+        <td>Player</td>
+        <td>
+          <label><input type="radio" name="playback" value="DEFAULT" /> YouTube Default</label>
+          </br >
+          <label><input type="radio" name="playback" value="HTML5" /> YouTube HTML5</label>
+        </td>
       </tr>
-      <tr>
-        <td>YouTube HTML5</td>
-        <td><input type="radio" name="playback" value="HTML5" /></td>
-      </tr>
+
       <tr>
         <td><h4>Channels</h4></td>
+      </tr>
+      <tr>
+        <td>Order By</td>
+        <td>
+          <label><input type="radio" name="chanorder" value="VIDDATE" /> Recent Activity</label>
+          </br >
+          <label><input type="radio" name="chanorder" value="CHANNAME" /> Alphabetical</label>
+        </td>
       </tr>
       <tr>
         <td>Load Increment</td>
         <td><input type="number" name="loadincrement" min="1" /></td>
       </tr>
-      <tr>
-        <td><h4>Channel Order</h4></td>
-      </tr>
-      <tr>
-        <td>Recent Activity</td>
-        <td><input type="radio" name="chanorder" value="VIDDATE" /></td>
-      </tr>
-      <tr>
-        <td>Alphabetical</td>
-        <td><input type="radio" name="chanorder" value="CHANNAME" /></td>
-      </tr>
+
       <tr>
         <td><h4>History</h4></td>
       </tr>
@@ -90,25 +85,27 @@
         <td>Erase History</td>
         <td><button onclick="utube.unwatchAll()">Unsee</button></td>
       </tr>
+
       <tr>
         <td><h4>API</h4></td>
       </tr>
       <tr>
-        <td>YouTube V2</td>
-        <td><input type="radio" name="api" value="YouTubeAPI2" /></td>
+        <td>API</td>
+        <td>
+          <label><input type="radio" name="api" value="YouTubeAPI2" /> YouTube V2</label>
+          </br >
+          <label><input type="radio" name="api" value="YouTubeAPI3" /> YouTube V3</label>
+        </td>
       </tr>
       <tr>
-        <td>YouTube V3</td>
-        <td><input type="radio" name="api" value="YouTubeAPI3" /></td>
-      </tr>
-      <tr>
-        <td>API Key</td>
+        <td>V3 API Key</td>
         <td><input type="text" name="apiyt3key" size="30" /></td>
       </tr>
       <tr>
-        <td>URL</td>
+        <td>V3 URL</td>
         <td><input type="text" name="apiyt3url" size="30" /></td>
       </tr>
+
       <tr>
         <td><h4>Styling</h4></td>
       </tr>
@@ -124,6 +121,7 @@
         <td>Alternative Scrolling</td>
         <td><input type="checkbox" name="althscroll" /></td>
       </tr>
+
       <tr>
         <td><h4>Other</h4></td>
       </tr>
