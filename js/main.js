@@ -134,6 +134,7 @@ var utube = {
 
     standard: {
       althscroll:     true,
+      analytics:      true,
       api:            'YouTubeAPI2',
       apiyt3key:      '',
       apiyt3url:      'https://www.googleapis.com/youtube/v3/',
@@ -677,6 +678,20 @@ var utube = {
         $('.ut_cbar').removeMousewheel(utube.alternativeHorizontalScroll);
       }
     };
+    utube.conf.onchange.analytics = function(enable) {
+      if (enable) {
+        window._paq = window._paq || [];
+        window._paq.push(['trackPageView']);
+        window._paq.push(['enableLinkTracking']);
+        (function(_paq) {
+          var u="//analytics.polyfloyd.net/";
+          _paq.push(['setTrackerUrl', u+'piwik.php']);
+          _paq.push(['setSiteId', 3]);
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })(_paq);
+      }
+    };
     utube.conf.onchange.transitions = function(enable) {
       var style = $('#disabletransitions');
       if (!enable && !style) {
@@ -689,7 +704,7 @@ var utube = {
         style.remove();
       }
     };
-    utube.conf.onchange.api         = function(api) {
+    utube.conf.onchange.api = function(api) {
       utube.yt = {
         YouTubeAPI2: YouTubeAPI2,
         YouTubeAPI3: YouTubeAPI3,
@@ -709,17 +724,18 @@ var utube = {
         });
       }
     };
-    utube.conf.onchange.apiyt3key   = function(key) {
+    utube.conf.onchange.apiyt3key = function(key) {
       YouTubeAPI3.key = key;
     };
-    utube.conf.onchange.apiyt3url   = function(url) {
+    utube.conf.onchange.apiyt3url = function(url) {
       YouTubeAPI3.url = url;
     };
     [
-      'api',
       'althscroll',
-      'transitions',
+      'analytics',
+      'api',
       'theme',
+      'transitions',
     ].forEach(function(k) { utube.conf.fireChanged(k); });
     utube.updateChannels();
   },

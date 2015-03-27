@@ -124,6 +124,16 @@
         <td>Alternative Scrolling</td>
         <td><input type="checkbox" name="althscroll" /></td>
       </tr>
+      <tr>
+        <td><h4>Other</h4></td>
+      </tr>
+      <tr>
+        <td>Analytics</td>
+        <td>
+          <input type="checkbox" name="analytics" />
+          (I promise to take good care of your privacy)
+        </td>
+      </tr>
     </table>
     <button onclick="if(confirm('Delete channels and restore all settings to default?')){utube.conf.reset();}" class="ut_button">Reset</button>
     <button onclick="if(!utube.conf.importAll(prompt('Copy exported settings below'))){utube.error('Input not accepted :(');}" class="ut_button">Import</button>
